@@ -6,6 +6,16 @@
   "author": "Jack Baron <jackmbaron@gmail.com> (https://www.jackbaron.com)",
   "license": "ISC",
   "private": true,
+  "scripts": {
+    "test": "yarn run check && yarn run lint",
+    "check": "yarn run build --noEmit",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "prebuild": "rimraf build",
+    "build": "tsc",
+    "build:dev": "yarn run build --sourceMap",
+    "watch": "tsc --watch",
+    "dev": "yarn run watch --sourceMap"
+  },
   "devDependencies": {
     "@types/node": "^12.0.2",
     "prettier": "^1.17.1",
