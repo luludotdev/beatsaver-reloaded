@@ -2,13 +2,14 @@ import Koa from 'koa'
 import Router from 'koa-router'
 import mongoose from 'mongoose'
 import { IS_DEV, MONGO_URL, PORT } from './env'
+import { logger } from './middleware'
 import { apiRouter } from './routes'
 import CodedError from './utils/CodedError'
 import signale, { panic } from './utils/signale'
 
 export const app = new Koa()
 const router = new Router()
-app.use(async (ctx, next) => {
+app.use(logger).use(async (ctx, next) => {
   try {
     await next()
   } catch (err) {
