@@ -17,12 +17,24 @@
     "dev": "yarn run watch --sourceMap"
   },
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/koa": "^2.0.48",
+    "@types/koa-router": "^7.0.40",
+    "@types/mongoose": "^5.5.1",
     "@types/node": "^12.0.2",
+    "@types/signale": "^1.2.1",
     "prettier": "^1.17.1",
     "rimraf": "^2.6.3",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "dotenv": "^8.0.0",
+    "koa": "^2.7.0",
+    "koa-router": "^7.4.0",
+    "mongoose": "^5.5.9",
+    "signale": "^1.4.0"
   }
 }
