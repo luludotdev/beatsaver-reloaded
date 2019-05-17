@@ -9,6 +9,8 @@ import signale, { panic } from './utils/signale'
 
 export const app = new Koa()
 const router = new Router()
+
+if (!IS_DEV) app.proxy = true
 app.use(logger).use(async (ctx, next) => {
   try {
     await next()
