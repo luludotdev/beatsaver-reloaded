@@ -1,0 +1,9 @@
+{
+  "name": "beatsaver-reloaded-prototype",
+  "version": "0.1.0",
+  "description": "BeatSaver Again",
+  "main": "build/index.js",
+  "author": "Jack Baron <jackmbaron@gmail.com> (https://www.jackbaron.com)",
+  "license": "ISC",
+  "private": true
+}
