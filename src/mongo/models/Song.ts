@@ -111,8 +111,9 @@ schema.virtual('stats.rating').get(function(this: ISongModel) {
   const downVotes = this.votes.filter(x => x.direction === -1).length
 
   const total = upVotes + downVotes
-  const score = upVotes / total
+  if (total === 0) return 0
 
+  const score = upVotes / total
   return score - (score - 0.5) * Math.pow(2, -Math.log10(total + 1))
 })
 
