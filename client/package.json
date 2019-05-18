@@ -4,5 +4,20 @@
   "description": "BeatSaver Again",
   "author": "Jack Baron <jackmbaron@gmail.com> (https://www.jackbaron.com)",
   "license": "ISC",
-  "private": true
+  "private": true,
+  "scripts": {
+    "dev": "parcel ./src/index.html",
+    "build": "parcel build ./src/index.html",
+    "prebuild": "rimraf .cache dist"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.3",
+    "prettier": "^1.17.1",
+    "rimraf": "^2.6.3",
+    "tslint": "^5.16.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {}
 }
