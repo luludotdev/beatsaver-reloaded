@@ -29,17 +29,15 @@ export type IBeatmapSearch = ISearchProps | IQueryProps
 type IProps = ICommonProps & IBeatmapSearch
 
 const search = createSearch()
-export const BeatmapAPI: FunctionComponent<IProps> = ({
-  render,
-  type,
-  query,
-}) => {
+const BeatmapAPI: FunctionComponent<IProps> = ({ render, type, query }) => {
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
   const [maps, setMaps] = useState([] as IBeatmap[])
 
   useEffect(() => {
+    setMaps([])
     setLoading(true)
+    setDone(false)
 
     search
       .next({ type, query })
@@ -72,3 +70,5 @@ export const BeatmapAPI: FunctionComponent<IProps> = ({
 
   return render({ maps, loading, done, next })
 }
+
+export default BeatmapAPI
