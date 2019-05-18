@@ -117,7 +117,7 @@ schema.virtual('stats.rating').get(function(this: ISongModel) {
   return score - (score - 0.5) * Math.pow(2, -Math.log10(total + 1))
 })
 
-schema.plugin(withoutKeys('__v', 'votes'))
+schema.plugin(withoutKeys(['__v', 'votes', 'id']))
 schema.plugin(withVirtuals)
 
 const Song = mongoose.model<ISongModel>('song', schema)

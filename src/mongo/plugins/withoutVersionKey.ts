@@ -1,4 +1,4 @@
 import withoutKeys from './withoutKeys'
 
-const withoutVersionKey = withoutKeys('__v')
+const withoutVersionKey = withoutKeys(['__v'])
 export default withoutVersionKey

@@ -8,7 +8,9 @@ interface IBaseDocument {
   [index: string]: any
 }
 
-const withoutKeys = (...keys: Readonly<string[]>) => (schema: Schema) => {
+const withoutKeys = (keys: Readonly<string[]>, skipObject: boolean = false) => (
+  schema: Schema
+) => {
   const toJSON = schema.get('toJSON')
   const toObject = schema.get('toObject')
 
@@ -19,7 +21,7 @@ const withoutKeys = (...keys: Readonly<string[]>) => (schema: Schema) => {
   }
 
   schema.set('toJSON', { ...toJSON, transform })
-  schema.set('toObject', { ...toObject, transform })
+  if (!skipObject) schema.set('toObject', { ...toObject, transform })
 }
 
 export default withoutKeys
