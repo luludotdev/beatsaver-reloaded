@@ -7,8 +7,9 @@
   "private": true,
   "scripts": {
     "dev": "parcel ./src/index.html",
+    "clean": "rimraf .cache dist",
     "build": "parcel build ./src/index.html",
-    "prebuild": "rimraf .cache dist"
+    "build:clean": "yarn run clean && parcel build ./src/index.html"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.3",
