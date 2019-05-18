@@ -1,0 +1,108 @@
+// Initial Bulma Constants
+@import "~@lolpants/bulma/sass/utilities/_all";
+
+// Override Bulma variables
+$bg: #232325;
+$tex: #eff1f5;
+$btn: #36373a;
+$main: #6782ff;
+
+// Alternate Colours
+$alt: $main;
+$altDark: darken($alt, 10);
+
+// Override Computed
+$primary: $main;
+$primary-invert: findColorInvert($primary);
+$dark: lighten($bg, 8);
+$dark-invert: findColorInvert($dark);
+
+// Setup $colors to use as bulma classes
+$colors: (
+  "white": ($white, $black),
+  "black": ($black, $white),
+  "light": ($light, $light-invert),
+  "dark": ($dark, $dark-invert),
+  "primary": ($primary, $primary-invert),
+  "info": ($info, $info-invert),
+  "success": ($success, $success-invert),
+  "warning": ($warning, $warning-invert),
+  "danger": ($danger, $danger-invert),
+);
+
+// Body
+$body-background-color: $bg;
+$body-color: $tex;
+$content-heading-color: $tex;
+$hr-background-color: rgba(255, 255, 255, 0.2);
+$label-color: $tex;
+$text-strong: darken($tex, 20);
+
+// Navbar
+$navbar-box-shadow-color: rgba(lighten($dark, 15), 0.2);
+$navbar-divider-background-color: darken($btn, 4);
+
+// Navbar Dropdown
+$navbar-dropdown-border-top: 2px solid $navbar-divider-background-color;
+$navbar-dropdown-radius: 5px;
+$navbar-dropdown-background-color: $btn;
+$navbar-dropdown-item-hover-background-color: $bg;
+$navbar-dropdown-item-hover-color: $tex;
+.navbar-item {
+  color: $tex !important;
+}
+
+// Links
+$link: $alt;
+$link-hover: $altDark;
+
+// Buttons
+$button-color: $tex;
+$button-hover-color: $tex;
+$button-active-color: darken($tex, 20);
+$button-focus-color: darken($tex, 20);
+$button-background-color: $btn;
+$button-border-width: 0;
+$button-disabled-background-color: $btn;
+.button:hover {
+  background-color: darken($btn, 2);
+}
+.button[disabled]:active, fieldset[disabled] .button:active {
+  color: $tex;
+}
+.button[disabled], fieldset[disabled] .button {
+  filter: blur(1px);
+}
+
+// Text Boxes
+$input-color: $tex;
+$input-background-color: darken($bg, 5);
+$input-border-color: lighten($bg, 4);
+$input-hover-border-color: lighten($bg, 8);
+
+// Tables
+$table-color: $tex;
+$table-cell-border: 1px solid lighten($bg, 10);
+$table-background-color: transparent;
+$table-cell-heading-color: darken($tex, 10);
+$table-head-cell-color: darken($tex, 10);
+$table-foot-cell-color: darken($tex, 10);
+
+// Table Layout
+ul.table-spacing {
+  padding: 0;
+  list-style-type: none;
+  display: inline;
+
+  & > li {
+    display: inline;
+
+    &:not(:last-child)::after {
+      content: ' • ';
+        color: rgba($tex, 0.5);
+    }
+  }
+}
+
+// The rest of Bulma
+@import "~@lolpants/bulma";

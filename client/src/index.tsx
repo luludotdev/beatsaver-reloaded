@@ -6,8 +6,7 @@ import { Provider } from 'react-redux'
 import { App } from './ts/App'
 import { history, store } from './ts/store'
 
-import '@lolpants/bulma/css/bulma.css'
-import './css/global.css'
+import './css/global.scss'
 
 render(
   <Provider store={store}>
