@@ -1,5 +1,5 @@
 {
-  "name": "beatsaver-reloaded-prototype",
+  "name": "@beatsaver/server",
   "version": "0.1.0",
   "description": "BeatSaver Again",
   "main": "build/index.js",
