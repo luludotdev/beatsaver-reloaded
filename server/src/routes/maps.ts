@@ -16,4 +16,26 @@ router.get('/latest/:page?', async ctx => {
   return (ctx.body = { maps: docs, lastPage })
 })
 
+router.get('/downloads/:page?', async ctx => {
+  const page = (Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0) + 1
+  const { docs, totalPages } = await Beatmap.paginate(
+    {},
+    { page, limit: 10, sort: '-stats.downloads -uploaded' }
+  )
+
+  const lastPage = (totalPages as number) - 1
+  return (ctx.body = { maps: docs, lastPage })
+})
+
+router.get('/plays/:page?', async ctx => {
+  const page = (Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0) + 1
+  const { docs, totalPages } = await Beatmap.paginate(
+    {},
+    { page, limit: 10, sort: '-stats.plays -uploaded' }
+  )
+
+  const lastPage = (totalPages as number) - 1
+  return (ctx.body = { maps: docs, lastPage })
+})
+
 export { router as mapsRouter }
