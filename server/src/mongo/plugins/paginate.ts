@@ -6,6 +6,10 @@ const pOptions: PaginateOptions = {
   limit: RESULTS_PER_PAGE,
 }
 
+interface IPaginateOptions extends PaginateOptions {
+  populate: string
+}
+
 interface IPaginateResult<T extends Document> {
   docs: T[]
   totalDocs: number
@@ -18,7 +22,7 @@ interface IPaginateResult<T extends Document> {
 const paginateFn: <D extends Document, M extends PaginateModel<D>>(
   model: M,
   query?: object,
-  options?: PaginateOptions
+  options?: Partial<IPaginateOptions>
 ) => Promise<IPaginateResult<D>> = async (model, query, options) => {
   const opts: PaginateOptions = options || {}
   const page = opts.page !== undefined ? opts.page + 1 : undefined
@@ -39,6 +43,12 @@ const paginateFn: <D extends Document, M extends PaginateModel<D>>(
   const lastPage = totalPages - 1
   const prevPage = prev === null ? null : prev - 1
   const nextPage = next === null ? null : next - 1
+
+  if (opts.populate) {
+    await Promise.all(
+      docs.map(d => d.populate(opts.populate as string).execPopulate())
+    )
+  }
 
   return { docs, totalDocs, lastPage, prevPage, nextPage }
 }
