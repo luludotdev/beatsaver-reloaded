@@ -6,7 +6,7 @@ const router = new Router({
 })
 
 router.get('/songs', async ctx => {
-  const songs = await Song.find({})
+  const songs = await Song.find({}).populate('uploader')
   return (ctx.body = songs)
 })
 

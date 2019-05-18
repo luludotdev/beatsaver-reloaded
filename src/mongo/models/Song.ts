@@ -59,7 +59,7 @@ const schema: Schema = new Schema({
   name: { type: String, required: true, index: true, maxlength: 255 },
 
   uploaded: { type: Date, default: Date.now },
-  uploader: { type: Schema.Types.ObjectId, required: true },
+  uploader: { type: Schema.Types.ObjectId, required: true, ref: 'user' },
 
   metadata: {
     levelAuthorName: {
