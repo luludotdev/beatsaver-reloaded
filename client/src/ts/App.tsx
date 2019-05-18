@@ -8,10 +8,12 @@ export const App: FunctionComponent = () => (
   <>
     <Navbar />
 
-    <Boundary>
-      <Suspense fallback={<Loader />}>
-        <Routes />
-      </Suspense>
-    </Boundary>
+    <div className='container pad'>
+      <Boundary>
+        <Suspense fallback={<Loader />}>
+          <Routes />
+        </Suspense>
+      </Boundary>
+    </div>
   </>
 )
