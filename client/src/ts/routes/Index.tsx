@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react'
 
 export const Index: FunctionComponent = () => (
-  <div className='content'>
-    <h1>BeatSaver</h1>
-    <p>Allan please write flavour text</p>
+  <div>
+    <h1 className='is-size-1 has-text-weight-light'>BeatSaver</h1>
+    <p>Beat Saber's #1 unofficial beatmap distributor!</p>
   </div>
 )
