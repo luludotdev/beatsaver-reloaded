@@ -3,7 +3,7 @@ import withoutKeys from '../plugins/withoutKeys'
 import withVirtuals from '../plugins/withVirtuals'
 import { IUserModel } from './User'
 
-export interface ISongLean {
+export interface IBeatmapLean {
   key: string
   name: string
   description: string
@@ -44,7 +44,7 @@ export interface ISongLean {
   }
 }
 
-export type ISongModel = ISongLean & Document
+export type IBeatmapModel = IBeatmapLean & Document
 
 const schema: Schema = new Schema({
   key: {
@@ -75,7 +75,7 @@ const schema: Schema = new Schema({
       type: String,
     },
     songName: { type: String, required: true, index: true, maxlength: 255 },
-    songSubName: { type: String, required: true, index: true, maxlength: 255 },
+    songSubName: { type: String, index: true, maxlength: 255 },
 
     bpm: { type: Number, required: true },
   },
@@ -98,15 +98,15 @@ const schema: Schema = new Schema({
   },
 })
 
-schema.virtual('stats.upVotes').get(function(this: ISongModel) {
+schema.virtual('stats.upVotes').get(function(this: IBeatmapModel) {
   return this.votes.filter(x => x.direction === 1).length
 })
 
-schema.virtual('stats.downVotes').get(function(this: ISongModel) {
+schema.virtual('stats.downVotes').get(function(this: IBeatmapModel) {
   return this.votes.filter(x => x.direction === -1).length
 })
 
-schema.virtual('stats.rating').get(function(this: ISongModel) {
+schema.virtual('stats.rating').get(function(this: IBeatmapModel) {
   const upVotes = this.votes.filter(x => x.direction === 1).length
   const downVotes = this.votes.filter(x => x.direction === -1).length
 
@@ -120,5 +120,5 @@ schema.virtual('stats.rating').get(function(this: ISongModel) {
 schema.plugin(withoutKeys(['__v', 'votes', 'id']))
 schema.plugin(withVirtuals)
 
-const Song = mongoose.model<ISongModel>('song', schema)
-export default Song
+const Beatmap = mongoose.model<IBeatmapModel>('beatmap', schema)
+export default Beatmap
