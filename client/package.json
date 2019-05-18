@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.4.4",
+    "@fortawesome/fontawesome-free": "^5.8.2",
     "@lolpants/bulma": "^0.7.4",
     "axios": "^0.18.0",
     "connected-react-router": "^6.4.0",

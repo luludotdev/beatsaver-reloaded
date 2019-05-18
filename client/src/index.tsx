@@ -8,6 +8,11 @@ import { history, store } from './ts/store'
 
 import './css/global.scss'
 
+// @ts-ignore
+import('./css/fontawesome.scss').then(() => {
+  // Font Awesome Loaded!
+})
+
 render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
