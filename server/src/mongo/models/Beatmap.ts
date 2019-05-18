@@ -1,4 +1,5 @@
-import mongoose, { Document, Schema } from 'mongoose'
+import mongoose, { Document, PaginateModel, Schema } from 'mongoose'
+import paginate from 'mongoose-paginate-v2'
 import withoutKeys from '../plugins/withoutKeys'
 import withVirtuals from '../plugins/withVirtuals'
 import { IUserModel } from './User'
@@ -115,6 +116,7 @@ schema.virtual('stats.rating').get(function(this: IBeatmapModel) {
   return score - (score - 0.5) * Math.pow(2, -Math.log10(total + 1))
 })
 
+schema.plugin(paginate)
 schema.plugin(withoutKeys(['__v', 'votes', 'id']))
 schema.plugin(withVirtuals)
 
@@ -138,5 +140,8 @@ schema.index(
   }
 )
 
-const Beatmap = mongoose.model<IBeatmapModel>('beatmap', schema)
+const Beatmap = mongoose.model<IBeatmapModel>(
+  'beatmap',
+  schema
+) as PaginateModel<IBeatmapModel>
 export default Beatmap
