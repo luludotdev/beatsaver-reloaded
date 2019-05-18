@@ -35,8 +35,8 @@ export const Navbar: FunctionComponent = () => {
 
         <div className={`navbar-menu${active ? ' is-active' : ''}`}>
           <div className='navbar-start'>
-            <Link className='navbar-item' to='/browse/newest'>
-              Newest
+            <Link className='navbar-item' to='/browse/latest'>
+              Latest
             </Link>
 
             <div className='navbar-item has-dropdown is-hoverable'>
