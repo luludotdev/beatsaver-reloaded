@@ -39,17 +39,35 @@ export const BeatmapAPI: FunctionComponent<IProps> = ({
   const [maps, setMaps] = useState([] as IBeatmap[])
 
   useEffect(() => {
-    search.next({ type, query }).then(resp => {
-      setMaps(resp.value)
-      setDone(resp.done)
-    })
+    setLoading(true)
+
+    search
+      .next({ type, query })
+      .then(resp => {
+        setLoading(false)
+        setMaps(resp.value)
+        setDone(resp.done)
+      })
+      .catch(err => {
+        console.error(err)
+        setLoading(false)
+      })
   }, [query])
 
   const next = async () => {
-    search.next({ type, query }).then(resp => {
-      setMaps([...maps, ...resp.value])
-      setDone(resp.done)
-    })
+    setLoading(true)
+
+    search
+      .next({ type, query })
+      .then(resp => {
+        setLoading(false)
+        setMaps([...maps, ...resp.value])
+        setDone(resp.done)
+      })
+      .catch(err => {
+        console.error(err)
+        setLoading(false)
+      })
   }
 
   return render({ maps, loading, done, next })
