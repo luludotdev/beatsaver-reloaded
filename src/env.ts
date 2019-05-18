@@ -32,3 +32,7 @@ export const MONGO_URL =
 const defaultPort = 3000
 export const PORT =
   parseInt(process.env.PORT || `${defaultPort}`, 10) || defaultPort
+
+const defaultRounds = 12
+export const BCRYPT_ROUNDS =
+  parseInt(process.env.PORT || `${defaultRounds}`, 10) || defaultRounds
