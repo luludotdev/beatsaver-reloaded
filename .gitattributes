@@ -8,5 +8,5 @@
 /test export-ignore
 
 # Never merge Lockfiles
-package-lock.json -diff
-yarn.lock -diff
+package-lock.json -diff linguist-vendored
+yarn.lock -diff linguist-vendored
