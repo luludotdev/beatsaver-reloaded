@@ -29,6 +29,7 @@
     "@types/passport-jwt": "^3.0.1",
     "@types/passport-local": "^1.0.33",
     "@types/signale": "^1.2.1",
+    "@types/uuid": "^3.4.4",
     "prettier": "^1.17.1",
     "rimraf": "^2.6.3",
     "tslint": "^5.16.0",
@@ -49,6 +50,7 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "signale": "^1.4.0"
+    "signale": "^1.4.0",
+    "uuid": "^3.3.2"
   }
 }
