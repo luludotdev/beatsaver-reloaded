@@ -6,8 +6,6 @@ import User, { IUserModel } from '../mongo/models/User'
 
 export interface IAuthToken {
   _id: string
-  username: string
-  admin: boolean
 }
 
 passport.use(
@@ -31,11 +29,7 @@ passport.use(
 
 export const issueToken: (user: IUserModel) => Promise<string> = user =>
   new Promise((resolve, reject) => {
-    const payload: IAuthToken = {
-      _id: user._id,
-      admin: user.admin,
-      username: user.username,
-    }
+    const payload: IAuthToken = { _id: user._id }
 
     jwt.sign(payload, JWT_SECRET, { expiresIn: '7 days' }, (err, token) => {
       if (err) return reject(err)
