@@ -1,5 +1,6 @@
 import React, { FunctionComponent, Suspense } from 'react'
 import { Boundary } from './components/Boundary'
+import { Footer } from './components/Footer'
 import { Loader } from './components/Loader'
 import { Navbar } from './components/Navbar'
 import { Routes } from './Routes'
@@ -15,5 +16,7 @@ export const App: FunctionComponent = () => (
         </Suspense>
       </Boundary>
     </div>
+
+    <Footer />
   </>
 )

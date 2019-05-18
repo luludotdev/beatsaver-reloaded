@@ -6,10 +6,10 @@ import { Provider } from 'react-redux'
 import { App } from './ts/App'
 import { history, store } from './ts/store'
 
-import './css/global.scss'
+import './sass/global.scss'
 
 // @ts-ignore
-import('./css/fontawesome.scss').then(() => {
+import('./sass/fontawesome.scss').then(() => {
   // Font Awesome Loaded!
 })
 

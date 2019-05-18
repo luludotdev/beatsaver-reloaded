@@ -88,8 +88,8 @@ $table-cell-heading-color: darken($tex, 10);
 $table-head-cell-color: darken($tex, 10);
 $table-foot-cell-color: darken($tex, 10);
 
-// Table Layout
-ul.table-spacing {
+// Spaced List
+ul.spaced {
   padding: 0;
   list-style-type: none;
   display: inline;
