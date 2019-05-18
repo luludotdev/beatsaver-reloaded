@@ -1,4 +1,33 @@
+html, body, div#root {
+  height: 100%;
+}
+
+div.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+div.container.has-footer {
+  margin-top: 24px;
+  flex-grow: 1;
+}
+
+footer.sticky-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 12px;
+  font-weight: bold;
+}
+
 div.container.pad {
   margin-top: 24px;
   margin-bottom: 36px;
+}
+
+div.thin {
+  max-width: 600px;
+  margin: 0 auto;
 }

@@ -5,8 +5,6 @@ import { Loader } from './components/Loader'
 import { Navbar } from './components/Navbar'
 import { Routes } from './Routes'
 
-import '../sass/layout.scss'
-
 export const App: FunctionComponent = () => (
   <>
     <Navbar />
