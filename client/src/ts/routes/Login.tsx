@@ -28,6 +28,7 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
       <h1 className='has-text-centered is-size-3 has-text-weight-semibold'>
         Login
       </h1>
+      <br />
 
       <Input
         placeholder='Username'
