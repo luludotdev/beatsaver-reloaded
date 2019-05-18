@@ -1,4 +1,9 @@
-@keyframes lds-double-ring {
+// Loading.io double-ring spinner
+// https://loading.io/spinner/double-ring
+// CC BY License
+// CSS Class names have been modified
+
+@keyframes spinner {
   0% {
     -webkit-transform: rotate(0);
     transform: rotate(0);
@@ -10,19 +15,7 @@
   }
 }
 
-@-webkit-keyframes lds-double-ring {
-  0% {
-    -webkit-transform: rotate(0);
-    transform: rotate(0);
-  }
-
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes lds-double-ring_reverse {
+@keyframes spinner_reverse {
   0% {
     -webkit-transform: rotate(0);
     transform: rotate(0);
@@ -34,48 +27,37 @@
   }
 }
 
-@-webkit-keyframes lds-double-ring_reverse {
-  0% {
-    -webkit-transform: rotate(0);
-    transform: rotate(0);
-  }
-
-  100% {
-    -webkit-transform: rotate(-360deg);
-    transform: rotate(-360deg);
-  }
-}
-
-.lds-double-ring {
+.loader-spinner {
   position: relative;
-}
 
-.lds-double-ring div {
-  position: absolute;
-  width: 180px;
-  height: 180px;
-  top: 10px;
-  left: 10px;
-  border-radius: 50%;
-  border: 10px solid #000;
-  border-color: #b8b9c2 transparent #b8b9c2 transparent;
-  -webkit-animation: lds-double-ring 1.7s linear infinite;
-  animation: lds-double-ring 1.7s linear infinite;
-}
+  & div {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    top: 10px;
+    left: 10px;
+    border-radius: 50%;
+    border: 10px solid #000;
+    border-color: #b8b9c2 transparent #b8b9c2 transparent;
+    animation: spinner 1.7s linear infinite;
 
-.lds-double-ring div:nth-child(2) {
-  width: 156px;
-  height: 156px;
-  top: 22px;
-  left: 22px;
-  border-color: transparent #9292a0 transparent #9292a0;
-  -webkit-animation: lds-double-ring_reverse 1.7s linear infinite;
-  animation: lds-double-ring_reverse 1.7s linear infinite;
-}
+    &:nth-child(2) {
+      width: 156px;
+      height: 156px;
+      top: 22px;
+      left: 22px;
+      border-color: transparent #9292a0 transparent #9292a0;
+      animation: spinner_reverse 1.7s linear infinite;
+    }
+  }
 
-.lds-double-ring {
   width: 120px !important;
   height: 120px !important;
-  -webkit-transform: translate(-60px, -60px) scale(0.6) translate(60px, 60px);
-  transform: translate(-60px, -60px) scale(0.6) translate(60px, 60px);
+  transform: translate(-60px, -60px) scale(0.4) translate(60px, 60px);
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

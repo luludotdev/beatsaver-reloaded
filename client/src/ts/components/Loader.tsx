@@ -1,3 +1,10 @@
 import React, { FunctionComponent } from 'react'
 
-export const Loader: FunctionComponent = () => <div>loading</div>
+export const Loader: FunctionComponent = () => (
+  <div className='loader-container'>
+    <div className='loader-spinner'>
+      <div />
+      <div />
+    </div>
+  </div>
+)
