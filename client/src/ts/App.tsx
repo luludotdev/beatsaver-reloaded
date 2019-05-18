@@ -1,5 +1,4 @@
 import React, { FunctionComponent, Suspense } from 'react'
-import { Link } from 'react-router-dom'
 import { Boundary } from './components/Boundary'
 import { Loader } from './components/Loader'
 import { Navbar } from './components/Navbar'
