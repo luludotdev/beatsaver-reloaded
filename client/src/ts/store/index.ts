@@ -4,8 +4,25 @@ import {
   RouterState,
 } from 'connected-react-router'
 import { createBrowserHistory, History } from 'history'
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
+import {
+  Action,
+  applyMiddleware,
+  combineReducers,
+  compose,
+  createStore,
+  Dispatch,
+} from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import thunk from 'redux-thunk'
+
+export type Thunk<T, P = any> = (
+  dispatch: Dispatch<IAnyAction<T, P>>,
+  getState: () => IState
+) => void
+
+export interface IAnyAction<T, P = any> extends Action<T> {
+  payload?: P
+}
 
 export interface IState {
   router: RouterState
@@ -26,5 +43,5 @@ const composeEnhancers: typeof compose =
 
 export const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(routerMiddleware(history)))
+  composeEnhancers(applyMiddleware(thunk, routerMiddleware(history)))
 )
