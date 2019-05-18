@@ -5,7 +5,7 @@ import Router from 'koa-router'
 import { IS_DEV } from './env'
 import { logger } from './middleware'
 import { errorHandler } from './middleware/errors'
-import { apiRouter, authRouter } from './routes'
+import { authRouter, mapsRouter } from './routes'
 
 export const app = new Koa()
 const router = new Router()
@@ -28,4 +28,4 @@ const registerRoutes = (first: Router | Router[], ...routes: Router[]) => {
   app.use(router.routes()).use(router.allowedMethods())
 }
 
-registerRoutes(apiRouter, authRouter)
+registerRoutes(authRouter, mapsRouter)
