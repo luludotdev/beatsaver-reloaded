@@ -14,7 +14,7 @@ router.get('/latest/:page?', async ctx => {
     { page, sort: '-uploaded', populate: 'uploader' }
   )
 
-  return (ctx.body = { maps: maps.docs, ...maps, docs: undefined })
+  return (ctx.body = maps)
 })
 
 router.get('/downloads/:page?', async ctx => {
@@ -25,7 +25,7 @@ router.get('/downloads/:page?', async ctx => {
     { page, sort: '-stats.downloads -uploaded', populate: 'uploader' }
   )
 
-  return (ctx.body = { maps: maps.docs, ...maps, docs: undefined })
+  return (ctx.body = maps)
 })
 
 router.get('/plays/:page?', async ctx => {
@@ -36,7 +36,7 @@ router.get('/plays/:page?', async ctx => {
     { page, sort: '-stats.plays -uploaded', populate: 'uploader' }
   )
 
-  return (ctx.body = { maps: maps.docs, ...maps, docs: undefined })
+  return (ctx.body = maps)
 })
 
 export { router as mapsRouter }

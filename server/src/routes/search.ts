@@ -25,7 +25,7 @@ router.get('/text/:page?', async ctx => {
     { page, sort: '-stats.downloads', populate: 'uploader' }
   )
 
-  return (ctx.body = { maps: maps.docs, ...maps, docs: undefined })
+  return (ctx.body = maps)
 })
 
 export { router as searchRouter }
