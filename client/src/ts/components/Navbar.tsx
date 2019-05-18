@@ -99,7 +99,7 @@ export const Navbar: FunctionComponent = () => {
           </div>
 
           <div className='navbar-end'>
-            <Link className='navbar-item' to='/login'>
+            <Link className='navbar-item' to='/auth/login'>
               Login
             </Link>
           </div>
