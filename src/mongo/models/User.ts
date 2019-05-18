@@ -6,6 +6,9 @@ export interface IUserLean {
   email: string
   password: string
 
+  verified: boolean
+  verifyToken: string
+
   links: {
     steam?: string
     oculus?: string
@@ -17,8 +20,25 @@ export interface IUserLean {
 export type IUserModel = IUserLean & Document
 
 const schema: Schema = new Schema({
-  password: { type: String, required: true, maxlength: 255 },
-  username: { type: String, required: true, unique: true, maxlength: 24 },
+  email: {
+    index: true,
+    lowercase: true,
+    match: /\S+@\S+\.\S+/,
+    required: true,
+    type: String,
+    unique: true,
+  },
+  password: { type: String, required: true, maxlength: 72 },
+  username: {
+    lowercase: true,
+    maxlength: 24,
+    required: true,
+    type: String,
+    unique: true,
+  },
+
+  verified: { type: Boolean, default: false },
+  verifyToken: { type: String, default: null },
 
   links: {
     oculus: { type: String, default: undefined, maxlength: 16 },
@@ -28,6 +48,12 @@ const schema: Schema = new Schema({
   admin: { type: Boolean, default: false },
 })
 
-schema.plugin(withoutKeys(['__v', 'email', 'password', 'admin'], true))
+schema.plugin(
+  withoutKeys(
+    ['__v', 'email', 'password', 'verified', 'verifyToken', 'admin'],
+    true
+  )
+)
+
 const User = mongoose.model<IUserModel>('user', schema)
 export default User
