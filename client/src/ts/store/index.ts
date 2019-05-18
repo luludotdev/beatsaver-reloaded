@@ -19,12 +19,6 @@ const createRootReducer = (hist: History) =>
 export const history = createBrowserHistory()
 const rootReducer = createRootReducer(history)
 
-declare const process: {
-  env: {
-    NODE_ENV: string
-  }
-}
-
 const composeEnhancers: typeof compose =
   process.env.NODE_ENV === 'production'
     ? compose
