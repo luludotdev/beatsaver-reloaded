@@ -1,15 +1,13 @@
+import jwt from 'jsonwebtoken'
 import passport from 'passport'
 import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt'
 import { JWT_SECRET } from '../env'
-import User from '../mongo/models/User'
+import User, { IUserModel } from '../mongo/models/User'
 
 export interface IAuthToken {
   _id: string
   username: string
   admin: boolean
-
-  issued: string | Date
-  expires: string | Date
 }
 
 passport.use(
@@ -19,9 +17,6 @@ passport.use(
       secretOrKey: JWT_SECRET,
     },
     async (payload: IAuthToken, cb) => {
-      const expires = new Date(payload.expires)
-      if (new Date() >= expires) return cb(null, false)
-
       try {
         const user = await User.findById(payload._id)
         if (!user) return cb(null, false)
@@ -33,3 +28,17 @@ passport.use(
     }
   )
 )
+
+export const issueToken: (user: IUserModel) => Promise<string> = user =>
+  new Promise((resolve, reject) => {
+    const payload: IAuthToken = {
+      _id: user._id,
+      admin: user.admin,
+      username: user.username,
+    }
+
+    jwt.sign(payload, JWT_SECRET, { expiresIn: '7 days' }, (err, token) => {
+      if (err) return reject(err)
+      else return resolve(token)
+    })
+  })
