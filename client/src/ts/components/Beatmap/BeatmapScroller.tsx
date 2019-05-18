@@ -21,7 +21,7 @@ const BeatmapScroller: FunctionComponent<IProps> = ({
   fallback,
   next,
 }) => {
-  const [ref, inView] = useInView()
+  const [ref, inView] = useInView({ rootMargin: '240px' })
   if (inView && !loading && !done) next()
 
   return (
