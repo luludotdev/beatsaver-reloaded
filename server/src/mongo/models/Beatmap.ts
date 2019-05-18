@@ -63,19 +63,17 @@ const schema: Schema = new Schema({
 
   metadata: {
     levelAuthorName: {
-      index: true,
       maxlength: 255,
       required: true,
       type: String,
     },
     songAuthorName: {
-      index: true,
       maxlength: 255,
       required: true,
       type: String,
     },
-    songName: { type: String, required: true, index: true, maxlength: 255 },
-    songSubName: { type: String, index: true, maxlength: 255 },
+    songName: { type: String, required: true, maxlength: 255 },
+    songSubName: { type: String, maxlength: 255 },
 
     bpm: { type: Number, required: true },
   },
@@ -119,6 +117,26 @@ schema.virtual('stats.rating').get(function(this: IBeatmapModel) {
 
 schema.plugin(withoutKeys(['__v', 'votes', 'id']))
 schema.plugin(withVirtuals)
+
+schema.index(
+  {
+    'metadata.levelAuthorName': 'text',
+    'metadata.songAuthorName': 'text',
+    'metadata.songName': 'text',
+    'metadata.songSubName': 'text',
+    name: 'text',
+  },
+  {
+    name: 'full_search',
+    weights: {
+      'metadata.levelAuthorName': 1,
+      'metadata.songAuthorName': 1,
+      'metadata.songName': 2,
+      'metadata.songSubName': 2,
+      name: 5,
+    },
+  }
+)
 
 const Beatmap = mongoose.model<IBeatmapModel>('beatmap', schema)
 export default Beatmap
