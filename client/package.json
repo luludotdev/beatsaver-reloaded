@@ -12,6 +12,10 @@
     "build:clean": "yarn run clean && parcel build ./src/index.html"
   },
   "devDependencies": {
+    "@types/react": "^16.8.17",
+    "@types/react-dom": "^16.8.4",
+    "@types/react-redux": "^7.0.9",
+    "@types/react-router-dom": "^4.3.3",
     "parcel-bundler": "^1.12.3",
     "prettier": "^1.17.1",
     "rimraf": "^2.6.3",
@@ -20,5 +24,21 @@
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.4.5"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@lolpants/bulma": "^0.7.4",
+    "connected-react-router": "^6.4.0",
+    "history": "^4.9.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.0.3",
+    "react-router-dom": "^5.0.0",
+    "redux": "^4.0.1",
+    "redux-devtools-extension": "^2.13.8"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
