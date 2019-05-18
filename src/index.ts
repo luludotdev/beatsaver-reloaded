@@ -1,3 +1,4 @@
+import cors from '@koa/cors'
 import Koa from 'koa'
 import helmet from 'koa-helmet'
 import Router from 'koa-router'
@@ -12,7 +13,12 @@ import signale, { panic } from './utils/signale'
 export const app = new Koa()
 const router = new Router()
 
-if (!IS_DEV) app.proxy = true
+if (!IS_DEV) {
+  app.proxy = true
+} else {
+  app.use(cors({ exposeHeaders: ['x-auth-token'] }))
+}
+
 app
   .use(helmet({ hsts: false }))
   .use(logger)
