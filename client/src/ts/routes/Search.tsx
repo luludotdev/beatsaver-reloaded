@@ -2,14 +2,12 @@ import React, { FunctionComponent, useState } from 'react'
 import { BeatmapList } from '../components/Beatmap'
 import { Input } from '../components/Input'
 
-import '../../sass/search.scss'
-
 const Search: FunctionComponent = () => {
   const [query, setQuery] = useState('')
 
   return (
     <>
-      <div className='searchbox thin'>
+      <div className='thin' style={{ marginBottom: '24px' }}>
         <Input
           value={query}
           onChange={v => setQuery(v)}
