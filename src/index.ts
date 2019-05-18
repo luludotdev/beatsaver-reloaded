@@ -4,7 +4,7 @@ import Router from 'koa-router'
 import mongoose from 'mongoose'
 import { IS_DEV, MONGO_URL, PORT } from './env'
 import { logger } from './middleware'
-import { apiRouter } from './routes'
+import { apiRouter, authRouter } from './routes'
 import './strategies'
 import CodedError from './utils/CodedError'
 import signale, { panic } from './utils/signale'
@@ -43,7 +43,7 @@ mongoose
   .then(async () => {
     signale.info(`Connected to MongoDB ${IS_DEV ? 'Instance' : 'Cluster'}`)
 
-    registerRoutes(apiRouter)
+    registerRoutes(apiRouter, authRouter)
     app.listen(PORT).on('listening', () => {
       signale.start(`Listening over HTTP on port ${PORT}`)
     })
