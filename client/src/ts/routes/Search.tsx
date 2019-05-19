@@ -1,4 +1,4 @@
-import { push as pushFn } from 'connected-react-router'
+import { replace as replaceFn } from 'connected-react-router'
 import { parse, stringify } from 'query-string'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { connect, MapStateToProps } from 'react-redux'
@@ -7,22 +7,25 @@ import { Input } from '../components/Input'
 import { IState } from '../store'
 
 interface IProps {
-  push: typeof pushFn
+  pathname: string
   queryStr: string
+
+  replace: typeof replaceFn
 }
 
-const Search: FunctionComponent<IProps> = ({ push, queryStr }) => {
+const Search: FunctionComponent<IProps> = ({ pathname, queryStr, replace }) => {
   const [query, setQuery] = useState('')
+
   useEffect(() => {
     const { q } = parse(queryStr)
     if (q && typeof q === 'string') setQuery(q)
-  }, [])
+  }, [pathname])
 
   const search = (q: string) => {
     setQuery(q)
 
-    if (!q) push({ search: '' })
-    else push({ search: stringify({ q }) })
+    if (!q) replace({ search: '' })
+    else replace({ search: stringify({ q }) })
   }
 
   return (
@@ -42,13 +45,15 @@ const Search: FunctionComponent<IProps> = ({ push, queryStr }) => {
 }
 
 const mapStateToProps: MapStateToProps<IProps, {}, IState> = state => ({
-  push: pushFn,
+  pathname: state.router.location.pathname,
   queryStr: state.router.location.search,
+
+  replace: replaceFn,
 })
 
 const ConnectedSearch = connect(
   mapStateToProps,
-  { push: pushFn }
+  { replace: replaceFn }
 )(Search)
 
 export default ConnectedSearch
