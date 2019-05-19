@@ -5,6 +5,7 @@ interface IRenderProps {
   maps: IBeatmap[]
   loading: boolean
   done: boolean
+  error: Error | null
 
   next: () => any
 }
@@ -31,12 +32,14 @@ type IProps = ICommonProps & IBeatmapSearch
 const search = createSearch()
 const BeatmapAPI: FunctionComponent<IProps> = ({ render, type, query }) => {
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null as Error | null)
   const [done, setDone] = useState(false)
   const [maps, setMaps] = useState([] as IBeatmap[])
 
   useEffect(() => {
     setMaps([])
     setLoading(true)
+    setError(null)
     setDone(false)
 
     search
@@ -45,10 +48,12 @@ const BeatmapAPI: FunctionComponent<IProps> = ({ render, type, query }) => {
         setLoading(false)
         setMaps(resp.value)
         setDone(resp.done)
+        setError(null)
       })
       .catch(err => {
         console.error(err)
         setLoading(false)
+        setError(err)
       })
   }, [query])
 
@@ -61,14 +66,16 @@ const BeatmapAPI: FunctionComponent<IProps> = ({ render, type, query }) => {
         setLoading(false)
         setMaps([...maps, ...resp.value])
         setDone(resp.done)
+        setError(null)
       })
       .catch(err => {
         console.error(err)
         setLoading(false)
+        setError(err)
       })
   }
 
-  return render({ maps, loading, done, next })
+  return render({ maps, loading, done, error, next })
 }
 
 export default BeatmapAPI
