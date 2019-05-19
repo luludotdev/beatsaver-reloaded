@@ -39,10 +39,7 @@ export interface IBeatmapLean {
   downloadURL: string
   coverURL: string
 
-  hashes: {
-    sha1: string
-    md5: string
-  }
+  hash: string
 }
 
 export type IBeatmapModel = IBeatmapLean & Document
@@ -91,10 +88,7 @@ const schema: Schema = new Schema({
     },
   ],
 
-  hashes: {
-    md5: { type: String, required: true, index: true, maxlength: 32 },
-    sha1: { type: String, required: true, index: true, maxlength: 40 },
-  },
+  hash: { type: String, required: true, index: true, maxlength: 40 },
 })
 
 schema.virtual('stats.upVotes').get(function(this: IBeatmapModel) {
