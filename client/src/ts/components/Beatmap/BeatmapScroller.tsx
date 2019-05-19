@@ -32,7 +32,7 @@ const BeatmapScroller: FunctionComponent<IProps> = ({
     <>
       {maps.length === 0
         ? fallback || null
-        : maps.map(m => <BeatmapResult key={m._id} {...m} />)}
+        : maps.map(m => <BeatmapResult key={m._id} map={m} />)}
 
       {!loading || done ? null : <Loader />}
 

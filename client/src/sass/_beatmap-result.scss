@@ -1,0 +1,26 @@
+div.beatmap-result {
+  margin-bottom: 4px;
+
+  & h1 {
+    padding-bottom: 4px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  & div.beatmap-container {
+    display: flex;
+
+    & div.artwork {
+      width: 180px;
+
+      & img {
+        border-radius: 10px;
+      }
+    }
+
+    & div.details {
+      margin-left: 12px;
+      flex-grow: 1;
+    }
+  }
+}
