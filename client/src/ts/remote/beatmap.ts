@@ -60,13 +60,16 @@ export const createSearch = () => {
   interface ISearchOptions {
     type: SearchType | QueryType
     query?: string
+
+    reset?: boolean
   }
 
   const fetch: (options: ISearchOptions) => Promise<ISearchResult> = async ({
     type,
     query,
+    reset,
   }) => {
-    if (type !== lastType || query !== lastQuery) nextPage = 0
+    if (reset || type !== lastType || query !== lastQuery) nextPage = 0
     if (nextPage === null) {
       return {
         done: true,
