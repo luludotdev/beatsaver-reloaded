@@ -37,6 +37,7 @@
     "connected-react-router": "^6.4.0",
     "history": "^4.9.0",
     "p-debounce": "^2.1.0",
+    "query-string": "^6.5.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-intersection-observer": "^8.23.0",
