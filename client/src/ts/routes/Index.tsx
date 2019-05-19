@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react'
+import { TextPage } from '../components/TextPage'
 
 export const Index: FunctionComponent = () => (
-  <div>
-    <h1 className='is-size-1 has-text-weight-light'>BeatSaver</h1>
+  <TextPage title='BeatSaver'>
     <p>Beat Saber's #1 unofficial beatmap distributor!</p>
-  </div>
+  </TextPage>
 )

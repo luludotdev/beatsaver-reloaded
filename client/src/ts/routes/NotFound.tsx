@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react'
+import { TextPage } from '../components/TextPage'
 
 export const NotFound: FunctionComponent = () => (
-  <div>
-    <h1 className='is-size-1 has-text-weight-light'>404</h1>
+  <TextPage title='404'>
     <p>This page doesn't exist. Use the navbar to get back on track!</p>
-  </div>
+  </TextPage>
 )
