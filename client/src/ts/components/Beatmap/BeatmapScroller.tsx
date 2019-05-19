@@ -9,7 +9,7 @@ interface IProps {
   maps: IBeatmap[]
   loading: boolean
   done: boolean
-  error: Error
+  error: Error | null
 
   fallback?: JSX.Element
   next: () => any
