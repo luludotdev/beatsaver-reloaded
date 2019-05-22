@@ -7,6 +7,7 @@ import { App } from './ts/App'
 import { history, store } from './ts/store'
 
 import './sass/global.scss'
+import './ts/init'
 
 // @ts-ignore
 import('./sass/fontawesome.scss').then(() => {

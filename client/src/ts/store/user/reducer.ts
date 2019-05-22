@@ -9,6 +9,9 @@ export const userReducer: Reducer<IUserState, IAnyAction<UserActionTypes>> = (
   action
 ) => {
   switch (action.type) {
+    case UserActionTypes.SET_USER:
+      return { ...state, login: action.payload }
+
     default:
       return state
   }

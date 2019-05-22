@@ -3,7 +3,7 @@ import koaBody from 'koa-body'
 import passport from 'koa-passport'
 import Router from 'koa-router'
 import { BCRYPT_ROUNDS } from '../env'
-import User, { IUserModel } from '../mongo/models/User'
+import User, { IRedactedUser, IUserModel } from '../mongo/models/User'
 import { issueToken } from '../strategies/jwt'
 
 const router = new Router({
@@ -30,6 +30,28 @@ router.post(
 
     ctx.set('x-auth-token', token)
     return (ctx.status = 204)
+  }
+)
+
+router.get(
+  '/me',
+  passport.authenticate('jwt', { session: false }),
+  async ctx => {
+    const user: IUserModel = ctx.state.user
+
+    interface IUserID {
+      _id: string
+    }
+
+    const userInfo: IRedactedUser & IUserID = {
+      _id: user._id,
+      admin: user.admin,
+      links: user.links,
+      username: user.username,
+      verified: user.verified,
+    }
+
+    return (ctx.body = userInfo)
   }
 )
 

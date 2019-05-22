@@ -1,12 +1,18 @@
 export enum UserActionTypes {
-  LOG_IN = '@@user/LOG_IN',
-  LOG_OUT = '@@popup/LOG_OUT',
+  SET_USER = '@@user/SET_USER',
 }
 
 export interface IUser {
   _id: string
   username: string
+
+  verified: boolean
   admin: boolean
+
+  links: {
+    steam?: string
+    oculus?: string
+  }
 }
 
 export interface IUserState {

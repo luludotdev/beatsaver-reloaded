@@ -1,20 +1,23 @@
 import mongoose, { Document, Schema } from 'mongoose'
 import withoutKeys from '../plugins/withoutKeys'
 
-export interface IUserLean {
+export interface IRedactedUser {
   username: string
-  email: string
-  password: string
-
   verified: boolean
-  verifyToken: string
+
+  admin: boolean
 
   links: {
     steam?: string
     oculus?: string
   }
+}
 
-  admin: boolean
+export interface IUserLean extends IRedactedUser {
+  email: string
+  password: string
+
+  verifyToken: string
 }
 
 export type IUserModel = IUserLean & Document
