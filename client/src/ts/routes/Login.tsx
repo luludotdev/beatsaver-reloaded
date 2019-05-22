@@ -45,7 +45,7 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
         iconClass='fas fa-lock'
       />
 
-      <button className='button' onClick={() => submit()}>
+      <button className='button is-fullwidth' onClick={() => submit()}>
         Login
       </button>
     </div>

@@ -1,15 +1,29 @@
 import React, { FunctionComponent, MouseEvent, useState } from 'react'
+import { connect, MapStateToProps } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { IState } from '../store'
+import { IUser, logout as logoutFn } from '../store/user'
 
 import Logo from '../../images/beat_saver_logo_white.png'
 import { ExtLink } from './ExtLink'
 
-export const Navbar: FunctionComponent = () => {
+interface IProps {
+  user: IUser | null
+
+  logout: typeof logoutFn
+}
+
+const Navbar: FunctionComponent<IProps> = ({ user, logout }) => {
   const [active, setActive] = useState(false)
 
   const toggle = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     setActive(!active)
+  }
+
+  const handleLogout = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    logout()
   }
 
   return (
@@ -99,12 +113,33 @@ export const Navbar: FunctionComponent = () => {
           </div>
 
           <div className='navbar-end'>
-            <Link className='navbar-item' to='/auth/login'>
-              Login
-            </Link>
+            {user === null ? (
+              <Link className='navbar-item' to='/auth/login'>
+                Login
+              </Link>
+            ) : (
+              <a className='navbar-item' onClick={e => handleLogout(e)}>
+                Logout
+              </a>
+            )}
           </div>
         </div>
       </div>
     </nav>
   )
 }
+
+const mapStateToProps: MapStateToProps<IProps, {}, IState> = state => ({
+  user: state.user.login,
+
+  logout: logoutFn,
+})
+
+const ConnectedNavbar = connect(
+  mapStateToProps,
+  {
+    logout: logoutFn,
+  }
+)(Navbar)
+
+export default ConnectedNavbar
