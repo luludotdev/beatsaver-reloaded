@@ -32,6 +32,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/adm-zip@^0.4.32":
+  version "0.4.32"
+  resolved "https://registry.yarnpkg.com/@types/adm-zip/-/adm-zip-0.4.32.tgz#6de01309af60677065d2e52b417a023303220931"
+  integrity sha512-hv1O7ySn+XvP5OeDQcJFWwVb2v+GFGO1A9aMTQ5B/bzxb7WW21O8iRhVdsKKr8QwuiagzGmPP+gsUAYZ6bRddQ==
+  dependencies:
+    "@types/node" "*"
+
 "@types/bcrypt@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/bcrypt/-/bcrypt-3.0.0.tgz#851489a9065a067cb7f3c9cbe4ce9bed8bba0876"
@@ -284,6 +291,11 @@ accepts@^1.3.5:
   dependencies:
     mime-types "~2.1.24"
     negotiator "0.6.2"
+
+adm-zip@^0.4.13:
+  version "0.4.13"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.4.13.tgz#597e2f8cc3672151e1307d3e95cddbc75672314a"
+  integrity sha512-fERNJX8sOXfel6qCBCMPvZLzENBEhZTzKqg6vrOW5pvoEaQuJhRU4ndTAh6lHOxn1I6jnz2NHra56ZODM751uw==
 
 ansi-align@^2.0.0:
   version "2.0.0"
