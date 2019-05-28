@@ -1,6 +1,7 @@
 import React, { FunctionComponent, lazy, Suspense } from 'react'
 import { Loader } from '../Loader'
 import { IBeatmapSearch } from './BeatmapAPI'
+export * from './Detail'
 
 const BeatmapAPI = lazy(() => import('./BeatmapAPI'))
 const BeatmapScroller = lazy(() => import('./BeatmapScroller'))
