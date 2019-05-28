@@ -39,4 +39,13 @@ router.get('/plays/:page?', async ctx => {
   return (ctx.body = maps)
 })
 
+router.get('/detail/:key', async ctx => {
+  const map = await Beatmap.findOne({ key: ctx.params.key })
+  if (!map) {
+    return (ctx.status = 404)
+  }
+
+  return (ctx.body = map)
+})
+
 export { router as mapsRouter }
