@@ -29,6 +29,15 @@ export const errorHandler: Middleware = async (ctx, next) => {
       }
 
       throw err
+    } else if (err.code === 'LIMIT_FILE_SIZE') {
+      const body = {
+        code: 0x00003,
+        field: err.field,
+        identifier: 'ERR_FILE_TOO_LARGE',
+      }
+
+      ctx.status = 413
+      return (ctx.body = body)
     } else if (err instanceof CodedError) {
       ctx.status = err.status
       return (ctx.body = err.body)
