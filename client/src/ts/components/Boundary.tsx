@@ -1,4 +1,5 @@
 import React, { Component, ErrorInfo } from 'react'
+import { TextPage } from './TextPage'
 
 interface IState {
   hasError: boolean
@@ -43,15 +44,16 @@ export class Boundary extends Component<{}, IState> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div>
-          <h1>BeatSaver has crashed!</h1>
+        <TextPage title='BeatSaver has crashed!'>
           {this.state.error === undefined ? null : (
-            <details style={{ maxHeight: '288px', overflowY: 'scroll' }}>
+            <details
+              style={{ maxHeight: '420px', overflowY: 'overlay' as 'scroll' }}
+            >
               <summary style={{ outline: 'none' }}>Stack Trace</summary>
               <pre>{this.state.error.stack}</pre>
             </details>
           )}
-        </div>
+        </TextPage>
       )
     }
 
