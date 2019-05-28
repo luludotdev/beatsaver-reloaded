@@ -1,4 +1,4 @@
-export interface IBeatmapInfo {
+declare interface IBeatmapInfo {
   _version: string
   _songName: string
   _songSubName: string
@@ -10,13 +10,26 @@ export interface IBeatmapInfo {
   _difficultyBeatmapSets: IBeatmapSet[]
 }
 
-export interface IBeatmapSet {
+declare interface IBeatmapSet {
   _beatmapCharacteristicName: string
   _difficultyBeatmaps: IDifficultyBeatmap[]
 }
 
-export interface IDifficultyBeatmap {
+declare interface IDifficultyBeatmap {
   _difficulty: string
   _difficultyRank: number
   _beatmapFilename: string
+}
+
+declare interface IParsedBeatmap {
+  metadata: {
+    songName: string
+    songSubName: string
+    songAuthorName: string
+    levelAuthorName: string
+
+    bpm: number
+  }
+
+  hash: string
 }

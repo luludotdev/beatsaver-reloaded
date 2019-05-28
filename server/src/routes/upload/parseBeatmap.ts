@@ -2,9 +2,10 @@ import AdmZIP from 'adm-zip'
 import { createHash } from 'crypto'
 import { validJSON } from '../../utils/json'
 import { getDataPromise } from '../../utils/zip'
-import { IBeatmapInfo, IDifficultyBeatmap } from './types'
 
-export const parseBeatmap = async (zipBuf: Buffer) => {
+export const parseBeatmap: (
+  zipBuf: Buffer
+) => Promise<IParsedBeatmap> = async zipBuf => {
   const zip = new AdmZIP(zipBuf)
 
   const info = zip.getEntry('info.dat')
@@ -38,5 +39,18 @@ export const parseBeatmap = async (zipBuf: Buffer) => {
   }
 
   const sha1 = hash.digest('hex')
-  return { sha1, beatmap: infoJSON }
+  const parsed: IParsedBeatmap = {
+    hash: sha1,
+
+    metadata: {
+      levelAuthorName: infoJSON._levelAuthorName,
+      songAuthorName: infoJSON._songAuthorName,
+      songName: infoJSON._songName,
+      songSubName: infoJSON._songSubName,
+
+      bpm: infoJSON._beatsPerMinute,
+    },
+  }
+
+  return parsed
 }
