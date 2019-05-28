@@ -34,3 +34,6 @@ node_modules
 
 # TypeScript Output
 build
+
+# CDN Folder
+cdn
