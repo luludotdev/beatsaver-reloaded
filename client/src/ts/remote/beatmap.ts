@@ -34,14 +34,10 @@ export interface IBeatmap {
     rating: number
   }
 
-  permalink: string
   downloadURL: string
   coverURL: string
 
-  hashes: {
-    sha1: string
-    md5: string
-  }
+  hash: string
 }
 
 export type IBeatmapResponse = IResponse<IBeatmap>
