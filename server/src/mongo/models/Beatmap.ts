@@ -35,9 +35,9 @@ export interface IBeatmapLean {
     direction: -1 | 1
   }>
 
-  permalink: string
   downloadURL: string
   coverURL: string
+  coverExt: string
 
   hash: string
 }
@@ -88,6 +88,7 @@ const schema: Schema = new Schema({
     },
   ],
 
+  coverExt: { type: String, required: true, maxlength: 5 },
   hash: { type: String, required: true, index: true, maxlength: 40 },
 })
 
@@ -110,8 +111,16 @@ schema.virtual('stats.rating').get(function(this: IBeatmapModel) {
   return score - (score - 0.5) * Math.pow(2, -Math.log10(total + 1))
 })
 
+schema.virtual('downloadURL').get(function(this: IBeatmapModel) {
+  return `/cdn/${this.key}/${this.hash}.zip`
+})
+
+schema.virtual('coverURL').get(function(this: IBeatmapModel) {
+  return `/cdn/${this.key}/${this.hash}${this.coverExt}`
+})
+
 schema.plugin(paginate)
-schema.plugin(withoutKeys(['__v', 'votes', 'id']))
+schema.plugin(withoutKeys(['__v', 'votes', 'id', 'coverExt']))
 schema.plugin(withVirtuals)
 
 schema.index(
