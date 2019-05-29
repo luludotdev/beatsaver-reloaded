@@ -61,11 +61,25 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
         </div>
 
         <div className='tags'>
-          <span className='tag is-easy'>Easy</span>
-          <span className='tag is-normal'>Normal</span>
-          <span className='tag is-hard'>Hard</span>
-          <span className='tag is-expert'>Expert</span>
-          <span className='tag is-expert-plus'>Expert+</span>
+          {map.metadata.difficulties.easy ? (
+            <span className='tag is-easy'>Easy</span>
+          ) : null}
+
+          {map.metadata.difficulties.normal ? (
+            <span className='tag is-normal'>Normal</span>
+          ) : null}
+
+          {map.metadata.difficulties.hard ? (
+            <span className='tag is-hard'>Hard</span>
+          ) : null}
+
+          {map.metadata.difficulties.expert ? (
+            <span className='tag is-expert'>Expert</span>
+          ) : null}
+
+          {map.metadata.difficulties.expertPlus ? (
+            <span className='tag is-expert-plus'>Expert+</span>
+          ) : null}
         </div>
       </div>
     </div>
