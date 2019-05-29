@@ -1,5 +1,6 @@
 import mongoose, { Document, PaginateModel, Schema } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
+import { IS_DEV, PORT } from '../../env'
 import withoutKeys from '../plugins/withoutKeys'
 import withVirtuals from '../plugins/withVirtuals'
 import { IUserModel } from './User'
@@ -112,11 +113,13 @@ schema.virtual('stats.rating').get(function(this: IBeatmapModel) {
 })
 
 schema.virtual('downloadURL').get(function(this: IBeatmapModel) {
-  return `/cdn/${this.key}/${this.hash}.zip`
+  const absolute = `/cdn/${this.key}/${this.hash}.zip`
+  return IS_DEV ? `http://localhost:${PORT}${absolute}` : absolute
 })
 
 schema.virtual('coverURL').get(function(this: IBeatmapModel) {
-  return `/cdn/${this.key}/${this.hash}${this.coverExt}`
+  const absolute = `/cdn/${this.key}/${this.hash}${this.coverExt}`
+  return IS_DEV ? `http://localhost:${PORT}${absolute}` : absolute
 })
 
 schema.plugin(paginate)
