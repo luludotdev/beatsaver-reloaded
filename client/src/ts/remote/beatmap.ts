@@ -23,6 +23,16 @@ export interface IBeatmap {
     levelAuthorName: string
 
     bpm: number
+
+    difficulties: {
+      easy: boolean
+      normal: boolean
+      hard: boolean
+      expert: boolean
+      expertPlus: boolean
+    }
+
+    characteristics: string[]
   }
 
   stats: {

@@ -20,6 +20,16 @@ export interface IBeatmapLean {
     levelAuthorName: string
 
     bpm: number
+
+    difficulties: {
+      easy: boolean
+      normal: boolean
+      hard: boolean
+      expert: boolean
+      expertPlus: boolean
+    }
+
+    characteristics: string[]
   }
 
   stats: {
@@ -75,6 +85,16 @@ const schema: Schema = new Schema({
     songSubName: { type: String, maxlength: 255 },
 
     bpm: { type: Number, required: true },
+
+    difficulties: {
+      easy: { type: Boolean },
+      expert: { type: Boolean },
+      expertPlus: { type: Boolean },
+      hard: { type: Boolean },
+      normal: { type: Boolean },
+    },
+
+    characteristics: [String],
   },
 
   stats: {
