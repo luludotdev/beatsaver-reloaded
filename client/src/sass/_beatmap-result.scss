@@ -32,7 +32,7 @@ div.beatmap-result {
   }
 
   & div.beatmap-content {
-    $content-padding: 6px;
+    $content-padding: 8px;
 
     flex-grow: 1;
     border-radius: 0 $radius $radius 0;
@@ -47,6 +47,19 @@ div.beatmap-result {
       margin-bottom: $content-padding;
 
       color: rgb(23, 23, 24);
+
+      & h1, h2 {
+        line-height: 1em;
+      }
+
+      & h2 {
+        margin-top: 6px;
+
+        & > span.uploaded {
+          color: rgba(0, 0, 0, 0.5);
+          font-size: 0.7em;
+        }
+      }
     }
   }
 }
