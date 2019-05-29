@@ -19,8 +19,13 @@ type IProps = IConnectedProps & IPassedProps
 const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
   const [imageError, setImageError] = useState(false)
 
+  const handleClick = (e: MouseEvent<HTMLDivElement>) => {
+    if (e.target instanceof HTMLAnchorElement) return
+    else push(`/beatmap/${map.key}`)
+  }
+
   return (
-    <div className='beatmap-result' onClick={() => push(`/beatmap/${map.key}`)}>
+    <div className='beatmap-result' onClick={e => handleClick(e)}>
       <div className='cover'>
         <img
           src={imageError ? Missing : map.coverURL}
