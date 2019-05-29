@@ -2,9 +2,13 @@ import fileType from 'file-type'
 import multer, { File, MulterIncomingMessage } from 'koa-multer'
 import passport from 'koa-passport'
 import Router from 'koa-router'
+import { MongoError } from 'mongodb'
+import { join } from 'path'
+import { CDN_PATH } from '../../constants'
 import Beatmap from '../../mongo/models/Beatmap'
 import { IUserModel } from '../../mongo/models/User'
 import CodedError from '../../utils/CodedError'
+import { mkdirp, writeFile } from '../../utils/fs'
 import { parseBeatmap } from './parseBeatmap'
 
 const ERR_NO_BEATMAP = new CodedError(
@@ -33,6 +37,13 @@ const ERR_DUPLICATE_BEATMAP = new CodedError(
   0x30004,
   'ERR_DUPLICATE_BEATMAP',
   409
+)
+
+const ERR_BEATMAP_SAVE_FAILURE = new CodedError(
+  'beatmap failed to save',
+  0x30005,
+  'ERR_BEATMAP_SAVE_FAILURE',
+  500
 )
 
 const upload = multer({
@@ -72,16 +83,31 @@ router.post(
       .sort({ key: -1 })
       .limit(1)
 
-    const nextKey = ((parseInt(latest && latest.key, 16) || 0) + 1).toString(16)
-    const newBeatmap = await Beatmap.create({
-      key: nextKey,
-      name: beatmap.metadata.songName,
-      uploader: user._id,
+    try {
+      const nextKey = ((parseInt(latest && latest.key, 16) || 0) + 1).toString(
+        16
+      )
 
-      ...beatmap,
-    })
+      const beatmapDir = join(CDN_PATH, nextKey)
+      await mkdirp(beatmapDir)
+      await writeFile(
+        join(beatmapDir, `${beatmap.hash}.zip`),
+        beatmapFile.buffer
+      )
 
-    return (ctx.body = newBeatmap)
+      const newBeatmap = await Beatmap.create({
+        key: nextKey,
+        name: beatmap.metadata.songName,
+        uploader: user._id,
+
+        ...beatmap,
+      })
+
+      return (ctx.body = newBeatmap)
+    } catch (err) {
+      if (err instanceof MongoError) throw err
+      else throw ERR_BEATMAP_SAVE_FAILURE
+    }
   }
 )
 
