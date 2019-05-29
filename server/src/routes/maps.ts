@@ -45,6 +45,7 @@ router.get('/detail/:key', async ctx => {
     return (ctx.status = 404)
   }
 
+  await map.populate('uploader').execPopulate()
   return (ctx.body = map)
 })
 
