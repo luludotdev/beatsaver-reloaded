@@ -67,6 +67,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "signale": "^1.4.0",
+    "static-koa-router": "^1.0.3",
     "uuid": "^3.3.2"
   }
 }
