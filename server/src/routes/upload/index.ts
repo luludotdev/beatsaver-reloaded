@@ -7,44 +7,16 @@ import { join } from 'path'
 import { CDN_PATH } from '../../constants'
 import Beatmap from '../../mongo/models/Beatmap'
 import { IUserModel } from '../../mongo/models/User'
-import CodedError from '../../utils/CodedError'
 import { mkdirp, writeFile } from '../../utils/fs'
 import { parseBeatmap } from './parseBeatmap'
 
-const ERR_NO_BEATMAP = new CodedError(
-  'no beatmap uploaded',
-  0x30001,
-  'ERR_NO_BEATMAP',
-  400
-)
-
-const ERR_UNKNOWN_BEATMAP = new CodedError(
-  'beatmap file type is unknown',
-  0x30002,
-  'ERR_UNKNOWN_BEATMAP',
-  400
-)
-
-const ERR_BEATMAP_NOT_ZIP = new CodedError(
-  'beatmap is not a zip',
-  0x30003,
-  'ERR_BEATMAP_NOT_ZIP',
-  400
-)
-
-const ERR_DUPLICATE_BEATMAP = new CodedError(
-  'beatmap hash already exists',
-  0x30004,
-  'ERR_DUPLICATE_BEATMAP',
-  409
-)
-
-const ERR_BEATMAP_SAVE_FAILURE = new CodedError(
-  'beatmap failed to save',
-  0x30005,
-  'ERR_BEATMAP_SAVE_FAILURE',
-  500
-)
+import {
+  ERR_BEATMAP_NOT_ZIP,
+  ERR_BEATMAP_SAVE_FAILURE,
+  ERR_DUPLICATE_BEATMAP,
+  ERR_NO_BEATMAP,
+  ERR_UNKNOWN_BEATMAP,
+} from './errors'
 
 const upload = multer({
   limits: { fileSize: 1000 * 1000 * 15 },
@@ -75,7 +47,7 @@ router.post(
       throw ERR_BEATMAP_NOT_ZIP
     }
 
-    const beatmap = await parseBeatmap(beatmapFile.buffer)
+    const { parsed: beatmap, cover } = await parseBeatmap(beatmapFile.buffer)
     const duplicates = await Beatmap.find({ hash: beatmap.hash })
     if (duplicates.length > 0) throw ERR_DUPLICATE_BEATMAP
 
@@ -93,6 +65,10 @@ router.post(
       await writeFile(
         join(beatmapDir, `${beatmap.hash}.zip`),
         beatmapFile.buffer
+      )
+      await writeFile(
+        join(beatmapDir, `${beatmap.hash}${beatmap.coverExt}`),
+        cover
       )
 
       const newBeatmap = await Beatmap.create({

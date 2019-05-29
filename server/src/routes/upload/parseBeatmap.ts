@@ -1,21 +1,49 @@
 import AdmZIP from 'adm-zip'
 import { createHash } from 'crypto'
+import imageSize from 'image-size'
 import { validJSON } from '../../utils/json'
 import { getDataPromise } from '../../utils/zip'
 
+import fileType = require('file-type')
+import {
+  ERR_BEATMAP_COVER_INVALID,
+  ERR_BEATMAP_COVER_NOT_FOUND,
+  ERR_BEATMAP_COVER_NOT_SQUARE,
+  ERR_BEATMAP_COVER_TOO_SMOL,
+  ERR_BEATMAP_DIFF_NOT_FOUND,
+  ERR_BEATMAP_INFO_INVALID,
+  ERR_BEATMAP_INFO_NOT_FOUND,
+} from './errors'
+
 export const parseBeatmap: (
   zipBuf: Buffer
-) => Promise<IParsedBeatmap> = async zipBuf => {
+) => Promise<{ parsed: IParsedBeatmap; cover: Buffer }> = async zipBuf => {
   const zip = new AdmZIP(zipBuf)
 
   const info = zip.getEntry('info.dat')
-  if (info === null) {
-    throw new Error('info.dat not found')
-  }
+  if (info === null) throw ERR_BEATMAP_INFO_NOT_FOUND
 
   const infoDAT = await getDataPromise(info, true)
-  if (!validJSON(infoDAT)) throw new Error('Invalid info.dat')
+  if (!validJSON(infoDAT)) throw ERR_BEATMAP_INFO_INVALID
   const infoJSON: IBeatmapInfo = JSON.parse(infoDAT)
+
+  const coverEntry = zip.getEntry(infoJSON._coverImageFilename)
+  if (coverEntry === null) {
+    throw ERR_BEATMAP_COVER_NOT_FOUND(infoJSON._coverImageFilename)
+  }
+
+  const cover = await getDataPromise(coverEntry)
+  const coverType = fileType(cover)
+  if (
+    coverType === undefined ||
+    (coverType.mime !== 'image/png' && coverType.mime !== 'image/jpeg')
+  ) {
+    throw ERR_BEATMAP_COVER_INVALID
+  }
+
+  const size = imageSize(cover)
+  if (size.width !== size.height) throw ERR_BEATMAP_COVER_NOT_SQUARE
+  if (size.width < 256 || size.height < 256) throw ERR_BEATMAP_COVER_TOO_SMOL
 
   const difficulties = ([] as IDifficultyBeatmap[]).concat(
     ...infoJSON._difficultyBeatmapSets.map(x => x._difficultyBeatmaps)
@@ -24,7 +52,7 @@ export const parseBeatmap: (
   for (const diff of difficulties) {
     const diffEntry = zip.getEntry(diff._beatmapFilename)
     if (diffEntry === null) {
-      throw new Error(`${diff._beatmapFilename} not found`)
+      throw ERR_BEATMAP_DIFF_NOT_FOUND(diff._beatmapFilename)
     }
   }
 
@@ -50,7 +78,9 @@ export const parseBeatmap: (
 
       bpm: infoJSON._beatsPerMinute,
     },
+
+    coverExt: `.${coverType.ext}`,
   }
 
-  return parsed
+  return { parsed, cover }
 }

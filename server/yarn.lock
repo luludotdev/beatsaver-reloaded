@@ -134,6 +134,13 @@
   resolved "https://registry.yarnpkg.com/@types/http-assert/-/http-assert-1.4.0.tgz#41d173466e396e99a14d75f7160cc997f2f9ed8b"
   integrity sha512-TZDqvFW4nQwL9DVSNJIJu4lPLttKgzRF58COa7Vs42Ki/MrhIqUbeIw0MWn4kGLiZLXB7oCBibm7nkSjPkzfKQ==
 
+"@types/image-size@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@types/image-size/-/image-size-0.7.0.tgz#a785302cdaedad7dfd985c5f2f6f721467b95de9"
+  integrity sha512-WkmNFWsC7NggeNC+2LxFJc6we3PiPf72NJUpezGNPbSe5zZ9sBcscQnSqQjYAyax3QNCyT42kNdAeT2tTvQMcQ==
+  dependencies:
+    "@types/node" "*"
+
 "@types/jsonwebtoken@*":
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.3.2.tgz#e3d5245197152346fae7ee87d5541aa5a92d0362"
@@ -1307,6 +1314,11 @@ ignore-walk@^3.0.1:
   integrity sha512-DTVlMx3IYPe0/JJcYP7Gxg7ttZZu3IInhuEhbchuqneY9wWe5Ojy2mXLBaQFUQmo0AW2r3qG7m1mg86js+gnlQ==
   dependencies:
     minimatch "^3.0.4"
+
+image-size@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.7.4.tgz#092c1e541a93511917bfc957a1fc7add21c72e87"
+  integrity sha512-GqPgxs+VkOr12aWwjSkyRzf5atzObWpFtiRuDgxCl2I/SDpZOKZFRD3iIAeAN6/usmn8SeLWRt7a8JRYK0Whbw==
 
 import-lazy@^2.1.0:
   version "2.1.0"

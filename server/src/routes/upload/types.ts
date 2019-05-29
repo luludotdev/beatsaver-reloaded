@@ -32,4 +32,5 @@ declare interface IParsedBeatmap {
   }
 
   hash: string
+  coverExt: string
 }
