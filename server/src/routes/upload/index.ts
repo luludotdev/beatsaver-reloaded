@@ -103,6 +103,7 @@ router.post(
         ...beatmap,
       })
 
+      await newBeatmap.populate('uploader').execPopulate()
       return (ctx.body = newBeatmap)
     } catch (err) {
       if (err instanceof MongoError) throw err
