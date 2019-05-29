@@ -1,40 +1,55 @@
+import { push as pushFn } from 'connected-react-router'
 import React, { FunctionComponent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IBeatmap } from '../../remote/beatmap'
 
+import { connect } from 'react-redux'
 import Missing from '../../../images/missing_image.png'
 
-interface IProps {
+interface IConnectedProps {
+  push: typeof pushFn
+}
+
+interface IPassedProps {
   map: IBeatmap
 }
 
-export const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
+type IProps = IConnectedProps & IPassedProps
+
+const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
   const [imageError, setImageError] = useState(false)
 
   return (
-    <div className='beatmap-result'>
-      <h1 className='is-size-3 has-text-weight-light'>
-        <Link to={`/beatmap/${map.key}`}>{map.name}</Link>
-      </h1>
+    <div className='beatmap-result' onClick={() => push(`/beatmap/${map.key}`)}>
+      <div className='cover'>
+        <img
+          src={imageError ? Missing : map.coverURL}
+          alt={`Artwork for ${map.name}`}
+          onError={() => setImageError(true)}
+          draggable={false}
+        />
+      </div>
 
-      <div className='beatmap-container'>
-        <div className='artwork'>
-          <img
-            src={imageError ? Missing : map.coverURL}
-            alt={`Artwork for ${map.name}`}
-            onError={() => setImageError(true)}
-          />
+      <div className='beatmap-content'>
+        <div className='details'>
+          <h1 className='is-size-3 has-text-weight-light'>{map.name}</h1>
         </div>
 
-        <div className='details'>
-          <h2 className='is-size-5'>
-            Uploaded by{' '}
-            <Link to={`/uploader/${map.uploader._id}`}>
-              {map.uploader.username}
-            </Link>
-          </h2>
+        <div className='tags'>
+          <span className='tag is-easy'>Easy</span>
+          <span className='tag is-normal'>Normal</span>
+          <span className='tag is-hard'>Hard</span>
+          <span className='tag is-expert'>Expert</span>
+          <span className='tag is-expert-plus'>Expert+</span>
         </div>
       </div>
     </div>
   )
 }
+
+const ConnectedBeatmapResult = connect(
+  null,
+  { push: pushFn }
+)(BeatmapResult)
+
+export { ConnectedBeatmapResult as BeatmapResult }

@@ -1,26 +1,77 @@
 div.beatmap-result {
-  margin-bottom: 4px;
+  $radius: 8px;
+  margin-bottom: 14px;
+  border-radius: $radius;
 
-  & h1 {
-    padding-bottom: 4px;
-    margin-bottom: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  cursor: pointer;
+
+  $transition-time: 120ms;
+  box-shadow: rgba(0, 0, 0, 0.4) 0 4px 6px 0px;
+  transition: transform $transition-time ease, box-shadow $transition-time ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: rgba(0, 0, 0, 0.6) 0 6px 10px 0px;
   }
 
-  & div.beatmap-container {
-    display: flex;
+  & div.cover {
+    $image-size: 172px;
 
-    & div.artwork {
-      width: 180px;
+    border-radius: $radius 0 0 $radius;
+    width: $image-size;
+    height: $image-size;
+    overflow: hidden;
 
-      & img {
-        border-radius: 10px;
-      }
+    & img {
+      width: $image-size;
+      height: $image-size;
+
+      border-radius: $radius 0 0 $radius;
     }
+  }
+
+  & div.beatmap-content {
+    $content-padding: 6px;
+
+    flex-grow: 1;
+    border-radius: 0 $radius $radius 0;
+    background-color: rgba(255, 255, 255, 0.92);
+    padding: $content-padding;
+
+    display: flex;
+    flex-direction: column;
 
     & div.details {
-      margin-left: 12px;
       flex-grow: 1;
+      margin-bottom: $content-padding;
+
+      color: rgb(23, 23, 24);
     }
   }
+}
+
+span.tag.is-easy {
+  color: white;
+  background-color: #3cb371;
+}
+
+span.tag.is-normal {
+  color: white;
+  background-color: #59b0f4;
+}
+
+span.tag.is-hard {
+  color: white;
+  background-color: #ff6347;
+}
+
+span.tag.is-expert {
+  color: white;
+  background-color: #bf2a42;
+}
+
+span.tag.is-expert-plus {
+  color: white;
+  background-color: #8f48db;
 }
