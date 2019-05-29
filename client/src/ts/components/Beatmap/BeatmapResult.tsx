@@ -1,33 +1,40 @@
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IBeatmap } from '../../remote/beatmap'
+
+import Missing from '../../../images/missing_image.png'
 
 interface IProps {
   map: IBeatmap
 }
 
-export const BeatmapResult: FunctionComponent<IProps> = ({ map }) => (
-  <div className='beatmap-result'>
-    <h1 className='is-size-3 has-text-weight-light'>
-      <Link to={`/beatmap/${map.key}`}>{map.name}</Link>
-    </h1>
+export const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
+  const [imageError, setImageError] = useState(false)
 
-    <div className='beatmap-container'>
-      <div className='artwork'>
-        <img
-          src='https://www.americanrealtyarlington.com/wp-content/uploads/2016/06/us-placeholder-square-1024x1024.jpg'
-          alt={`Artwork for ${map.name}`}
-        />
-      </div>
+  return (
+    <div className='beatmap-result'>
+      <h1 className='is-size-3 has-text-weight-light'>
+        <Link to={`/beatmap/${map.key}`}>{map.name}</Link>
+      </h1>
 
-      <div className='details'>
-        <h2 className='is-size-5'>
-          Uploaded by{' '}
-          <Link to={`/uploader/${map.uploader._id}`}>
-            {map.uploader.username}
-          </Link>
-        </h2>
+      <div className='beatmap-container'>
+        <div className='artwork'>
+          <img
+            src={imageError ? Missing : map.coverURL}
+            alt={`Artwork for ${map.name}`}
+            onError={() => setImageError(true)}
+          />
+        </div>
+
+        <div className='details'>
+          <h2 className='is-size-5'>
+            Uploaded by{' '}
+            <Link to={`/uploader/${map.uploader._id}`}>
+              {map.uploader.username}
+            </Link>
+          </h2>
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
