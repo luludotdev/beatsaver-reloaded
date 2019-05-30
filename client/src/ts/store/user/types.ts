@@ -16,5 +16,5 @@ export interface IUser {
 }
 
 export interface IUserState {
-  login: IUser | null
+  login: IUser | null | undefined
 }
