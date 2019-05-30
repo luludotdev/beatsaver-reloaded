@@ -1,0 +1,25 @@
+div.field label.label {
+  $transition: 100ms;
+
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: color $transition ease;
+
+  &::after {
+    display: inline-block;
+    content: attr(data-error);
+    text-transform: initial;
+    font-style: italic;
+    font-weight: 400;
+
+    transition: opacity $transition ease, transform $transition ease;
+    opacity: 0;
+    transform: translateX(-2px);
+  }
+
+  &.has-text-danger::after {
+    opacity: 1;
+    transform: translateX(4px);
+  }
+}

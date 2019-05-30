@@ -3,7 +3,7 @@ import { parse, stringify } from 'query-string'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { connect, MapStateToProps } from 'react-redux'
 import { BeatmapList } from '../components/Beatmap'
-import { Input } from '../components/Input'
+import { IconInput } from '../components/Input'
 import { IState } from '../store'
 
 interface IProps {
@@ -31,7 +31,7 @@ const Search: FunctionComponent<IProps> = ({ pathname, queryStr, replace }) => {
   return (
     <>
       <div className='thin' style={{ marginBottom: '24px' }}>
-        <Input
+        <IconInput
           value={query}
           onChange={v => search(v)}
           placeholder='Search BeatSaver'
