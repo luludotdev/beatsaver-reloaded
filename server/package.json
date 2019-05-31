@@ -20,6 +20,7 @@
   "devDependencies": {
     "@types/adm-zip": "^0.4.32",
     "@types/bcrypt": "^3.0.0",
+    "@types/chunk": "^0.0.0",
     "@types/dotenv": "^6.1.1",
     "@types/image-size": "^0.7.0",
     "@types/koa": "^2.0.48",
@@ -50,6 +51,7 @@
     "@koa/cors": "^3.0.0",
     "adm-zip": "^0.4.13",
     "bcrypt": "^3.0.6",
+    "chunk": "^0.0.2",
     "dotenv": "^8.0.0",
     "file-type": "^11.1.0",
     "image-size": "^0.7.4",
