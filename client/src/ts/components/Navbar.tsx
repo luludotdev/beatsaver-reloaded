@@ -57,16 +57,16 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout }) => {
               <a className='navbar-link'>Sort By</a>
 
               <div className='navbar-dropdown'>
+                <Link className='navbar-item' to='/browse/hot'>
+                  Hot
+                </Link>
+
                 <Link className='navbar-item' to='/browse/downloads'>
                   Downloads
                 </Link>
 
                 <Link className='navbar-item' to='/browse/plays'>
                   Plays
-                </Link>
-
-                <Link className='navbar-item' to='/browse/rating'>
-                  Rating
                 </Link>
               </div>
             </div>

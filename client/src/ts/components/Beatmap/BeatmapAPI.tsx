@@ -15,7 +15,7 @@ interface ICommonProps {
   render: (props: IRenderProps) => JSX.Element
 }
 
-export type SearchType = 'latest' | 'downloads' | 'plays'
+export type SearchType = 'latest' | 'hot' | 'downloads' | 'plays'
 interface ISearchProps {
   type: SearchType
   query?: string
