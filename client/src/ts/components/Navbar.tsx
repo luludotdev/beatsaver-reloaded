@@ -8,7 +8,7 @@ import Logo from '../../images/beat_saver_logo_white.png'
 import { ExtLink } from './ExtLink'
 
 interface IProps {
-  user: IUser | null
+  user: IUser | null | undefined
 
   logout: typeof logoutFn
 }
@@ -113,7 +113,7 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout }) => {
           </div>
 
           <div className='navbar-end'>
-            {user === null ? (
+            {!user ? (
               <Link className='navbar-item' to='/auth/login'>
                 Login
               </Link>
