@@ -1,4 +1,5 @@
-import mongoose, { Document, PaginateModel, Schema } from 'mongoose'
+import mongoose, { AggregatePaginateModel, Document, Schema } from 'mongoose'
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 import paginate from 'mongoose-paginate-v2'
 import { IS_DEV, PORT } from '../../env'
 import withoutKeys from '../plugins/withoutKeys'
@@ -143,6 +144,7 @@ schema.virtual('coverURL').get(function(this: IBeatmapModel) {
 })
 
 schema.plugin(paginate)
+schema.plugin(aggregatePaginate)
 schema.plugin(withoutKeys(['__v', 'votes', 'id', 'coverExt']))
 schema.plugin(withVirtuals)
 
@@ -169,5 +171,5 @@ schema.index(
 const Beatmap = mongoose.model<IBeatmapModel>(
   'beatmap',
   schema
-) as PaginateModel<IBeatmapModel>
+) as AggregatePaginateModel<IBeatmapModel>
 export default Beatmap

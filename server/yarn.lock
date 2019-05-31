@@ -1978,6 +1978,11 @@ mongodb@3.2.4:
     mongodb-core "3.2.4"
     safe-buffer "^5.1.2"
 
+mongoose-aggregate-paginate-v2@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/mongoose-aggregate-paginate-v2/-/mongoose-aggregate-paginate-v2-1.0.2.tgz#4b1d82c1ecc9879645cfc65609ffec9cb2cac1ef"
+  integrity sha512-iKKtSzmkVMDodZBGiA1AWlOsZ4L3tO144xo1hnF/HcKpIC3Y9o+E1kqonOYymV6IR37oNT4gxAOAyHBia8E/0w==
+
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
