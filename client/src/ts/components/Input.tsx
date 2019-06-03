@@ -7,6 +7,8 @@ interface IProps {
   autoFocus?: boolean
   disabled?: boolean
   readOnly?: boolean
+  autoComplete?: 'on' | 'off'
+  autoCapitalize?: 'on' | 'off'
 
   label?: string
   errorLabel?: string
@@ -26,6 +28,8 @@ const RawInput: FunctionComponent<IProps> = ({
   autoFocus,
   disabled,
   readOnly,
+  autoComplete,
+  autoCapitalize,
 
   size,
   style,
@@ -52,6 +56,8 @@ const RawInput: FunctionComponent<IProps> = ({
       autoFocus={autoFocus}
       disabled={disabled}
       readOnly={readOnly}
+      autoComplete={autoComplete}
+      autoCapitalize={autoCapitalize}
       onKeyPress={e => {
         if (e.key === 'Enter' && typeof onSubmit === 'function') {
           onSubmit()
@@ -103,3 +109,43 @@ export const IconInput: FunctionComponent<IProps & IIconProps> = props => (
     </div>
   </div>
 )
+
+interface ITextareaProps extends Omit<IProps, 'rounded'> {
+  rows?: number
+  maxLength?: number
+  fixed?: boolean
+}
+
+export const TextareaInput: FunctionComponent<ITextareaProps> = props => {
+  const sizeClass = props.size ? `is-${props.size}` : undefined
+  const styleClass = props.style ? `is-${props.style}` : undefined
+  const fixedClass = props.fixed ? 'has-fixed-size' : undefined
+
+  const classes = ['textarea', sizeClass, styleClass, fixedClass]
+    .filter(x => x !== undefined)
+    .join(' ')
+
+  return (
+    <div className='field'>
+      <RawLabel {...props} />
+
+      <textarea
+        className={classes}
+        value={props.value}
+        onChange={e => props.onChange(e.target.value)}
+        autoFocus={props.autoFocus}
+        disabled={props.disabled}
+        readOnly={props.readOnly}
+        autoComplete={props.autoComplete}
+        autoCapitalize={props.autoCapitalize}
+        rows={props.rows}
+        maxLength={props.maxLength}
+        onKeyPress={e => {
+          if (e.key === 'Enter' && typeof props.onSubmit === 'function') {
+            props.onSubmit()
+          }
+        }}
+      />
+    </div>
+  )
+}
