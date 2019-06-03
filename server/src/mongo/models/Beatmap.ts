@@ -42,8 +42,8 @@ export interface IBeatmapLean {
   }
 
   votes: Array<{
-    user: IUserModel['_id']
     direction: -1 | 1
+    voterUID: string
   }>
 
   downloadURL: string
@@ -105,7 +105,7 @@ const schema: Schema = new Schema({
   votes: [
     {
       direction: { type: Number, required: true, default: 1, min: -1, max: 1 },
-      user: { type: Schema.Types.ObjectId, required: true, index: true },
+      voterUID: { type: String, required: true, index: true },
     },
   ],
 
