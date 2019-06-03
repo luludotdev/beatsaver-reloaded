@@ -1,0 +1,12 @@
+details.details {
+  margin-bottom: 12px;
+
+  & summary {
+    font-size: 0.9em;
+    text-transform: uppercase;
+    font-weight: bold;
+
+    outline: none;
+    cursor: pointer;
+  }
+}
