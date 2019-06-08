@@ -1,6 +1,7 @@
 import chunk from 'chunk'
 import Router from 'koa-router'
 import { RESULTS_PER_PAGE } from '../env'
+import { cache } from '../middleware/cache'
 import Beatmap from '../mongo/models/Beatmap'
 import { paginate } from '../mongo/plugins/paginate'
 
@@ -8,7 +9,9 @@ const router = new Router({
   prefix: '/maps',
 })
 
-router.get('/latest/:page?', async ctx => {
+const mapCache = cache({ prefix: 'maps', expire: 60 })
+
+router.get('/latest/:page?', mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const maps = await paginate(
     Beatmap,
@@ -19,7 +22,7 @@ router.get('/latest/:page?', async ctx => {
   return (ctx.body = maps)
 })
 
-router.get('/downloads/:page?', async ctx => {
+router.get('/downloads/:page?', mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const maps = await paginate(
     Beatmap,
@@ -30,7 +33,7 @@ router.get('/downloads/:page?', async ctx => {
   return (ctx.body = maps)
 })
 
-router.get('/plays/:page?', async ctx => {
+router.get('/plays/:page?', mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const maps = await paginate(
     Beatmap,
@@ -41,7 +44,7 @@ router.get('/plays/:page?', async ctx => {
   return (ctx.body = maps)
 })
 
-router.get('/hot/:page?', async ctx => {
+router.get('/hot/:page?', mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
 
   interface IResult {
