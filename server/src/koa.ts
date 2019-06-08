@@ -6,6 +6,7 @@ import { IS_DEV } from './env'
 import { logger } from './middleware'
 import { cacheHeaders } from './middleware/cache'
 import { errorHandler } from './middleware/errors'
+import { realIP } from './middleware/realIP'
 import { routes } from './routes'
 
 export const app = new Koa()
@@ -18,6 +19,7 @@ if (!IS_DEV) {
 }
 
 app
+  .use(realIP)
   .use(helmet({ hsts: false }))
   .use(logger)
   .use(errorHandler)

@@ -4,9 +4,6 @@ import signale from '../utils/signale'
 export const logger: Middleware = async (ctx, next) => {
   await next()
 
-  const ip =
-    ctx.headers['cf-connecting-ip'] || ctx.headers['x-forwarded-for'] || ctx.ip
-
   const httpVersion = `${ctx.req.httpVersionMajor}.${ctx.req.httpVersionMinor}`
 
   const responseLength = ctx.status === 204 ? 0 : ctx.response.length || -1
@@ -16,5 +13,5 @@ export const logger: Middleware = async (ctx, next) => {
   const ua = ctx.headers['user-agent'] || '-'
   const headers = `"${referrer}" "${ua}"`
 
-  signale.info(`${ip} - "${reqInfo}" ${resInfo} ${headers}`)
+  signale.info(`${ctx.realIP} - "${reqInfo}" ${resInfo} ${headers}`)
 }
