@@ -2,6 +2,33 @@ import Redis from 'ioredis'
 import { Middleware } from 'koa'
 import redisCache, { CacheOptions } from 'koa-redis-cache'
 import { CACHE_DRIVER, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } from '../env'
+import signale from '../utils/signale'
+
+const redis =
+  CACHE_DRIVER === 'redis'
+    ? new Redis({
+        host: REDIS_HOST,
+        password: REDIS_PASSWORD,
+        port: REDIS_PORT,
+      })
+    : undefined
+
+export const awaitRedis: () => Promise<void> = () =>
+  new Promise(resolve => {
+    if (redis === undefined) return resolve()
+    redis.on('ready', () => resolve())
+  })
+
+if (redis) {
+  redis
+    .on('error', () => {
+      signale.error('Failed to connect to Redis')
+      process.exit(1)
+    })
+    .on('reconnecting', () => {
+      signale.warn('Reconnecting to Redis...')
+    })
+}
 
 const noCache: Middleware = (_, next) => next()
 
@@ -46,13 +73,7 @@ export const clearCache: (prefix?: string) => Promise<void> = (
   prefix = 'koa-redis-cache'
 ) =>
   new Promise((resolve, reject) => {
-    if (CACHE_DRIVER !== 'redis') return resolve()
-
-    const redis = new Redis({
-      host: REDIS_HOST,
-      password: REDIS_PASSWORD,
-      port: REDIS_PORT,
-    })
+    if (redis === undefined) return resolve()
 
     const keys: string[] = []
     const stream = redis.scanStream({ match: `${prefix}:*` })

@@ -16,7 +16,7 @@ try {
 
 export const JWT_SECRET = process.env.JWT_SECRET as string
 if (JWT_SECRET.length < 32) {
-  signale.warn('JWT Secret does not meet security recommendations')
+  signale.warn('JWT Secret does not meet security recommendations!')
 }
 
 const IS_PROD =
@@ -45,6 +45,12 @@ export const RESULTS_PER_PAGE =
 export const CACHE_DRIVER = (process.env.CACHE_DRIVER || 'none') as
   | 'redis'
   | 'none'
+
+if (CACHE_DRIVER === 'none') {
+  signale.warn(
+    'Route caching is disabled! This is not recommended for production.'
+  )
+}
 
 const redisPort = 6379
 export const REDIS_HOST = process.env.REDIS_HOST

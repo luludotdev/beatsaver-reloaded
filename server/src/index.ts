@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import { IS_DEV, MONGO_URL, PORT } from './env'
 import { app } from './koa'
+import { awaitRedis } from './middleware/cache'
 import './strategies'
 import signale, { panic } from './utils/signale'
 
@@ -10,6 +11,11 @@ mongoose
   .connect(MONGO_URL, { useNewUrlParser: true })
   .then(async () => {
     signale.info(`Connected to MongoDB ${IS_DEV ? 'Instance' : 'Cluster'}`)
+
+    return awaitRedis()
+  })
+  .then(() => {
+    signale.info('Connected to Redis Cache')
 
     app.listen(PORT).on('listening', () => {
       signale.start(`Listening over HTTP on port ${PORT}`)
