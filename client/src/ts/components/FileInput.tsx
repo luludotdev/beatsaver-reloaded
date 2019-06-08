@@ -2,6 +2,7 @@ import React, { ChangeEvent, FunctionComponent } from 'react'
 
 interface IProps {
   label: string
+  errorLabel?: string
   file: File | null
   accept?: string
 
@@ -10,6 +11,7 @@ interface IProps {
 
 export const FileInput: FunctionComponent<IProps> = ({
   label,
+  errorLabel,
   file,
   accept,
   onChange,
@@ -26,7 +28,12 @@ export const FileInput: FunctionComponent<IProps> = ({
 
   return (
     <div className='field'>
-      <label className='label'>{label}</label>
+      <label
+        className={`label ${errorLabel ? 'has-text-danger' : ''}`}
+        data-error={errorLabel ? `${label ? ' - ' : ''}${errorLabel}` : null}
+      >
+        {label}
+      </label>
 
       <div className='file has-name is-fullwidth'>
         <label className='file-label'>

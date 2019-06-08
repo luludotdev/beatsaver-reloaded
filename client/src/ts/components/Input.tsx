@@ -4,6 +4,7 @@ interface IProps {
   value: string
   type?: 'text' | 'password' | 'email' | 'tel'
   placeholder?: string
+  maxLength?: number
   autoFocus?: boolean
   disabled?: boolean
   readOnly?: boolean
@@ -25,6 +26,7 @@ const RawInput: FunctionComponent<IProps> = ({
   type,
   value,
   placeholder,
+  maxLength,
   autoFocus,
   disabled,
   readOnly,
@@ -52,7 +54,12 @@ const RawInput: FunctionComponent<IProps> = ({
       className={classes}
       value={value}
       placeholder={placeholder}
-      onChange={e => onChange(e.target.value)}
+      onChange={e => {
+        if (typeof onChange !== 'function') return false
+        if (maxLength && e.target.value.length > maxLength) return false
+
+        return onChange(e.target.value)
+      }}
       autoFocus={autoFocus}
       disabled={disabled}
       readOnly={readOnly}

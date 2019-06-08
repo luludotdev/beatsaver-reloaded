@@ -8,6 +8,7 @@ import { NotFound } from './routes/NotFound'
 import Search from './routes/Search'
 
 const Login = lazy(() => import('./routes/Login'))
+const Upload = lazy(() => import('./routes/Upload'))
 
 export const Routes: FunctionComponent = () => (
   <Switch>
@@ -20,6 +21,8 @@ export const Routes: FunctionComponent = () => (
     <Route path='/search' component={Search} />
 
     <Route path='/auth/login' component={Login} />
+
+    <Route path='/user/upload' component={Upload} />
 
     <Route exact path='/' component={Index} />
     <Route component={NotFound} />

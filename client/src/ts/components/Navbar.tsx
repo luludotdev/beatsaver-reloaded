@@ -118,9 +118,15 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout }) => {
                 Login
               </Link>
             ) : (
-              <a className='navbar-item' onClick={e => handleLogout(e)}>
-                Logout
-              </a>
+              <>
+                <Link className='navbar-item' to='/user/upload'>
+                  Upload
+                </Link>
+
+                <a className='navbar-item' onClick={e => handleLogout(e)}>
+                  Logout
+                </a>
+              </>
             )}
           </div>
         </div>

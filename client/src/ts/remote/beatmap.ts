@@ -1,7 +1,6 @@
 import pDebounce from 'p-debounce'
 import { QueryType, SearchType } from '../components/Beatmap/BeatmapAPI'
 import { axios } from '../utils/axios'
-import { IResponse } from './response'
 
 export interface IBeatmap {
   _id: string
