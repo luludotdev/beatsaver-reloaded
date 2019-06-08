@@ -77,6 +77,18 @@ export const parseBeatmap: (
       songSubName: infoJSON._songSubName,
 
       bpm: infoJSON._beatsPerMinute,
+
+      difficulties: {
+        easy: difficulties.some(x => x._difficultyRank === 1),
+        expert: difficulties.some(x => x._difficultyRank === 7),
+        expertPlus: difficulties.some(x => x._difficultyRank === 9),
+        hard: difficulties.some(x => x._difficultyRank === 5),
+        normal: difficulties.some(x => x._difficultyRank === 3),
+      },
+
+      characteristics: infoJSON._difficultyBeatmapSets.map(
+        x => x._beatmapCharacteristicName
+      ),
     },
 
     coverExt: `.${coverType.ext}`,

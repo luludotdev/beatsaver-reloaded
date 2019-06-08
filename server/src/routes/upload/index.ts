@@ -32,7 +32,8 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   async ctx => {
     const user: IUserModel = ctx.state.user
-    const { files: f } = ctx.req as MulterIncomingMessage
+    const { files: f, body } = ctx.req as MulterIncomingMessage
+    const { name, description } = body || ({} as any)
     const files = f as File[]
 
     const beatmapFile = files.find(x => x.fieldname === 'beatmap')
@@ -72,8 +73,9 @@ router.post(
       )
 
       const newBeatmap = await Beatmap.create({
+        description,
         key: nextKey,
-        name: beatmap.metadata.songName,
+        name,
         uploader: user._id,
 
         ...beatmap,
@@ -82,8 +84,10 @@ router.post(
       await newBeatmap.populate('uploader').execPopulate()
       return (ctx.body = newBeatmap)
     } catch (err) {
-      if (err instanceof MongoError) throw err
-      else throw ERR_BEATMAP_SAVE_FAILURE
+      if (err instanceof MongoError || err.name === 'ValidationError') throw err
+
+      console.error(err)
+      throw ERR_BEATMAP_SAVE_FAILURE
     }
   }
 )

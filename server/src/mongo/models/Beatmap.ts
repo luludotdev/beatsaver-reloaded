@@ -87,14 +87,14 @@ const schema: Schema = new Schema({
     bpm: { type: Number, required: true },
 
     difficulties: {
-      easy: { type: Boolean },
-      expert: { type: Boolean },
-      expertPlus: { type: Boolean },
-      hard: { type: Boolean },
-      normal: { type: Boolean },
+      easy: { type: Boolean, required: true },
+      expert: { type: Boolean, required: true },
+      expertPlus: { type: Boolean, required: true },
+      hard: { type: Boolean, required: true },
+      normal: { type: Boolean, required: true },
     },
 
-    characteristics: [String],
+    characteristics: { type: [String], default: [] },
   },
 
   stats: {
