@@ -38,7 +38,9 @@ export interface IBeatmapLean {
 
     upVotes: number
     downVotes: number
+
     rating: number
+    heat: number
   }
 
   votes: Array<{
@@ -130,6 +132,24 @@ schema.virtual('stats.rating').get(function(this: IBeatmapModel) {
 
   const score = upVotes / total
   return score - (score - 0.5) * Math.pow(2, -Math.log10(total + 1))
+})
+
+schema.virtual('stats.heat').get(function(this: IBeatmapModel) {
+  const epoch = new Date(Date.UTC(1970, 0, 1))
+  const seconds =
+    (this.uploaded.getTime() - epoch.getTime()) / 1000 - 1525132800
+
+  const upVotes = this.votes.filter(x => x.direction === 1).length
+  const downVotes = this.votes.filter(x => x.direction === -1).length
+
+  const score = upVotes - downVotes
+  const absolute = Math.abs(score)
+  const sign = score < 0 ? -1 : score > 0 ? 1 : 0
+
+  const order = Math.log10(Math.max(absolute, 1))
+  const heat = sign * order + seconds / 45000
+
+  return heat.toFixed(7)
 })
 
 schema.virtual('downloadURL').get(function(this: IBeatmapModel) {

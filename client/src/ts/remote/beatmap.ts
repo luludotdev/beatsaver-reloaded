@@ -40,7 +40,9 @@ export interface IBeatmap {
 
     upVotes: number
     downVotes: number
+
     rating: number
+    heat: number
   }
 
   downloadURL: string
