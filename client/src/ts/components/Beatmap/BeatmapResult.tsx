@@ -37,6 +37,14 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
       ? timeAgo.format(uploaded)
       : dateFormat(uploaded, 'yyyy/mm/dd')
 
+  const characteristics = map.metadata.characteristics.map(characteristic =>
+    characteristic
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, str => str.toUpperCase())
+      .trim()
+      .replace(/(  )/g, ' ')
+  )
+
   return (
     <div className='beatmap-result' onClick={e => handleClick(e)}>
       <div className='cover'>
