@@ -18,7 +18,15 @@ router.get('/key/:key', async ctx => {
 })
 
 router.get('/hash/:hash', async ctx => {
-  return (ctx.status = 501)
+  const { hash } = ctx.params
+
+  const map = await Beatmap.findOne({ hash })
+  if (!map) return (ctx.status = 404)
+
+  map.stats.downloads += 1
+  await map.save()
+
+  return ctx.redirect(map.downloadURL)
 })
 
 export { router as downloadRouter }
