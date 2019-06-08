@@ -41,3 +41,13 @@ const defaultResultsPerPage = 10
 export const RESULTS_PER_PAGE =
   parseInt(process.env.RESULTS_PER_PAGE || `${defaultResultsPerPage}`, 10) ||
   defaultResultsPerPage
+
+export const CACHE_DRIVER = (process.env.CACHE_DRIVER || 'none') as
+  | 'redis'
+  | 'none'
+
+const redisPort = 6379
+export const REDIS_HOST = process.env.REDIS_HOST
+export const REDIS_PASSWORD = process.env.REDIS_PASSWORD
+export const REDIS_PORT =
+  parseInt(process.env.REDIS_PORT || `${redisPort}`, 10) || redisPort
