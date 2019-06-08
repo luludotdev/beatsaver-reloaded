@@ -14,7 +14,7 @@ router.get('/key/:key', async ctx => {
   map.stats.downloads += 1
   await map.save()
 
-  return ctx.redirect(map.downloadURL)
+  return ctx.redirect(map.directDownload)
 })
 
 router.get('/hash/:hash', async ctx => {
@@ -26,7 +26,7 @@ router.get('/hash/:hash', async ctx => {
   map.stats.downloads += 1
   await map.save()
 
-  return ctx.redirect(map.downloadURL)
+  return ctx.redirect(map.directDownload)
 })
 
 export { router as downloadRouter }

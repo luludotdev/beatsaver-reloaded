@@ -48,6 +48,7 @@ export interface IBeatmapLean {
     voterUID: string
   }>
 
+  directDownload: string
   downloadURL: string
   coverURL: string
   coverExt: string
@@ -152,8 +153,13 @@ schema.virtual('stats.heat').get(function(this: IBeatmapModel) {
   return heat.toFixed(7)
 })
 
-schema.virtual('downloadURL').get(function(this: IBeatmapModel) {
+schema.virtual('directDownload').get(function(this: IBeatmapModel) {
   const absolute = `/cdn/${this.key}/${this.hash}.zip`
+  return IS_DEV ? `http://localhost:${PORT}${absolute}` : absolute
+})
+
+schema.virtual('downloadURL').get(function(this: IBeatmapModel) {
+  const absolute = `/download/key/${this.key}`
   return IS_DEV ? `http://localhost:${PORT}${absolute}` : absolute
 })
 
@@ -163,7 +169,7 @@ schema.virtual('coverURL').get(function(this: IBeatmapModel) {
 })
 
 schema.plugin(paginate)
-schema.plugin(withoutKeys(['__v', 'votes', 'id', 'coverExt']))
+schema.plugin(withoutKeys(['__v', 'votes', 'id', 'coverExt', 'directDownload']))
 schema.plugin(withVirtuals)
 
 schema.index(
