@@ -31,6 +31,17 @@ export const cache = (opts?: CacheOptions) => {
   return redisCache(options)
 }
 
+export const cacheHeaders: Middleware = async (ctx, next) => {
+  await next()
+
+  ctx.set(
+    'X-Cache-Status',
+    ctx.response.headers['x-koa-redis-cache'] === 'true' ? 'HIT' : 'MISS'
+  )
+
+  ctx.remove('X-Koa-Redis-Cache')
+}
+
 export const clearCache: (prefix?: string) => Promise<void> = (
   prefix = 'koa-redis-cache'
 ) =>

@@ -4,6 +4,7 @@ import helmet from 'koa-helmet'
 import Router from 'koa-router'
 import { IS_DEV } from './env'
 import { logger } from './middleware'
+import { cacheHeaders } from './middleware/cache'
 import { errorHandler } from './middleware/errors'
 import { routes } from './routes'
 
@@ -20,6 +21,7 @@ app
   .use(helmet({ hsts: false }))
   .use(logger)
   .use(errorHandler)
+  .use(cacheHeaders)
 
 routes.forEach(r => router.use(r.routes(), r.allowedMethods()))
 app.use(router.routes()).use(router.allowedMethods())
