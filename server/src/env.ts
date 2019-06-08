@@ -35,9 +35,9 @@ export const PORT =
 
 const defaultRounds = 12
 export const BCRYPT_ROUNDS =
-  parseInt(process.env.PORT || `${defaultRounds}`, 10) || defaultRounds
+  parseInt(process.env.BCRYPT_ROUNDS || `${defaultRounds}`, 10) || defaultRounds
 
 const defaultResultsPerPage = 10
 export const RESULTS_PER_PAGE =
-  parseInt(process.env.PORT || `${defaultResultsPerPage}`, 10) ||
+  parseInt(process.env.RESULTS_PER_PAGE || `${defaultResultsPerPage}`, 10) ||
   defaultResultsPerPage
