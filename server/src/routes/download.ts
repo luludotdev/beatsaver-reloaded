@@ -1,9 +1,15 @@
 import Router from 'koa-router'
+import { rateLimit } from '../middleware/ratelimit'
 import Beatmap from '../mongo/models/Beatmap'
 
 const router = new Router({
   prefix: '/download',
-})
+}).use(
+  rateLimit({
+    duration: 1000,
+    max: 1,
+  })
+)
 
 router.get('/key/:key', async ctx => {
   const { key } = ctx.params
