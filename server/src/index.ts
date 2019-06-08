@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { IS_DEV, MONGO_URL, PORT } from './env'
 import { app } from './koa'
-import { awaitRedis } from './middleware/cache'
+import { awaitCacheDB, awaitRateLimitDB } from './redis'
 import './strategies'
 import signale, { panic } from './utils/signale'
 
@@ -9,14 +9,11 @@ if (IS_DEV) signale.warn('Running in development environment!')
 mongoose.set('useCreateIndex', true)
 mongoose
   .connect(MONGO_URL, { useNewUrlParser: true })
-  .then(async () => {
+  .then(() => {
     signale.info(`Connected to MongoDB ${IS_DEV ? 'Instance' : 'Cluster'}`)
-
-    return awaitRedis()
+    return Promise.all([awaitCacheDB(), awaitRateLimitDB()])
   })
   .then(() => {
-    signale.info('Connected to Redis Cache')
-
     app.listen(PORT).on('listening', () => {
       signale.start(`Listening over HTTP on port ${PORT}`)
     })
