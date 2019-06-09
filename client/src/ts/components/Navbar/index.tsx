@@ -2,11 +2,11 @@ import { push as pushFn } from 'connected-react-router'
 import React, { FunctionComponent, MouseEvent, useState } from 'react'
 import { connect, MapStateToProps } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { IState } from '../store'
-import { IUser, logout as logoutFn } from '../store/user'
+import { IState } from '../../store'
+import { IUser, logout as logoutFn } from '../../store/user'
 
-import Logo from '../../images/beat_saver_logo_white.png'
-import { ExtLink } from './ExtLink'
+import Logo from '../../../images/beat_saver_logo_white.png'
+import { ExtLink } from './../ExtLink'
 
 interface IProps {
   user: IUser | null | undefined
