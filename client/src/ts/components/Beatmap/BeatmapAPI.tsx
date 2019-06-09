@@ -21,7 +21,7 @@ interface ISearchProps {
   query?: string
 }
 
-export type QueryType = 'text' | 'hash'
+export type QueryType = 'text' | 'hash' | 'uploader'
 interface IQueryProps {
   type: QueryType
   query: string

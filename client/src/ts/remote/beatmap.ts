@@ -84,15 +84,18 @@ export const createSearch = () => {
       }
     }
 
+    const isUser = type === 'uploader'
     const isSearch = type === 'text' || type === 'hash'
-    if (isSearch && !query) {
+    if ((isUser || isSearch) && !query) {
       return {
         done: true,
         value: [],
       }
     }
 
-    const url = isSearch
+    const url = isUser
+      ? `/maps/${type}/${query}/${nextPage}`
+      : isSearch
       ? `/search/${type}/${nextPage}?q=${encodeURIComponent(query || '')}`
       : `/maps/${type}/${nextPage}`
 

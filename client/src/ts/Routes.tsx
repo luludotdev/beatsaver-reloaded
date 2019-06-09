@@ -6,6 +6,7 @@ import { Downloads, Hot, Latest, Plays } from './routes/Browse'
 import { Index } from './routes/Index'
 import { NotFound } from './routes/NotFound'
 import Search from './routes/Search'
+import { Uploader } from './routes/Uploader'
 
 const Login = lazy(() => import('./routes/Login'))
 const Upload = lazy(() => import('./routes/Upload'))
@@ -17,6 +18,7 @@ export const Routes: FunctionComponent = () => (
     <Route path='/browse/downloads' component={Downloads} />
     <Route path='/browse/plays' component={Plays} />
     <Route path='/beatmap/:key' component={Beatmap} />
+    <Route path='/uploader/:id' component={Uploader} />
 
     <Route path='/search' component={Search} />
 
