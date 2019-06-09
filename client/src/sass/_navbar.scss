@@ -1,0 +1,44 @@
+div.navbar-item.navbar-divi {
+  user-select: none;
+
+  $divi-color: rgba($tex, 0.4);
+  &::after {
+    color: $divi-color;
+    content: '|';
+  }
+
+  @media screen and (max-width: 1023px) {
+    &::after {
+      content: ' ';
+      position: absolute;
+
+      $padding: 12px;
+      left: $padding;
+      right: $padding;
+
+      height: 2px;
+      background-color: $divi-color;
+    }
+
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .navbar-menu {
+    background-color: darken($dark, 4);
+  }
+
+  a.navbar-item, .navbar-link {
+    color: darken($tex, 12);
+  }
+
+  a.navbar-item:hover, a.navbar-item.is-active, .navbar-link:hover, .navbar-link.is-active {
+    color: $tex;
+    background-color: lighten($dark, 2);
+  }
+
+  .navbar-link:not(.is-arrowless)::after {
+    border-color: $tex;
+  }
+}
