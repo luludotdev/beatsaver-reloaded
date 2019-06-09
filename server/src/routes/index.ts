@@ -7,6 +7,7 @@ import { downloadRouter } from './download'
 import { mapsRouter } from './maps'
 import { searchRouter } from './search'
 import { uploadRouter } from './upload'
+import { voteRouter } from './vote'
 
 export const routes: Router[] = [
   authRouter,
@@ -14,6 +15,7 @@ export const routes: Router[] = [
   mapsRouter,
   searchRouter,
   uploadRouter,
+  voteRouter,
 ]
 
 if (IS_DEV) {
