@@ -156,6 +156,7 @@ router.get('/hot/:page?', mapCache, async ctx => {
     .sort((a, b) => b.score - a.score)
     .map(({ map }) => map)
 
+  await Promise.all(docs.map(d => d.populate('uploader').execPopulate()))
   return (ctx.body = { docs, totalDocs, lastPage, prevPage, nextPage })
 })
 
