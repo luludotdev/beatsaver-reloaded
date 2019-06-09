@@ -1,9 +1,14 @@
-import mongoose, { Document, PaginateModel, Schema } from 'mongoose'
+import mongoose, { Document, PaginateModel, Schema, Types } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
 import { IS_DEV, PORT } from '../../env'
 import withoutKeys from '../plugins/withoutKeys'
 import withVirtuals from '../plugins/withVirtuals'
 import { IUserModel } from './User'
+
+export interface IVoteLean {
+  direction: -1 | 1
+  voterUID: string
+}
 
 export interface IBeatmapLean {
   key: string
@@ -43,10 +48,7 @@ export interface IBeatmapLean {
     heat: number
   }
 
-  votes: Array<{
-    direction: -1 | 1
-    voterUID: string
-  }>
+  votes: Types.DocumentArray<IVoteLean & Document>
 
   directDownload: string
   downloadURL: string
