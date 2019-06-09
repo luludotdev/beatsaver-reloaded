@@ -1,3 +1,4 @@
+import { push as pushFn } from 'connected-react-router'
 import React, { FunctionComponent, MouseEvent, useState } from 'react'
 import { connect, MapStateToProps } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -11,9 +12,10 @@ interface IProps {
   user: IUser | null | undefined
 
   logout: typeof logoutFn
+  push: typeof pushFn
 }
 
-const Navbar: FunctionComponent<IProps> = ({ user, logout }) => {
+const Navbar: FunctionComponent<IProps> = ({ user, logout, push }) => {
   const [active, setActive] = useState(false)
 
   const toggle = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -23,6 +25,7 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout }) => {
 
   const handleLogout = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
+    push('/')
     logout()
   }
 
@@ -53,23 +56,19 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout }) => {
               Latest
             </Link>
 
-            <div className='navbar-item has-dropdown is-hoverable'>
-              <a className='navbar-link'>Sort By</a>
+            <NavbarDropdown label='Sort By'>
+              <Link className='navbar-item' to='/browse/hot'>
+                Hot
+              </Link>
 
-              <div className='navbar-dropdown'>
-                <Link className='navbar-item' to='/browse/hot'>
-                  Hot
-                </Link>
+              <Link className='navbar-item' to='/browse/downloads'>
+                Downloads
+              </Link>
 
-                <Link className='navbar-item' to='/browse/downloads'>
-                  Downloads
-                </Link>
-
-                <Link className='navbar-item' to='/browse/plays'>
-                  Plays
-                </Link>
-              </div>
-            </div>
+              <Link className='navbar-item' to='/browse/plays'>
+                Plays
+              </Link>
+            </NavbarDropdown>
 
             <Link className='navbar-item' to='/search'>
               Search
@@ -87,29 +86,25 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout }) => {
               ScoreSaber
             </ExtLink>
 
-            <div className='navbar-item has-dropdown is-hoverable'>
-              <a className='navbar-link'>Modding</a>
+            <NavbarDropdown label='Modding'>
+              <ExtLink
+                className='navbar-item'
+                href='https://bsmg.wiki/beginners-guide'
+              >
+                Modding Guide
+              </ExtLink>
 
-              <div className='navbar-dropdown'>
-                <ExtLink
-                  className='navbar-item'
-                  href='https://bsmg.wiki/beginners-guide'
-                >
-                  Modding Guide
-                </ExtLink>
+              <ExtLink
+                className='navbar-item'
+                href='https://discord.gg/beatsabermods'
+              >
+                Modding Discord
+              </ExtLink>
 
-                <ExtLink
-                  className='navbar-item'
-                  href='https://discord.gg/beatsabermods'
-                >
-                  Modding Discord
-                </ExtLink>
-
-                <ExtLink className='navbar-item' href='https://bsmg.wiki/'>
-                  Community Wiki
-                </ExtLink>
-              </div>
-            </div>
+              <ExtLink className='navbar-item' href='https://bsmg.wiki/'>
+                Community Wiki
+              </ExtLink>
+            </NavbarDropdown>
           </div>
 
           <div className='navbar-end'>
@@ -123,9 +118,11 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout }) => {
                   Upload
                 </Link>
 
-                <a className='navbar-item' onClick={e => handleLogout(e)}>
-                  Logout
-                </a>
+                <NavbarDropdown label={user.username}>
+                  <a className='navbar-item' onClick={e => handleLogout(e)}>
+                    Logout
+                  </a>
+                </NavbarDropdown>
               </>
             )}
           </div>
@@ -135,16 +132,32 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout }) => {
   )
 }
 
+interface IDropdownProps {
+  label: string
+}
+
+const NavbarDropdown: FunctionComponent<IDropdownProps> = ({
+  label,
+  children,
+}) => (
+  <div className='navbar-item has-dropdown is-hoverable'>
+    <a className='navbar-link'>{label}</a>
+    <div className='navbar-dropdown'>{children}</div>
+  </div>
+)
+
 const mapStateToProps: MapStateToProps<IProps, {}, IState> = state => ({
   user: state.user.login,
 
   logout: logoutFn,
+  push: pushFn,
 })
 
 const ConnectedNavbar = connect(
   mapStateToProps,
   {
     logout: logoutFn,
+    push: pushFn,
   }
 )(Navbar)
 
