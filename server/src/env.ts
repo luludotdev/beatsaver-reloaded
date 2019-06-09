@@ -4,7 +4,7 @@ import signale, { panic } from './utils/signale'
 dotenv.config()
 const { NODE_ENV } = process.env
 
-const required = ['JWT_SECRET']
+const required = ['JWT_SECRET', 'STEAM_API_KEY']
 
 try {
   for (const variable of required) {
@@ -18,6 +18,8 @@ export const JWT_SECRET = process.env.JWT_SECRET as string
 if (JWT_SECRET.length < 32) {
   signale.warn('JWT Secret does not meet security recommendations!')
 }
+
+export const STEAM_API_KEY = process.env.STEAM_API_KEY as string
 
 const IS_PROD =
   NODE_ENV !== undefined && NODE_ENV.toLowerCase() !== 'production'
