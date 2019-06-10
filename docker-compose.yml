@@ -17,14 +17,14 @@ services:
       - internal
 
   client:
-    image: lolpants/beatsaver-reloaded:client
+    image: lolpants/beatsaver-reloaded:client-latest
     build: client
     restart: always
     ports:
       - 8000:80
 
   server:
-    image: lolpants/beatsaver-reloaded:server
+    image: lolpants/beatsaver-reloaded:server-latest
     build: server
     restart: always
     depends_on:
