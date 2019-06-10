@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a bug with BeatSaver
+about: Report a bug with BeatSaver Reloaded
 
 ---
 

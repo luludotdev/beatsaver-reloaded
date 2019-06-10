@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an new feature for BeatSaver
+about: Suggest an new feature for BeatSaver Reloaded
 
 ---
 
