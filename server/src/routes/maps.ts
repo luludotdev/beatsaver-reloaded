@@ -9,7 +9,7 @@ const router = new Router({
   prefix: '/maps',
 })
 
-const mapCache = cache({ prefix: 'maps', expire: 60 })
+const mapCache = cache({ prefix: 'maps', expire: 60 * 10 })
 
 router.get('/latest/:page?', mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
@@ -162,7 +162,7 @@ router.get('/hot/:page?', mapCache, async ctx => {
 
 router.get(
   '/detail/:key',
-  cache({ prefix: ctx => `key:${ctx.params.key}:`, expire: 60 }),
+  cache({ prefix: ctx => `key:${ctx.params.key}:`, expire: 60 * 10 }),
   async ctx => {
     const map = await Beatmap.findOne({ key: ctx.params.key })
     if (!map) return (ctx.status = 404)
@@ -174,7 +174,7 @@ router.get(
 
 router.get(
   '/by-hash/:hash',
-  cache({ prefix: ctx => `hash:${ctx.params.hash}:`, expire: 60 }),
+  cache({ prefix: ctx => `hash:${ctx.params.hash}:`, expire: 60 * 10 }),
   async ctx => {
     const map = await Beatmap.findOne({ hash: ctx.params.hash })
     if (!map) return (ctx.status = 404)
@@ -186,7 +186,7 @@ router.get(
 
 router.get(
   '/uploader/:id/:page?',
-  cache({ prefix: ctx => `${ctx.params.id}:`, expire: 60 }),
+  cache({ prefix: ctx => `${ctx.params.id}:`, expire: 60 * 10 }),
   async ctx => {
     const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
     const maps = await paginate(
