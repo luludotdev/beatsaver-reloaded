@@ -21,7 +21,7 @@ services:
     build: client
     restart: always
     ports:
-      - 80:8000
+      - 8000:80
 
   server:
     image: lolpants/beatsaver-reloaded:server
