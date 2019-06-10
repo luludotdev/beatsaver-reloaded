@@ -162,9 +162,7 @@ router.get('/hot/:page?', mapCache, async ctx => {
 
 router.get('/detail/:key', async ctx => {
   const map = await Beatmap.findOne({ key: ctx.params.key })
-  if (!map) {
-    return (ctx.status = 404)
-  }
+  if (!map) return (ctx.status = 404)
 
   await map.populate('uploader').execPopulate()
   return (ctx.body = map)
