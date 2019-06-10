@@ -9,7 +9,10 @@
     "dev": "parcel ./src/index.html",
     "clean": "rimraf .cache dist",
     "build": "parcel build ./src/index.html",
-    "build:clean": "yarn run clean && parcel build ./src/index.html"
+    "build:clean": "yarn run clean && parcel build ./src/index.html",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "check": "tsc --noEmit",
+    "test": "yarn run lint && yarn run check"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
