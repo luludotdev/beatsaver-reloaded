@@ -1,0 +1,16 @@
+dist: xenial
+language: node_js
+
+services:
+  - docker
+
+node_js:
+  - '10'
+
+env:
+  - PROJECT_DIR=client
+  - PROJECT_DIR=server
+
+cache: yarn
+install: cd $PROJECT_DIR && yarn install --frozen-lockfile
+script: cd $PROJECT_DIR && yarn test
