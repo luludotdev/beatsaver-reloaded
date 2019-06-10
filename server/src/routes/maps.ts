@@ -168,6 +168,14 @@ router.get('/detail/:key', async ctx => {
   return (ctx.body = map)
 })
 
+router.get('/by-hash/:hash', async ctx => {
+  const map = await Beatmap.findOne({ hash: ctx.params.hash })
+  if (!map) return (ctx.status = 404)
+
+  await map.populate('uploader').execPopulate()
+  return (ctx.body = map)
+})
+
 router.get('/uploader/:id/:page?', async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const maps = await paginate(
