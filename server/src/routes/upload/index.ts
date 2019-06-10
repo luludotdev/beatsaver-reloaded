@@ -5,6 +5,7 @@ import Router from 'koa-router'
 import { MongoError } from 'mongodb'
 import { join } from 'path'
 import { CDN_PATH } from '../../constants'
+import { clearCache } from '../../middleware/cache'
 import Beatmap from '../../mongo/models/Beatmap'
 import { IUserModel } from '../../mongo/models/User'
 import { mkdirp, writeFile } from '../../utils/fs'
@@ -81,6 +82,7 @@ router.post(
         ...beatmap,
       })
 
+      await clearCache('maps')
       await newBeatmap.populate('uploader').execPopulate()
       return (ctx.body = newBeatmap)
     } catch (err) {
