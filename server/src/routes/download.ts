@@ -14,7 +14,7 @@ const router = new Router({
 router.get('/key/:key', async ctx => {
   const { key } = ctx.params
 
-  const map = await Beatmap.findOne({ key })
+  const map = await Beatmap.findOne({ key, deletedAt: null })
   if (!map) return (ctx.status = 404)
 
   map.stats.downloads += 1
@@ -26,7 +26,7 @@ router.get('/key/:key', async ctx => {
 router.get('/hash/:hash', async ctx => {
   const { hash } = ctx.params
 
-  const map = await Beatmap.findOne({ hash })
+  const map = await Beatmap.findOne({ hash, deletedAt: null })
   if (!map) return (ctx.status = 404)
 
   map.stats.downloads += 1

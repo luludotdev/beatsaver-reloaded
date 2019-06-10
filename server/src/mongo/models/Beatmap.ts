@@ -17,6 +17,7 @@ export interface IBeatmapLean {
 
   uploader: IUserModel['_id']
   uploaded: Date
+  deletedAt: Date | null
 
   metadata: {
     songName: string
@@ -72,7 +73,8 @@ const schema: Schema = new Schema({
   description: { type: String, default: '', maxlength: 10000 },
   name: { type: String, required: true, index: true, maxlength: 255 },
 
-  uploaded: { type: Date, default: Date.now },
+  deletedAt: { type: Date, default: null, index: true },
+  uploaded: { type: Date, default: Date.now, index: true },
   uploader: { type: Schema.Types.ObjectId, required: true, ref: 'user' },
 
   metadata: {

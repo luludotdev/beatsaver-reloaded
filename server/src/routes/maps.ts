@@ -15,7 +15,7 @@ router.get('/latest/:page?', mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const maps = await paginate(
     Beatmap,
-    {},
+    { deletedAt: null },
     { page, sort: '-uploaded', populate: 'uploader' }
   )
 
@@ -26,7 +26,7 @@ router.get('/downloads/:page?', mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const maps = await paginate(
     Beatmap,
-    {},
+    { deletedAt: null },
     { page, sort: '-stats.downloads -uploaded', populate: 'uploader' }
   )
 
@@ -37,7 +37,7 @@ router.get('/plays/:page?', mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const maps = await paginate(
     Beatmap,
-    {},
+    { deletedAt: null },
     { page, sort: '-stats.plays -uploaded', populate: 'uploader' }
   )
 
@@ -54,6 +54,7 @@ router.get('/hot/:page?', mapCache, async ctx => {
 
   // Reddit Hot Algorithm
   const IDs: IResult[] = await Beatmap.aggregate([
+    { $match: { deletedAt: null } },
     {
       $project: {
         _id: '$_id',
@@ -164,7 +165,7 @@ router.get(
   '/detail/:key',
   cache({ prefix: ctx => `key:${ctx.params.key}:`, expire: 60 * 10 }),
   async ctx => {
-    const map = await Beatmap.findOne({ key: ctx.params.key })
+    const map = await Beatmap.findOne({ key: ctx.params.key, deletedAt: null })
     if (!map) return (ctx.status = 404)
 
     await map.populate('uploader').execPopulate()
@@ -176,7 +177,11 @@ router.get(
   '/by-hash/:hash',
   cache({ prefix: ctx => `hash:${ctx.params.hash}:`, expire: 60 * 10 }),
   async ctx => {
-    const map = await Beatmap.findOne({ hash: ctx.params.hash })
+    const map = await Beatmap.findOne({
+      deletedAt: null,
+      hash: ctx.params.hash,
+    })
+
     if (!map) return (ctx.status = 404)
 
     await map.populate('uploader').execPopulate()
@@ -191,7 +196,7 @@ router.get(
     const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
     const maps = await paginate(
       Beatmap,
-      { uploader: ctx.params.id },
+      { uploader: ctx.params.id, deletedAt: null },
       { page, sort: '-uploaded', populate: 'uploader' }
     )
 

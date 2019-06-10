@@ -123,7 +123,7 @@ const submitVote = async (ctx: ParameterizedContext, voterUID: string) => {
   if (direction !== -1 && direction !== 1) throw ERR_INVALID_DIRECTION
 
   const { key } = ctx.params
-  const map = await Beatmap.findOne({ key })
+  const map = await Beatmap.findOne({ key, deletedAt: null })
   if (!map) return (ctx.status = 404)
 
   const existingVote = map.votes.find(x => x.voterUID === voterUID)
