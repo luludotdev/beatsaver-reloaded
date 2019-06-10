@@ -160,21 +160,29 @@ router.get('/hot/:page?', mapCache, async ctx => {
   return (ctx.body = { docs, totalDocs, lastPage, prevPage, nextPage })
 })
 
-router.get('/detail/:key', async ctx => {
-  const map = await Beatmap.findOne({ key: ctx.params.key })
-  if (!map) return (ctx.status = 404)
+router.get(
+  '/detail/:key',
+  cache({ prefix: ctx => `key:${ctx.params.key}:`, expire: 60 }),
+  async ctx => {
+    const map = await Beatmap.findOne({ key: ctx.params.key })
+    if (!map) return (ctx.status = 404)
 
-  await map.populate('uploader').execPopulate()
-  return (ctx.body = map)
-})
+    await map.populate('uploader').execPopulate()
+    return (ctx.body = map)
+  }
+)
 
-router.get('/by-hash/:hash', async ctx => {
-  const map = await Beatmap.findOne({ hash: ctx.params.hash })
-  if (!map) return (ctx.status = 404)
+router.get(
+  '/by-hash/:hash',
+  cache({ prefix: ctx => `hash:${ctx.params.hash}:`, expire: 60 }),
+  async ctx => {
+    const map = await Beatmap.findOne({ hash: ctx.params.hash })
+    if (!map) return (ctx.status = 404)
 
-  await map.populate('uploader').execPopulate()
-  return (ctx.body = map)
-})
+    await map.populate('uploader').execPopulate()
+    return (ctx.body = map)
+  }
+)
 
 router.get(
   '/uploader/:id/:page?',
