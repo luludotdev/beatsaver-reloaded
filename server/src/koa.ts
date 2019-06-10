@@ -12,11 +12,8 @@ import { routes } from './routes'
 export const app = new Koa()
 const router = new Router()
 
-if (!IS_DEV) {
-  app.proxy = true
-} else {
-  app.use(cors({ exposeHeaders: ['x-auth-token'] }))
-}
+if (!IS_DEV) app.proxy = true
+else app.use(cors({ exposeHeaders: ['x-auth-token'] }))
 
 app
   .use(realIP)
