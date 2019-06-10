@@ -82,7 +82,11 @@ router.post(
         ...beatmap,
       })
 
-      await clearCache('maps')
+      await Promise.all([
+        clearCache('maps'),
+        clearCache(`uploader:${newBeatmap.uploader}`),
+      ])
+
       await newBeatmap.populate('uploader').execPopulate()
       return (ctx.body = newBeatmap)
     } catch (err) {

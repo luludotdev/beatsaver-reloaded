@@ -186,7 +186,7 @@ router.get(
 
 router.get(
   '/uploader/:id/:page?',
-  cache({ prefix: ctx => `${ctx.params.id}:`, expire: 60 * 10 }),
+  cache({ prefix: ctx => `uploader:${ctx.params.id}:`, expire: 60 * 10 }),
   async ctx => {
     const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
     const maps = await paginate(
