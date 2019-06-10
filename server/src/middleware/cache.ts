@@ -17,7 +17,12 @@ export const cache = (opts?: CacheOptions) => {
 
     ...opts,
 
-    prefix: opts && opts.prefix ? `${opts.prefix}:` : undefined,
+    prefix:
+      opts && opts.prefix
+        ? typeof opts.prefix === 'string'
+          ? `${opts.prefix}:`
+          : opts.prefix
+        : undefined,
 
     redis: {
       host: REDIS_HOST,
