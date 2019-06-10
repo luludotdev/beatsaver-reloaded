@@ -176,15 +176,19 @@ router.get('/by-hash/:hash', async ctx => {
   return (ctx.body = map)
 })
 
-router.get('/uploader/:id/:page?', async ctx => {
-  const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
-  const maps = await paginate(
-    Beatmap,
-    { uploader: ctx.params.id },
-    { page, sort: '-uploaded', populate: 'uploader' }
-  )
+router.get(
+  '/uploader/:id/:page?',
+  cache({ prefix: ctx => `${ctx.params.id}:`, expire: 60 }),
+  async ctx => {
+    const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+    const maps = await paginate(
+      Beatmap,
+      { uploader: ctx.params.id },
+      { page, sort: '-uploaded', populate: 'uploader' }
+    )
 
-  return (ctx.body = maps)
-})
+    return (ctx.body = maps)
+  }
+)
 
 export { router as mapsRouter }
