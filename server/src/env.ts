@@ -22,14 +22,14 @@ if (JWT_SECRET.length < 32) {
 export const STEAM_API_KEY = process.env.STEAM_API_KEY as string
 
 const IS_PROD =
-  NODE_ENV !== undefined && NODE_ENV.toLowerCase() !== 'production'
+  NODE_ENV !== undefined && NODE_ENV.toLowerCase() === 'production'
 export const IS_DEV = !IS_PROD
 
 const dbName = 'beatsaver'
 export const MONGO_URL =
   process.env.MONGO_URL || IS_DEV
     ? `mongodb://localhost:27017/${dbName}`
-    : `mongodb://mongodb-0.mongodb:27017/${dbName}`
+    : `mongodb://mongo:27017/${dbName}`
 
 const defaultPort = 3000
 export const PORT =
@@ -55,7 +55,9 @@ if (CACHE_DRIVER === 'none') {
 }
 
 const redisPort = 6379
-export const REDIS_HOST = process.env.REDIS_HOST
+export const REDIS_HOST =
+  process.env.REDIS_HOST || (IS_DEV ? 'localhost' : 'redis')
+
 export const REDIS_PASSWORD = process.env.REDIS_PASSWORD
 export const REDIS_PORT =
   parseInt(process.env.REDIS_PORT || `${redisPort}`, 10) || redisPort
