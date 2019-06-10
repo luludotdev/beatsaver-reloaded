@@ -17,6 +17,7 @@ WORKDIR /home/node/app
 COPY package.json yarn.lock ./
 RUN apk add --no-cache tini bash git openssh make gcc g++ python && \
   yarn install --frozen-lockfile --production && \
+  yarn run modclean && \
   apk del bash git openssh make gcc g++ python
 
 USER node
