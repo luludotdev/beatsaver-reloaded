@@ -14,3 +14,13 @@ env:
 cache: yarn
 install: cd $PROJECT_DIR && yarn install --frozen-lockfile
 script: yarn test
+
+after_success:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+  - export REPO=lolpants/beatsaver-reloaded
+  - export TAG=$(if [ "$BRANCH" == "master" ]; then echo "latest"; else echo $BRANCH ; fi)
+  - docker pull $REPO || true
+  - docker build --pull --cache-from $REPO -f Dockerfile -t $REPO:$PROJECT_DIR-$TRAVIS_COMMIT .
+  - docker tag $REPO:$PROJECT_DIR-$TRAVIS_COMMIT $REPO:$PROJECT_DIR-$TAG
+  - docker push $REPO
