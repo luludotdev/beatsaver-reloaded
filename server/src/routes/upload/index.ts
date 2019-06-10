@@ -37,7 +37,7 @@ router.post(
     const { name, description } = body || ({} as any)
     const files = f as File[]
 
-    const beatmapFile = files.find(x => x.fieldname === 'beatmap')
+    const beatmapFile = (files || []).find(x => x.fieldname === 'beatmap')
     if (beatmapFile === undefined) {
       throw ERR_NO_BEATMAP
     }
