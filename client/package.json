@@ -10,6 +10,7 @@
     "clean": "rimraf .cache dist",
     "build": "parcel build ./src/index.html",
     "build:clean": "yarn run clean && parcel build ./src/index.html",
+    "build:prod": "yarn run clean && parcel build --public-url . --no-source-maps ./src/index.html",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "check": "tsc --noEmit",
     "test": "yarn run lint && yarn run check"

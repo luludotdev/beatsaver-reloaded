@@ -6,7 +6,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY . .
-RUN yarn build
+RUN yarn build:prod
 
 FROM nginx:alpine
 COPY --from=builder /usr/app/dist /usr/share/nginx/html
