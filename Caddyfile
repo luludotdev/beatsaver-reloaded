@@ -1,0 +1,12 @@
+beatsaver.com {
+  import common
+
+  proxy / localhost:8000 {
+    transparent
+  }
+
+  proxy /api localhost:3000 {
+    transparent
+    without /api
+  }
+}

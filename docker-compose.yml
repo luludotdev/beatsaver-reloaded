@@ -1,0 +1,47 @@
+# This is given as a sample, you should probably create your own in production
+version: '3'
+
+services:
+  mongo:
+    image: mongo:4
+    restart: always
+    networks:
+      - internal
+    volumes:
+      - mongo:/data/db:rw
+
+  redis:
+    image: redis:4-alpine
+    restart: 'always'
+    networks:
+      - internal
+
+  client:
+    image: lolpants/beatsaver-reloaded:client
+    build: client
+    restart: always
+    ports:
+      - 80:8000
+
+  server:
+    image: lolpants/beatsaver-reloaded:server
+    build: server
+    restart: always
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - internal
+    volumes:
+      - cdn:/home/node/app/cdn:rw
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+
+networks:
+  internal:
+
+volumes:
+  cdn:
+  mongo:

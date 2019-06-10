@@ -2,7 +2,7 @@ import Axios, { AxiosInstance } from 'axios'
 import { IS_DEV } from './env'
 
 export const axios: AxiosInstance = Axios.create({
-  baseURL: IS_DEV ? 'http://localhost:3000' : undefined,
+  baseURL: IS_DEV ? 'http://localhost:3000' : '/api',
 })
 
 axios.interceptors.request.use(
