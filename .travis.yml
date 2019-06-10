@@ -13,4 +13,4 @@ env:
 
 cache: yarn
 install: cd $PROJECT_DIR && yarn install --frozen-lockfile
-script: cd $PROJECT_DIR && yarn test
+script: yarn test
