@@ -10,6 +10,7 @@ import { Uploader } from './routes/Uploader'
 
 const Login = lazy(() => import('./routes/Login'))
 const Upload = lazy(() => import('./routes/Upload'))
+const Legacy = lazy(() => import('./routes/Legacy'))
 
 export const Routes: FunctionComponent = () => (
   <Switch>
@@ -20,10 +21,11 @@ export const Routes: FunctionComponent = () => (
     <Route path='/beatmap/:key' component={Beatmap} />
     <Route path='/uploader/:id' component={Uploader} />
 
+    <Route path='/browse/detail/:key' component={Legacy} />
+
     <Route path='/search' component={Search} />
 
     <Route path='/auth/login' component={Login} />
-
     <Route path='/user/upload' component={Upload} />
 
     <Route exact path='/' component={Index} />
