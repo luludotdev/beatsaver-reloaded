@@ -10,6 +10,7 @@ interface IProps {
   loading: boolean
   done: boolean
   error: Error | null
+  finite: boolean | undefined
 
   fallback?: JSX.Element
   next: () => any
@@ -20,12 +21,13 @@ const BeatmapScroller: FunctionComponent<IProps> = ({
   loading,
   done,
   error,
+  finite,
 
   fallback,
   next,
 }) => {
   const [ref, inView] = useInView({ rootMargin: '240px' })
-  if (inView && !loading && !done) next()
+  if (inView && !loading && !done && !finite) next()
   if (error) return <APIError error={error} />
 
   return (
@@ -37,8 +39,18 @@ const BeatmapScroller: FunctionComponent<IProps> = ({
       {!loading || done ? null : <Loader />}
 
       {!loading && !done && maps.length > 0 ? (
-        <div ref={ref} style={{ height: '1px' }} />
+        <div ref={finite ? undefined : ref} style={{ height: '1px' }} />
       ) : null}
+
+      {!finite ? null : (
+        <button
+          className='button is-fullwidth'
+          style={{ maxWidth: '180px', margin: '0 auto' }}
+          onClick={() => next()}
+        >
+          Show More...
+        </button>
+      )}
     </>
   )
 }
