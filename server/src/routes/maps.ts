@@ -165,7 +165,14 @@ router.get(
   '/detail/:key',
   cache({ prefix: ctx => `key:${ctx.params.key}:`, expire: 60 * 10 }),
   async ctx => {
-    const map = await Beatmap.findOne({ key: ctx.params.key, deletedAt: null })
+    const key =
+      typeof ctx.params.key !== 'string'
+        ? ctx.params.key
+        : ctx.params.key.match(/\d+-(\d+)/) === null
+        ? ctx.params.key
+        : parseInt(ctx.params.key.match(/\d+-(\d+)/)[1], 10).toString(16)
+
+    const map = await Beatmap.findOne({ key, deletedAt: null })
     if (!map) return (ctx.status = 404)
 
     await map.populate('uploader').execPopulate()
