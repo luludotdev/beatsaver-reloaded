@@ -163,7 +163,7 @@ schema.virtual('directDownload').get(function(this: IBeatmapModel) {
 })
 
 schema.virtual('downloadURL').get(function(this: IBeatmapModel) {
-  const absolute = `/download/key/${this.key}`
+  const absolute = `/api/download/key/${this.key}`
   return IS_DEV ? `http://localhost:${PORT}${absolute}` : absolute
 })
 
