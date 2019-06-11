@@ -11,6 +11,10 @@ RUN yarn test && yarn build
 FROM node:10-alpine
 ENV NODE_ENV=production
 
+ARG VCS_REF
+LABEL org.label-schema.vcs-ref=$VCS_REF \
+  org.label-schema.vcs-url="https://github.com/lolPants/beatsaver-reloaded"
+
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 

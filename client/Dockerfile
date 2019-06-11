@@ -9,6 +9,11 @@ COPY . .
 RUN yarn build:prod
 
 FROM nginx:alpine
+
+ARG VCS_REF
+LABEL org.label-schema.vcs-ref=$VCS_REF \
+  org.label-schema.vcs-url="https://github.com/lolPants/beatsaver-reloaded"
+
 COPY --from=builder /usr/app/dist /usr/share/nginx/html
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 

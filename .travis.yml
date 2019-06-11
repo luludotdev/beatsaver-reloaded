@@ -21,6 +21,6 @@ after_success:
   - export REPO=lolpants/beatsaver-reloaded
   - export TAG=$(if [ "$BRANCH" == "master" ]; then echo "latest"; else echo $BRANCH ; fi)
   - docker pull $REPO:$PROJECT_DIR-latest || true
-  - docker build --pull --cache-from $REPO:$PROJECT_DIR-latest -f Dockerfile -t $REPO:$PROJECT_DIR-$TRAVIS_COMMIT .
+  - docker build --build-arg VCS_REF=`git rev-parse --short HEAD` --pull --cache-from $REPO:$PROJECT_DIR-latest -f Dockerfile -t $REPO:$PROJECT_DIR-$TRAVIS_COMMIT .
   - docker tag $REPO:$PROJECT_DIR-$TRAVIS_COMMIT $REPO:$PROJECT_DIR-$TAG
   - docker push $REPO
