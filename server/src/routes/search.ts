@@ -28,4 +28,18 @@ router.get('/text/:page?', async ctx => {
   return (ctx.body = maps)
 })
 
+router.get('/hash/:page?', async ctx => {
+  const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+  const query = ctx.query.q
+  if (!query) throw ERR_NO_QUERY
+
+  const maps = await paginate(
+    Beatmap,
+    { hash: query },
+    { page, populate: 'uploader' }
+  )
+
+  return (ctx.body = maps)
+})
+
 export { router as searchRouter }
