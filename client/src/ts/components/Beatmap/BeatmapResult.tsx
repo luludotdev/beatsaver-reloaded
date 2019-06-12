@@ -53,7 +53,7 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
 
   useEffect(() => {
     axios
-      .get(map.coverURL)
+      .get(map.coverURL, { baseURL: '/' })
       .then(() => setImage(map.coverURL))
       .catch(() => setImage(undefined))
   }, [])
