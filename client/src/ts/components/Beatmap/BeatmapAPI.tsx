@@ -1,6 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react'
 import { createSearch, IBeatmap } from '../../remote/beatmap'
-import { history } from '../../store'
 
 interface IRenderProps {
   maps: IBeatmap[]
