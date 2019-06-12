@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom'
 import { IBeatmap } from '../../remote/beatmap'
 import { axios } from '../../utils/axios'
 
-import Missing from '../../../images/missing_image.png'
+import Placeholder from '../../../images/placeholder.svg'
 
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en-US')
@@ -62,7 +62,7 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
     <div className='beatmap-result' onClick={e => handleClick(e)}>
       <div className='cover'>
         <img
-          src={image || Missing}
+          src={image || Placeholder}
           alt={`Artwork for ${map.name}`}
           draggable={false}
         />
