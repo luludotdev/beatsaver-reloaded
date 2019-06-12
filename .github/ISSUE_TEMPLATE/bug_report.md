@@ -5,7 +5,7 @@ about: Report a bug with BeatSaver Reloaded
 ---
 
 ## Platform
-**This bug report concerns:**
+**This bug report concerns:** *(select all that apply)*
 - [ ] Client
 - [ ] Server
 

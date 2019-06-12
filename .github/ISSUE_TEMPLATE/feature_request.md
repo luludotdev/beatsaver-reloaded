@@ -5,7 +5,7 @@ about: Suggest an new feature for BeatSaver Reloaded
 ---
 
 ## Platform
-**This feature request concerns:**
+**This feature request concerns:** *(select all that apply)*
 - [ ] Client
 - [ ] Server
 
