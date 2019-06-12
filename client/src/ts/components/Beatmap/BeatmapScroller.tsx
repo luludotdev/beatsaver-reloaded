@@ -16,7 +16,7 @@ interface IProps {
   next: () => any
 }
 
-const BeatmapScroller: FunctionComponent<IProps> = ({
+export const BeatmapScroller: FunctionComponent<IProps> = ({
   maps,
   loading,
   done,
@@ -54,5 +54,3 @@ const BeatmapScroller: FunctionComponent<IProps> = ({
     </>
   )
 }
-
-export default BeatmapScroller

@@ -4,12 +4,12 @@ import { Route, Switch } from 'react-router'
 import { Beatmap } from './routes/Beatmap'
 import { Downloads, Hot, Latest, Plays } from './routes/Browse'
 import { Index } from './routes/Index'
+import Login from './routes/Login'
 import { NotFound } from './routes/NotFound'
 import Search from './routes/Search'
+import Upload from './routes/Upload'
 import { Uploader } from './routes/Uploader'
 
-const Login = lazy(() => import('./routes/Login'))
-const Upload = lazy(() => import('./routes/Upload'))
 const Legacy = lazy(() => import('./routes/Legacy'))
 
 export const Routes: FunctionComponent = () => (
