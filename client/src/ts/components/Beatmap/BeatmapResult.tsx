@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { push as pushFn } from 'connected-react-router'
 import dateFormat from 'dateformat'
 import TimeAgo from 'javascript-time-ago'
@@ -52,9 +51,11 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
   )
 
   useEffect(() => {
-    axios
-      .get(map.coverURL)
-      .then(() => setImage(map.coverURL))
+    fetch(map.coverURL)
+      .then(resp => {
+        if (resp.ok) setImage(map.coverURL)
+        else setImage(undefined)
+      })
       .catch(() => setImage(undefined))
   }, [])
 
