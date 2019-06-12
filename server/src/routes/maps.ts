@@ -4,6 +4,7 @@ import { RESULTS_PER_PAGE } from '../env'
 import { cache } from '../middleware/cache'
 import Beatmap from '../mongo/models/Beatmap'
 import { paginate } from '../mongo/plugins/paginate'
+import { parseKey } from '../utils/parseKey'
 
 const router = new Router({
   prefix: '/maps',
@@ -165,12 +166,8 @@ router.get(
   '/detail/:key',
   cache({ prefix: ctx => `key:${ctx.params.key}:`, expire: 60 * 10 }),
   async ctx => {
-    const key =
-      typeof ctx.params.key !== 'string'
-        ? ctx.params.key
-        : ctx.params.key.match(/\d+-(\d+)/) === null
-        ? ctx.params.key
-        : parseInt(ctx.params.key.match(/\d+-(\d+)/)[1], 10).toString(16)
+    const key = parseKey(ctx.params.key)
+    if (key === false) return (ctx.status = 404)
 
     const map = await Beatmap.findOne({ key, deletedAt: null })
     if (!map) return (ctx.status = 404)

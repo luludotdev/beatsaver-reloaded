@@ -1,6 +1,7 @@
 import Router from 'koa-router'
 import { rateLimit } from '../middleware/ratelimit'
 import Beatmap from '../mongo/models/Beatmap'
+import { parseKey } from '../utils/parseKey'
 
 const router = new Router({
   prefix: '/download',
@@ -12,7 +13,8 @@ const router = new Router({
 )
 
 router.get('/key/:key', async ctx => {
-  const { key } = ctx.params
+  const key = parseKey(ctx.params.key)
+  if (key === false) return (ctx.status = 404)
 
   const map = await Beatmap.findOne({ key, deletedAt: null })
   if (!map) return (ctx.status = 404)
