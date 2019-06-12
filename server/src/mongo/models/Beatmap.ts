@@ -1,5 +1,6 @@
 import mongoose, { Document, PaginateModel, Schema, Types } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
+import { BEATSAVER_EPOCH } from '../../constants'
 import { IS_DEV, PORT } from '../../env'
 import withoutKeys from '../plugins/withoutKeys'
 import withVirtuals from '../plugins/withVirtuals'
@@ -141,7 +142,7 @@ schema.virtual('stats.rating').get(function(this: IBeatmapModel) {
 schema.virtual('stats.heat').get(function(this: IBeatmapModel) {
   const epoch = new Date(Date.UTC(1970, 0, 1))
   const seconds =
-    (this.uploaded.getTime() - epoch.getTime()) / 1000 - 1525132800
+    (this.uploaded.getTime() - epoch.getTime()) / 1000 - BEATSAVER_EPOCH
 
   const score = this.votes.reduce((acc, curr) => acc + curr.direction, 0)
   const absolute = Math.abs(score)
