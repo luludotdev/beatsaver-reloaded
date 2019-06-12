@@ -181,9 +181,11 @@ router.get(
   '/by-hash/:hash',
   cache({ prefix: ctx => `hash:${ctx.params.hash}:`, expire: 60 * 10 }),
   async ctx => {
+    if (typeof ctx.params.hash !== 'string') return (ctx.status = 400)
+
     const map = await Beatmap.findOne({
       deletedAt: null,
-      hash: ctx.params.hash,
+      hash: ctx.params.hash.toLowerCase(),
     })
 
     if (!map) return (ctx.status = 404)
