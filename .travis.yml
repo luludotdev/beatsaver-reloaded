@@ -10,6 +10,7 @@ node_js:
 env:
   - PROJECT_DIR=client
   - PROJECT_DIR=server
+  - PROJECT_DIR=docs
 
 cache: yarn
 install: cd $PROJECT_DIR && yarn install --frozen-lockfile

@@ -1,0 +1,16 @@
+{
+  "name": "@beatsaver/docs",
+  "version": "0.1.0",
+  "description": "BeatSaver Reloaded Documentation",
+  "author": "Jack Baron <jackmbaron@gmail.com> (https://www.jackbaron.com)",
+  "license": "ISC",
+  "private": true,
+  "scripts": {
+    "dev": "vuepress dev content",
+    "build": "vuepress build content"
+  },
+  "devDependencies": {
+    "vuepress": "0.14.11",
+    "vuepress-theme-yuu": "^1.1.0"
+  }
+}
