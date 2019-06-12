@@ -37,7 +37,6 @@ const BeatmapAPI: FunctionComponent<IProps> = ({ render, type, query }) => {
   const [done, setDone] = useState(false)
   const [maps, setMaps] = useState([] as IBeatmap[])
 
-  const reset = history.action === 'POP'
   useEffect(() => {
     setMaps([])
     setLoading(true)
@@ -45,7 +44,7 @@ const BeatmapAPI: FunctionComponent<IProps> = ({ render, type, query }) => {
     setDone(false)
 
     search
-      .next({ type, query, reset })
+      .next({ type, query, reset: true })
       .then(resp => {
         setLoading(false)
         setMaps(resp.value)
@@ -57,7 +56,7 @@ const BeatmapAPI: FunctionComponent<IProps> = ({ render, type, query }) => {
         setLoading(false)
         setError(err)
       })
-  }, [query, reset])
+  }, [query])
 
   const next = async () => {
     setLoading(true)
