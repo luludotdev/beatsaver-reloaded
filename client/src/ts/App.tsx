@@ -10,7 +10,7 @@ export const App: FunctionComponent = () => (
     <Navbar />
 
     <div className='layout'>
-      <div className='container has-footer'>
+      <div className='container has-footer side-pad'>
         <Boundary>
           <Suspense fallback={<Loader />}>
             <Routes />

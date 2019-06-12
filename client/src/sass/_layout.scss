@@ -2,8 +2,8 @@ html, body, div#root {
   height: 100%;
 }
 
-@media screen and (max-width: 1024px) {
-  div.container:not(nav div.container) {
+@media screen and (max-width: 1023px) {
+  div.container.side-pad {
     width: 100%;
     padding: 0 20px;
   }
