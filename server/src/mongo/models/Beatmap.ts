@@ -154,7 +154,7 @@ schema.virtual('stats.heat').get(function(this: IBeatmapModel) {
   const order = Math.log10(Math.max(absolute, 1))
   const heat = sign * order + seconds / 45000
 
-  return heat.toFixed(7)
+  return parseFloat(heat.toFixed(7))
 })
 
 schema.virtual('directDownload').get(function(this: IBeatmapModel) {
