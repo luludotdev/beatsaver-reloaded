@@ -129,13 +129,12 @@ schema.virtual('stats.downVotes').get(function(this: IBeatmapModel) {
 })
 
 schema.virtual('stats.rating').get(function(this: IBeatmapModel) {
-  const upVotes = this.votes.filter(x => x.direction === 1).length
-  const downVotes = this.votes.filter(x => x.direction === -1).length
-
-  const total = upVotes + downVotes
+  const total = this.votes.length
   if (total === 0) return 0
 
+  const upVotes = this.votes.filter(x => x.direction === 1).length
   const score = upVotes / total
+
   return score - (score - 0.5) * Math.pow(2, -Math.log10(total + 1))
 })
 
@@ -144,10 +143,7 @@ schema.virtual('stats.heat').get(function(this: IBeatmapModel) {
   const seconds =
     (this.uploaded.getTime() - epoch.getTime()) / 1000 - 1525132800
 
-  const upVotes = this.votes.filter(x => x.direction === 1).length
-  const downVotes = this.votes.filter(x => x.direction === -1).length
-
-  const score = upVotes - downVotes
+  const score = this.votes.reduce((acc, curr) => acc + curr.direction, 0)
   const absolute = Math.abs(score)
   const sign = score < 0 ? -1 : score > 0 ? 1 : 0
 
