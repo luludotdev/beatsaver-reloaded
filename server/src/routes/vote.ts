@@ -102,6 +102,7 @@ router.post('/steam/:key', async ctx => {
     const {
       data: { response: resp },
     } = await axios.get<ISteamResp>(url)
+
     if (resp.params && resp.params.steamid === steamID) {
       // Valid
       return submitVote(ctx, steamID)
@@ -137,7 +138,9 @@ const submitVote = async (ctx: ParameterizedContext, voterUID: string) => {
   }
 
   await map.save()
-  return (ctx.status = 204)
+  await map.populate('uploader').execPopulate()
+
+  return (ctx.body = map)
 }
 
 export { router as voteRouter }
