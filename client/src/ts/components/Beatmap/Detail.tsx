@@ -44,5 +44,30 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
     )
   }
 
-  return <pre>{JSON.stringify(beatmap, null, 2)}</pre>
+  return (
+    <>
+      <pre>{JSON.stringify(beatmap, null, 2)}</pre>
+      <div
+        style={{
+          alignItems: 'center',
+          bottom: 0,
+          display: 'flex',
+          justifyContent: 'center',
+          left: 0,
+          pointerEvents: 'none',
+          position: 'fixed',
+          right: 0,
+          top: 0,
+        }}
+      >
+        <a
+          className='button'
+          href={beatmap.downloadURL}
+          style={{ pointerEvents: 'all', fontSize: '2em' }}
+        >
+          Download
+        </a>
+      </div>
+    </>
+  )
 }
