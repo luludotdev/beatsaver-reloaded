@@ -1,6 +1,4 @@
-import chunk from 'chunk'
 import Router from 'koa-router'
-import { RESULTS_PER_PAGE } from '../env'
 import { cache } from '../middleware/cache'
 import Beatmap from '../mongo/models/Beatmap'
 import { paginate } from '../mongo/plugins/paginate'
