@@ -7,6 +7,7 @@ div.beatmap-detail {
 
   $image-size: 172px;
   $content-padding: 8px;
+  $stat-padding: 20px;
 
   & div.cover {
     border-radius: $radius;
@@ -56,5 +57,17 @@ div.beatmap-detail {
   & div.links {
     border-radius: $radius;
     width: $image-size;
+  }
+
+  & div.stats {
+    margin-bottom: $content-padding;
+
+    & span.stat {
+      margin-right: $stat-padding;
+    }
+  }
+
+  & div.description {
+    margin-bottom: $content-padding;
   }
 }

@@ -103,22 +103,23 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
               <span className='tag is-expert-plus'>Expert+</span>
             ) : null}
           </div>
-
-          <h2 className='is-size-5 has-text-weight-normal'>
-            {beatmap.metadata.songName}
-          </h2>
-          <h2 className='is-size-5 has-text-weight-normal'>
-            {beatmap.metadata.songSubName}
-          </h2>
-          <h3 className='is-size-7 has-text-weight-normal'>
-            Song Author: {beatmap.metadata.songAuthorName}
-          </h3>
-          <h3 className='is-size-7 has-text-weight-normal'>
-            Level Author: {beatmap.metadata.levelAuthorName}
-          </h3>
-          <h3 className='is-size-7 has-text-weight-normal'>
-            BPM {beatmap.metadata.bpm}
-          </h3>
+          <div className='stats'>
+            <span className='stat'>
+              <i className='fas fa-download' /> {beatmap.stats.downloads}
+            </span>
+            <span className='stat'>
+              <i className='fas fa-thumbs-up' /> {beatmap.stats.upVotes}
+            </span>
+            <span className='stat'>
+              <i className='fas fa-thumbs-down' /> {beatmap.stats.downVotes}
+            </span>
+            <span className='stat'>
+              <i className='fas fa-percent' /> {beatmap.stats.rating}
+            </span>
+            <span className='stat'>
+              <i className='fas fa-play' /> {beatmap.stats.plays}
+            </span>
+          </div>
 
           <div className='description'>{beatmap.description}</div>
         </div>
