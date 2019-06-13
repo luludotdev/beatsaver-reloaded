@@ -16,7 +16,7 @@ router.get('/key/:key', async ctx => {
   const key = parseKey(ctx.params.key)
   if (key === false) return (ctx.status = 404)
 
-  const map = await Beatmap.findOne({ key, deletedAt: null }, '-votes')
+  const map = await Beatmap.findOne({ key, deletedAt: null })
   if (!map) return (ctx.status = 404)
 
   map.stats.downloads += 1
@@ -28,7 +28,7 @@ router.get('/key/:key', async ctx => {
 router.get('/hash/:hash', async ctx => {
   const { hash } = ctx.params
 
-  const map = await Beatmap.findOne({ hash, deletedAt: null }, '-votes')
+  const map = await Beatmap.findOne({ hash, deletedAt: null })
   if (!map) return (ctx.status = 404)
 
   map.stats.downloads += 1
