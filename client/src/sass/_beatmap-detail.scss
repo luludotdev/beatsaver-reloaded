@@ -4,13 +4,12 @@ div.beatmap-detail {
   border-radius: $radius;
 
   display: flex;
-  cursor: pointer;
+
+  $image-size: 172px;
+  $content-padding: 8px;
 
   & div.cover {
-    $image-size: 172px;
-
     border-radius: $radius;
-    margin: 0 $radius 0 0;
     width: $image-size;
     height: $image-size;
     overflow: hidden;
@@ -24,11 +23,11 @@ div.beatmap-detail {
   }
 
   & div.beatmap-content {
-    $content-padding: 8px;
-
     flex: 1;
     border-radius: $radius;
+    margin: 0 $radius 0 $radius;
     background-color: rgba(255, 255, 255, 0.92);
+    color: rgb(23, 23, 24);
     padding: $content-padding;
 
     display: flex;
@@ -37,8 +36,6 @@ div.beatmap-detail {
     & div.details {
       flex-grow: 1;
       margin-bottom: $content-padding;
-
-      color: rgb(23, 23, 24);
 
       & h1,
       h2 {
@@ -54,5 +51,10 @@ div.beatmap-detail {
         }
       }
     }
+  }
+
+  & div.links {
+    border-radius: $radius;
+    width: $image-size;
   }
 }

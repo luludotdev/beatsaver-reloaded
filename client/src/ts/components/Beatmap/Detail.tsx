@@ -105,6 +105,9 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
           </div>
 
           <h2 className='is-size-5 has-text-weight-normal'>
+            {beatmap.metadata.songName}
+          </h2>
+          <h2 className='is-size-5 has-text-weight-normal'>
             {beatmap.metadata.songSubName}
           </h2>
           <h3 className='is-size-7 has-text-weight-normal'>
@@ -119,19 +122,8 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
 
           <div className='description'>{beatmap.description}</div>
         </div>
-        <div
-          style={{
-            alignItems: 'center',
-            bottom: 0,
-            display: 'flex',
-            justifyContent: 'center',
-            left: 0,
-            pointerEvents: 'none',
-            position: 'fixed',
-            right: 0,
-            top: 0,
-          }}
-        >
+
+        <div className='links'>
           <a
             className='button'
             href={beatmap.downloadURL}
