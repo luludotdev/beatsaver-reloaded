@@ -9,6 +9,7 @@ import { clearCache } from '../../middleware/cache'
 import Beatmap from '../../mongo/models/Beatmap'
 import { IUserModel } from '../../mongo/models/User'
 import { mkdirp, writeFile } from '../../utils/fs'
+import signale from '../../utils/signale'
 import { parseBeatmap } from './parseBeatmap'
 
 import {
@@ -99,7 +100,7 @@ router.post(
     } catch (err) {
       if (err instanceof MongoError || err.name === 'ValidationError') throw err
 
-      console.error(err)
+      signale.error(err)
       throw ERR_BEATMAP_SAVE_FAILURE
     }
   }
