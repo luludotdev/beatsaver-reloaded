@@ -1,6 +1,7 @@
 import { Middleware } from 'koa'
 import { MongoError } from 'mongodb'
 import CodedError from '../utils/CodedError'
+import signale from '../utils/signale'
 
 export const errorHandler: Middleware = async (ctx, next) => {
   try {
@@ -43,6 +44,7 @@ export const errorHandler: Middleware = async (ctx, next) => {
       return (ctx.body = err.body)
     }
 
-    throw err
+    signale.error(err)
+    return (ctx.status = 500)
   }
 }
