@@ -64,6 +64,10 @@ div.beatmap-detail {
 
     & span.stat {
       margin-right: $stat-padding;
+
+      & i {
+        margin-left: 4px;
+      }
     }
   }
 

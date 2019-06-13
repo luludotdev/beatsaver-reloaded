@@ -81,6 +81,28 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
               <span className='uploaded'>{uploadedStr}</span>
             </h2>
           </div>
+          <div className='stats'>
+            <span className='stat'>
+              {beatmap.stats.downloads}
+              <i className='fas fa-download' />
+            </span>
+            <span className='stat'>
+              {beatmap.stats.upVotes}
+              <i className='fas fa-thumbs-up' />
+            </span>
+            <span className='stat'>
+              {beatmap.stats.downVotes}
+              <i className='fas fa-thumbs-down' />
+            </span>
+            <span className='stat'>
+              {beatmap.stats.rating}
+              <i className='fas fa-percent' />
+            </span>
+            <span className='stat'>
+              {beatmap.stats.plays}
+              <i className='fas fa-play' />
+            </span>
+          </div>
 
           <div className='tags'>
             {beatmap.metadata.difficulties.easy ? (
@@ -102,23 +124,6 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
             {beatmap.metadata.difficulties.expertPlus ? (
               <span className='tag is-expert-plus'>Expert+</span>
             ) : null}
-          </div>
-          <div className='stats'>
-            <span className='stat'>
-              <i className='fas fa-download' /> {beatmap.stats.downloads}
-            </span>
-            <span className='stat'>
-              <i className='fas fa-thumbs-up' /> {beatmap.stats.upVotes}
-            </span>
-            <span className='stat'>
-              <i className='fas fa-thumbs-down' /> {beatmap.stats.downVotes}
-            </span>
-            <span className='stat'>
-              <i className='fas fa-percent' /> {beatmap.stats.rating}
-            </span>
-            <span className='stat'>
-              <i className='fas fa-play' /> {beatmap.stats.plays}
-            </span>
           </div>
 
           <div className='description'>{beatmap.description}</div>
