@@ -22,7 +22,12 @@ router.get('/text/:page?', async ctx => {
   const maps = await paginate(
     Beatmap,
     { $text: { $search: query }, deletedAt: null },
-    { page, sort: '-stats.downloads', populate: 'uploader' }
+    {
+      page,
+      populate: 'uploader',
+      projection: '-votes',
+      sort: '-stats.downloads',
+    }
   )
 
   return (ctx.body = maps)

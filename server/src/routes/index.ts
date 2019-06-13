@@ -1,6 +1,7 @@
 import Router from 'koa-router'
 import { IS_DEV } from '../env'
 import signale from '../utils/signale'
+import { adminRouter } from './admin'
 import { authRouter } from './auth'
 import { cdnRouter } from './cdn'
 import { downloadRouter } from './download'
@@ -10,6 +11,7 @@ import { uploadRouter } from './upload'
 import { voteRouter } from './vote'
 
 export const routes: Router[] = [
+  adminRouter,
   authRouter,
   downloadRouter,
   mapsRouter,

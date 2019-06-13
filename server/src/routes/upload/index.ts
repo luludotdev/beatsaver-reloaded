@@ -50,10 +50,13 @@ router.post(
     }
 
     const { parsed: beatmap, cover } = await parseBeatmap(beatmapFile.buffer)
-    const duplicates = await Beatmap.find({
-      deletedAt: null,
-      hash: beatmap.hash,
-    })
+    const duplicates = await Beatmap.find(
+      {
+        deletedAt: null,
+        hash: beatmap.hash,
+      },
+      '-votes'
+    )
 
     if (duplicates.length > 0) throw ERR_DUPLICATE_BEATMAP
 

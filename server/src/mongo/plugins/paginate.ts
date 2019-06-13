@@ -8,6 +8,7 @@ const pOptions: PaginateOptions = {
 
 interface IPaginateOptions extends PaginateOptions {
   populate: string
+  projection: string
 }
 
 interface IPaginateResult<T extends Document> {
@@ -43,12 +44,6 @@ const paginateFn: <D extends Document, M extends PaginateModel<D>>(
   const lastPage = totalPages - 1
   const prevPage = prev === null ? null : prev - 1
   const nextPage = next === null ? null : next - 1
-
-  if (opts.populate) {
-    await Promise.all(
-      docs.map(d => d.populate(opts.populate as string).execPopulate())
-    )
-  }
 
   return { docs, totalDocs, lastPage, prevPage, nextPage }
 }
