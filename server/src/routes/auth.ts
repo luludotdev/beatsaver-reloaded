@@ -10,16 +10,16 @@ const router = new Router({
   prefix: '/auth',
 }).use(koaBody({ text: false, urlencoded: false }))
 
-router.post('/register', async ctx => {
-  const { username, email, password } = ctx.request.body
+// router.post('/register', async ctx => {
+//   const { username, email, password } = ctx.request.body
 
-  const hashed = password ? await hash(password, BCRYPT_ROUNDS) : undefined
-  const user = await User.create({ username, email, password: hashed })
-  const token = await issueToken(user)
+//   const hashed = password ? await hash(password, BCRYPT_ROUNDS) : undefined
+//   const user = await User.create({ username, email, password: hashed })
+//   const token = await issueToken(user)
 
-  ctx.set('x-auth-token', token)
-  return (ctx.status = 204)
-})
+//   ctx.set('x-auth-token', token)
+//   return (ctx.status = 204)
+// })
 
 router.post(
   '/login',

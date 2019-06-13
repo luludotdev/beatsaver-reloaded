@@ -22,5 +22,6 @@ app
   .use(errorHandler)
   .use(cacheHeaders)
 
+router.get('/health', ctx => (ctx.status = 200))
 routes.forEach(r => router.use(r.routes(), r.allowedMethods()))
 app.use(router.routes()).use(router.allowedMethods())

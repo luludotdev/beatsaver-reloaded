@@ -23,6 +23,10 @@ RUN apk add --no-cache tini bash git openssh make gcc g++ python && \
 USER node
 COPY --from=builder --chown=node:node /usr/app/build ./build
 
+ARG VCS_REF
+LABEL org.label-schema.vcs-ref=$VCS_REF \
+  org.label-schema.vcs-url="https://github.com/lolPants/beatsaver-reloaded"
+
 VOLUME ["/home/node/app/cdn"]
 ENTRYPOINT ["/sbin/tini", "--"]
 EXPOSE 3000

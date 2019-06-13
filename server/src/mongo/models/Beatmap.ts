@@ -1,5 +1,6 @@
 import mongoose, { Document, PaginateModel, Schema, Types } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
+import { BEATSAVER_EPOCH } from '../../constants'
 import { IS_DEV, PORT } from '../../env'
 import withoutKeys from '../plugins/withoutKeys'
 import withVirtuals from '../plugins/withVirtuals'
@@ -129,32 +130,28 @@ schema.virtual('stats.downVotes').get(function(this: IBeatmapModel) {
 })
 
 schema.virtual('stats.rating').get(function(this: IBeatmapModel) {
-  const upVotes = this.votes.filter(x => x.direction === 1).length
-  const downVotes = this.votes.filter(x => x.direction === -1).length
-
-  const total = upVotes + downVotes
+  const total = this.votes.length
   if (total === 0) return 0
 
+  const upVotes = this.votes.filter(x => x.direction === 1).length
   const score = upVotes / total
+
   return score - (score - 0.5) * Math.pow(2, -Math.log10(total + 1))
 })
 
 schema.virtual('stats.heat').get(function(this: IBeatmapModel) {
   const epoch = new Date(Date.UTC(1970, 0, 1))
   const seconds =
-    (this.uploaded.getTime() - epoch.getTime()) / 1000 - 1525132800
+    (this.uploaded.getTime() - epoch.getTime()) / 1000 - BEATSAVER_EPOCH
 
-  const upVotes = this.votes.filter(x => x.direction === 1).length
-  const downVotes = this.votes.filter(x => x.direction === -1).length
-
-  const score = upVotes - downVotes
+  const score = this.votes.reduce((acc, curr) => acc + curr.direction, 0)
   const absolute = Math.abs(score)
   const sign = score < 0 ? -1 : score > 0 ? 1 : 0
 
   const order = Math.log10(Math.max(absolute, 1))
   const heat = sign * order + seconds / 45000
 
-  return heat.toFixed(7)
+  return parseFloat(heat.toFixed(7))
 })
 
 schema.virtual('directDownload').get(function(this: IBeatmapModel) {
@@ -163,8 +160,8 @@ schema.virtual('directDownload').get(function(this: IBeatmapModel) {
 })
 
 schema.virtual('downloadURL').get(function(this: IBeatmapModel) {
-  const absolute = `/api/download/key/${this.key}`
-  return IS_DEV ? `http://localhost:${PORT}${absolute}` : absolute
+  const absolute = `/download/key/${this.key}`
+  return IS_DEV ? `http://localhost:${PORT}${absolute}` : `/api${absolute}`
 })
 
 schema.virtual('coverURL').get(function(this: IBeatmapModel) {

@@ -15,9 +15,7 @@ const withoutKeys = (keys: Readonly<string[]>, skipObject: boolean = false) => (
   const toObject = schema.get('toObject')
 
   const transform = (_: any, document: IBaseDocument) => {
-    for (const key of keys) {
-      delete document[key]
-    }
+    keys.forEach(k => (document[k] = undefined))
   }
 
   schema.set('toJSON', { ...toJSON, transform })

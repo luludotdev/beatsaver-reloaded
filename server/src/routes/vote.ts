@@ -7,6 +7,7 @@ import Beatmap from '../mongo/models/Beatmap'
 import { IUserModel } from '../mongo/models/User'
 import axios from '../utils/axios'
 import CodedError from '../utils/CodedError'
+import { parseKey } from '../utils/parseKey'
 
 const router = new Router({
   prefix: '/vote',
@@ -101,6 +102,7 @@ router.post('/steam/:key', async ctx => {
     const {
       data: { response: resp },
     } = await axios.get<ISteamResp>(url)
+
     if (resp.params && resp.params.steamid === steamID) {
       // Valid
       return submitVote(ctx, steamID)
@@ -122,7 +124,9 @@ const submitVote = async (ctx: ParameterizedContext, voterUID: string) => {
   const direction: number = parseInt(d, 10)
   if (direction !== -1 && direction !== 1) throw ERR_INVALID_DIRECTION
 
-  const { key } = ctx.params
+  const key = parseKey(ctx.params.key)
+  if (key === false) return (ctx.status = 404)
+
   const map = await Beatmap.findOne({ key, deletedAt: null })
   if (!map) return (ctx.status = 404)
 
@@ -134,7 +138,9 @@ const submitVote = async (ctx: ParameterizedContext, voterUID: string) => {
   }
 
   await map.save()
-  return (ctx.status = 204)
+  await map.populate('uploader').execPopulate()
+
+  return (ctx.body = map)
 }
 
 export { router as voteRouter }

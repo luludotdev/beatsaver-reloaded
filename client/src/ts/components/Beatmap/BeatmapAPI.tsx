@@ -1,6 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react'
 import { createSearch, IBeatmap } from '../../remote/beatmap'
-import { history } from '../../store'
 
 interface IRenderProps {
   maps: IBeatmap[]
@@ -31,13 +30,16 @@ export type IBeatmapSearch = ISearchProps | IQueryProps
 type IProps = ICommonProps & IBeatmapSearch
 
 const search = createSearch()
-const BeatmapAPI: FunctionComponent<IProps> = ({ render, type, query }) => {
+export const BeatmapAPI: FunctionComponent<IProps> = ({
+  render,
+  type,
+  query,
+}) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null as Error | null)
   const [done, setDone] = useState(false)
   const [maps, setMaps] = useState([] as IBeatmap[])
 
-  const reset = history.action === 'POP'
   useEffect(() => {
     setMaps([])
     setLoading(true)
@@ -45,7 +47,7 @@ const BeatmapAPI: FunctionComponent<IProps> = ({ render, type, query }) => {
     setDone(false)
 
     search
-      .next({ type, query, reset })
+      .next({ type, query, reset: true })
       .then(resp => {
         setLoading(false)
         setMaps(resp.value)
@@ -57,7 +59,7 @@ const BeatmapAPI: FunctionComponent<IProps> = ({ render, type, query }) => {
         setLoading(false)
         setError(err)
       })
-  }, [query, reset])
+  }, [query])
 
   const next = async () => {
     setLoading(true)
@@ -79,5 +81,3 @@ const BeatmapAPI: FunctionComponent<IProps> = ({ render, type, query }) => {
 
   return render({ maps, loading, done, error, next })
 }
-
-export default BeatmapAPI

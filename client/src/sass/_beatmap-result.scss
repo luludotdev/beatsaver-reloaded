@@ -34,7 +34,7 @@ div.beatmap-result {
   & div.beatmap-content {
     $content-padding: 8px;
 
-    flex-grow: 1;
+    flex: 1;
     border-radius: 0 $radius $radius 0;
     background-color: rgba(255, 255, 255, 0.92);
     padding: $content-padding;

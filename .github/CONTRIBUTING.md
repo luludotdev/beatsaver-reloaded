@@ -7,7 +7,7 @@ Just use the GitHub issue tracker to submit your bug reports and feature request
 ## Development Prerequisites
 - Node.js (>= v10.0.0) and `yarn`
 - MongoDB server running locally on port `27017`
-- Redis server running locally on port `6379` **[OPTIONAL]**
+- Redis server running locally on port `6379`
 
 ## Setup
 1. Fork & clone the repository, then setup a feature branch

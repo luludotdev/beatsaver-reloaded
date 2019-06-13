@@ -2,12 +2,17 @@ import { push as pushFn } from 'connected-react-router'
 import dateFormat from 'dateformat'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
-import React, { FunctionComponent, MouseEvent, useState } from 'react'
+import React, {
+  FunctionComponent,
+  MouseEvent,
+  useEffect,
+  useState,
+} from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { IBeatmap } from '../../remote/beatmap'
 
-import Missing from '../../../images/missing_image.png'
+import Placeholder from '../../../images/placeholder.svg'
 
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en-US')
@@ -24,7 +29,7 @@ interface IPassedProps {
 type IProps = IConnectedProps & IPassedProps
 
 const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
-  const [imageError, setImageError] = useState(false)
+  const [image, setImage] = useState(undefined as string | undefined)
 
   const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     if (e.target instanceof HTMLAnchorElement) return
@@ -45,13 +50,21 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
       .replace(/(  )/g, ' ')
   )
 
+  useEffect(() => {
+    fetch(map.coverURL)
+      .then(resp => {
+        if (resp.ok) setImage(map.coverURL)
+        else setImage(undefined)
+      })
+      .catch(() => setImage(undefined))
+  }, [])
+
   return (
     <div className='beatmap-result' onClick={e => handleClick(e)}>
       <div className='cover'>
         <img
-          src={imageError ? Missing : map.coverURL}
+          src={image || Placeholder}
           alt={`Artwork for ${map.name}`}
-          onError={() => setImageError(true)}
           draggable={false}
         />
       </div>

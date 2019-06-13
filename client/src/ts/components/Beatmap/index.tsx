@@ -1,20 +1,18 @@
-import React, { FunctionComponent, lazy, Suspense } from 'react'
+import React, { FunctionComponent } from 'react'
 import { Loader } from '../Loader'
 import { IBeatmapSearch } from './BeatmapAPI'
-export * from './Detail'
+import { BeatmapAPI } from './BeatmapAPI'
+import { BeatmapScroller } from './BeatmapScroller'
 
-const BeatmapAPI = lazy(() => import('./BeatmapAPI'))
-const BeatmapScroller = lazy(() => import('./BeatmapScroller'))
+export * from './Detail'
 
 export const BeatmapList: FunctionComponent<IBeatmapSearch> = props => {
   const isFirefox = navigator.userAgent.toLowerCase().includes('firefox')
 
   return (
-    <Suspense fallback={<Loader />}>
-      <BeatmapAPI
-        {...props}
-        render={api => <BeatmapScroller {...api} finite={isFirefox} />}
-      />
-    </Suspense>
+    <BeatmapAPI
+      {...props}
+      render={api => <BeatmapScroller {...api} finite={isFirefox} />}
+    />
   )
 }

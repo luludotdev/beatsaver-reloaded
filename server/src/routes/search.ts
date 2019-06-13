@@ -21,7 +21,7 @@ router.get('/text/:page?', async ctx => {
 
   const maps = await paginate(
     Beatmap,
-    { $text: { $search: query } },
+    { $text: { $search: query }, deletedAt: null },
     { page, sort: '-stats.downloads', populate: 'uploader' }
   )
 
