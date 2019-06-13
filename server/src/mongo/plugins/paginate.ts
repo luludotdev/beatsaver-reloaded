@@ -8,6 +8,7 @@ const pOptions: PaginateOptions = {
 
 interface IPaginateOptions extends PaginateOptions {
   populate: string
+  projection: string
 }
 
 interface IPaginateResult<T extends Document> {

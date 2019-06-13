@@ -17,7 +17,7 @@ router.get('/latest/:page?', mapCache, async ctx => {
   const maps = await paginate(
     Beatmap,
     { deletedAt: null },
-    { page, sort: '-uploaded', populate: 'uploader' }
+    { page, sort: '-uploaded', populate: 'uploader', projection: '-votes' }
   )
 
   return (ctx.body = maps)
@@ -28,7 +28,12 @@ router.get('/downloads/:page?', mapCache, async ctx => {
   const maps = await paginate(
     Beatmap,
     { deletedAt: null },
-    { page, sort: '-stats.downloads -uploaded', populate: 'uploader' }
+    {
+      page,
+      populate: 'uploader',
+      projection: '-votes',
+      sort: '-stats.downloads -uploaded',
+    }
   )
 
   return (ctx.body = maps)
@@ -39,7 +44,12 @@ router.get('/plays/:page?', mapCache, async ctx => {
   const maps = await paginate(
     Beatmap,
     { deletedAt: null },
-    { page, sort: '-stats.plays -uploaded', populate: 'uploader' }
+    {
+      page,
+      populate: 'uploader',
+      projection: '-votes',
+      sort: '-stats.plays -uploaded',
+    }
   )
 
   return (ctx.body = maps)
@@ -50,7 +60,18 @@ router.get('/hot/:page?', mapCache, async ctx => {
   const maps = await paginate(
     Beatmap,
     { deletedAt: null },
-    { page, sort: '-stats.heat', populate: 'uploader' }
+    { page, sort: '-stats.heat', populate: 'uploader', projection: '-votes' }
+  )
+
+  return (ctx.body = maps)
+})
+
+router.get('/rating/:page?', mapCache, async ctx => {
+  const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+  const maps = await paginate(
+    Beatmap,
+    { deletedAt: null },
+    { page, sort: '-stats.rating', populate: 'uploader', projection: '-votes' }
   )
 
   return (ctx.body = maps)
@@ -63,7 +84,7 @@ router.get(
     const key = parseKey(ctx.params.key)
     if (key === false) return (ctx.status = 404)
 
-    const map = await Beatmap.findOne({ key, deletedAt: null })
+    const map = await Beatmap.findOne({ key, deletedAt: null }, '-votes')
     if (!map) return (ctx.status = 404)
 
     await map.populate('uploader').execPopulate()
@@ -77,10 +98,13 @@ router.get(
   async ctx => {
     if (typeof ctx.params.hash !== 'string') return (ctx.status = 400)
 
-    const map = await Beatmap.findOne({
-      deletedAt: null,
-      hash: ctx.params.hash.toLowerCase(),
-    })
+    const map = await Beatmap.findOne(
+      {
+        deletedAt: null,
+        hash: ctx.params.hash.toLowerCase(),
+      },
+      '-votes'
+    )
 
     if (!map) return (ctx.status = 404)
 
@@ -97,7 +121,7 @@ router.get(
     const maps = await paginate(
       Beatmap,
       { uploader: ctx.params.id, deletedAt: null },
-      { page, sort: '-uploaded', populate: 'uploader' }
+      { page, sort: '-uploaded', populate: 'uploader', projection: '-votes' }
     )
 
     return (ctx.body = maps)

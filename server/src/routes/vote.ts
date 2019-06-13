@@ -127,7 +127,7 @@ const submitVote = async (ctx: ParameterizedContext, voterUID: string) => {
   const key = parseKey(ctx.params.key)
   if (key === false) return (ctx.status = 404)
 
-  const map = await Beatmap.findOne({ key, deletedAt: null })
+  const map = await Beatmap.findOne({ key, deletedAt: null }, '-votes')
   if (!map) return (ctx.status = 404)
 
   const existingVote = map.votes.find(x => x.voterUID === voterUID)
