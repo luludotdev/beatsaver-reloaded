@@ -1,5 +1,10 @@
 import { AxiosError } from 'axios'
+import dateFormat from 'dateformat'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
 import React, { FunctionComponent, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import Placeholder from '../../../images/placeholder.svg'
 import { IBeatmap } from '../../remote/beatmap'
 import { NotFound } from '../../routes/NotFound'
 import { axios } from '../../utils/axios'
@@ -44,29 +49,97 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
     )
   }
 
+  TimeAgo.addLocale(en)
+  const timeAgo = new TimeAgo('en-US')
+  const SEVEN_DAYS = 1000 * 60 * 60 * 24 * 7
+
+  const uploaded = new Date(beatmap.uploaded)
+  const uploadedStr =
+    Date.now() - uploaded.getTime() < SEVEN_DAYS
+      ? timeAgo.format(uploaded)
+      : dateFormat(uploaded, 'yyyy/mm/dd')
+
   return (
     <>
-      <pre>{JSON.stringify(beatmap, null, 2)}</pre>
-      <div
-        style={{
-          alignItems: 'center',
-          bottom: 0,
-          display: 'flex',
-          justifyContent: 'center',
-          left: 0,
-          pointerEvents: 'none',
-          position: 'fixed',
-          right: 0,
-          top: 0,
-        }}
-      >
-        <a
-          className='button'
-          href={beatmap.downloadURL}
-          style={{ pointerEvents: 'all', fontSize: '2em' }}
+      <div className='beatmap-detail'>
+        <div className='cover'>
+          <img
+            src={beatmap.coverURL || Placeholder}
+            alt={`Artwork for ${beatmap.name}`}
+            draggable={false}
+          />
+        </div>
+
+        <div className='beatmap-content'>
+          <div className='details'>
+            <h1 className='is-size-3 has-text-weight-light'>{beatmap.name}</h1>
+            <h2 className='is-size-5 has-text-weight-normal'>
+              Uploaded by{' '}
+              <Link to={`/uploader/${beatmap.uploader._id}`}>
+                {beatmap.uploader.username}
+              </Link>{' '}
+              <span className='uploaded'>{uploadedStr}</span>
+            </h2>
+          </div>
+
+          <div className='tags'>
+            {beatmap.metadata.difficulties.easy ? (
+              <span className='tag is-easy'>Easy</span>
+            ) : null}
+
+            {beatmap.metadata.difficulties.normal ? (
+              <span className='tag is-normal'>Normal</span>
+            ) : null}
+
+            {beatmap.metadata.difficulties.hard ? (
+              <span className='tag is-hard'>Hard</span>
+            ) : null}
+
+            {beatmap.metadata.difficulties.expert ? (
+              <span className='tag is-expert'>Expert</span>
+            ) : null}
+
+            {beatmap.metadata.difficulties.expertPlus ? (
+              <span className='tag is-expert-plus'>Expert+</span>
+            ) : null}
+          </div>
+
+          <h2 className='is-size-5 has-text-weight-normal'>
+            {beatmap.metadata.songSubName}
+          </h2>
+          <h3 className='is-size-7 has-text-weight-normal'>
+            Song Author: {beatmap.metadata.songAuthorName}
+          </h3>
+          <h3 className='is-size-7 has-text-weight-normal'>
+            Level Author: {beatmap.metadata.levelAuthorName}
+          </h3>
+          <h3 className='is-size-7 has-text-weight-normal'>
+            BPM {beatmap.metadata.bpm}
+          </h3>
+
+          <div className='description'>{beatmap.description}</div>
+        </div>
+        <div
+          style={{
+            alignItems: 'center',
+            bottom: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            left: 0,
+            pointerEvents: 'none',
+            position: 'fixed',
+            right: 0,
+            top: 0,
+          }}
         >
-          Download
-        </a>
+          <a
+            className='button'
+            href={beatmap.downloadURL}
+            style={{ pointerEvents: 'all', fontSize: '2em' }}
+          >
+            Download
+          </a>
+        </div>
       </div>
     </>
   )
