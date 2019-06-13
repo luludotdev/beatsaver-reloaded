@@ -44,12 +44,6 @@ const paginateFn: <D extends Document, M extends PaginateModel<D>>(
   const prevPage = prev === null ? null : prev - 1
   const nextPage = next === null ? null : next - 1
 
-  if (opts.populate) {
-    await Promise.all(
-      docs.map(d => d.populate(opts.populate as string).execPopulate())
-    )
-  }
-
   return { docs, totalDocs, lastPage, prevPage, nextPage }
 }
 
