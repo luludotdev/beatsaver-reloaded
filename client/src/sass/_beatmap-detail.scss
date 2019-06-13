@@ -1,0 +1,58 @@
+div.beatmap-detail {
+  $radius: 8px;
+  margin-bottom: 14px;
+  border-radius: $radius;
+
+  display: flex;
+  cursor: pointer;
+
+  & div.cover {
+    $image-size: 172px;
+
+    border-radius: $radius;
+    margin: 0 $radius 0 0;
+    width: $image-size;
+    height: $image-size;
+    overflow: hidden;
+
+    & img {
+      width: $image-size;
+      height: $image-size;
+
+      border-radius: $radius 0 0 $radius;
+    }
+  }
+
+  & div.beatmap-content {
+    $content-padding: 8px;
+
+    flex: 1;
+    border-radius: $radius;
+    background-color: rgba(255, 255, 255, 0.92);
+    padding: $content-padding;
+
+    display: flex;
+    flex-direction: column;
+
+    & div.details {
+      flex-grow: 1;
+      margin-bottom: $content-padding;
+
+      color: rgb(23, 23, 24);
+
+      & h1,
+      h2 {
+        line-height: 1em;
+      }
+
+      & h2 {
+        margin-top: 6px;
+
+        & > span.uploaded {
+          color: rgba(0, 0, 0, 0.5);
+          font-size: 0.7em;
+        }
+      }
+    }
+  }
+}
