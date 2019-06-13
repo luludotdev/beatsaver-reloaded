@@ -108,6 +108,12 @@ const schema: Schema = new Schema({
   stats: {
     downloads: { type: Number, default: 0 },
     plays: { type: Number, default: 0 },
+
+    downVotes: { type: Number, default: 0 },
+    upVotes: { type: Number, default: 0 },
+
+    heat: { type: Number, default: 0, index: true },
+    rating: { type: Number, default: 0, index: true },
   },
 
   votes: [
@@ -121,37 +127,37 @@ const schema: Schema = new Schema({
   hash: { type: String, required: true, index: true, maxlength: 40 },
 })
 
-schema.virtual('stats.upVotes').get(function(this: IBeatmapModel) {
-  return this.votes.filter(x => x.direction === 1).length
-})
-
-schema.virtual('stats.downVotes').get(function(this: IBeatmapModel) {
-  return this.votes.filter(x => x.direction === -1).length
-})
-
-schema.virtual('stats.rating').get(function(this: IBeatmapModel) {
+schema.pre('save', async function preSave(this: IBeatmapModel) {
   const total = this.votes.length
-  if (total === 0) return 0
-
   const upVotes = this.votes.filter(x => x.direction === 1).length
-  const score = upVotes / total
+  const downVotes = this.votes.filter(x => x.direction === -1).length
 
-  return score - (score - 0.5) * Math.pow(2, -Math.log10(total + 1))
-})
+  const calculateRating = () => {
+    if (total === 0) return 0
 
-schema.virtual('stats.heat').get(function(this: IBeatmapModel) {
-  const epoch = new Date(Date.UTC(1970, 0, 1))
-  const seconds =
-    (this.uploaded.getTime() - epoch.getTime()) / 1000 - BEATSAVER_EPOCH
+    const score = upVotes / total
+    return score - (score - 0.5) * Math.pow(2, -Math.log10(total + 1))
+  }
 
-  const score = this.votes.reduce((acc, curr) => acc + curr.direction, 0)
-  const absolute = Math.abs(score)
-  const sign = score < 0 ? -1 : score > 0 ? 1 : 0
+  const calculateHeat = () => {
+    const epoch = new Date(Date.UTC(1970, 0, 1))
+    const seconds =
+      (this.uploaded.getTime() - epoch.getTime()) / 1000 - BEATSAVER_EPOCH
 
-  const order = Math.log10(Math.max(absolute, 1))
-  const heat = sign * order + seconds / 45000
+    const score = this.votes.reduce((acc, curr) => acc + curr.direction, 0)
+    const absolute = Math.abs(score)
+    const sign = score < 0 ? -1 : score > 0 ? 1 : 0
 
-  return parseFloat(heat.toFixed(7))
+    const order = Math.log10(Math.max(absolute, 1))
+    const heat = sign * order + seconds / 45000
+
+    return parseFloat(heat.toFixed(7))
+  }
+
+  this.stats.upVotes = upVotes
+  this.stats.downVotes = downVotes
+  this.stats.rating = calculateRating()
+  this.stats.heat = calculateHeat()
 })
 
 schema.virtual('directDownload').get(function(this: IBeatmapModel) {
