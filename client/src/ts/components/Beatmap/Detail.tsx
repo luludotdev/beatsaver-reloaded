@@ -1,13 +1,11 @@
 import { AxiosError } from 'axios'
-import dateFormat from 'dateformat'
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Placeholder from '../../../images/placeholder.svg'
 import { IBeatmap } from '../../remote/beatmap'
 import { NotFound } from '../../routes/NotFound'
 import { axios } from '../../utils/axios'
+import { getUploadedString } from '../../utils/utils'
 import { Loader } from '../Loader'
 import { TextPage } from '../TextPage'
 
@@ -49,16 +47,6 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
     )
   }
 
-  TimeAgo.addLocale(en)
-  const timeAgo = new TimeAgo('en-US')
-  const SEVEN_DAYS = 1000 * 60 * 60 * 24 * 7
-
-  const uploaded = new Date(beatmap.uploaded)
-  const uploadedStr =
-    Date.now() - uploaded.getTime() < SEVEN_DAYS
-      ? timeAgo.format(uploaded)
-      : dateFormat(uploaded, 'yyyy/mm/dd')
-
   return (
     <>
       <div className='beatmap-detail'>
@@ -81,7 +69,7 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
                 <Link to={`/uploader/${beatmap.uploader._id}`}>
                   {beatmap.uploader.username}
                 </Link>{' '}
-                <span className='uploaded'>{uploadedStr}</span>
+                <span className='uploaded'>{getUploadedString(beatmap)}</span>
               </h2>
             </div>
             <div className='stats'>
