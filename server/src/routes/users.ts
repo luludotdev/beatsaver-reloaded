@@ -1,7 +1,7 @@
 import cors from '@koa/cors'
 import passport from 'koa-passport'
 import Router from 'koa-router'
-import { IRedactedUser, IUserModel } from '../mongo/models/User'
+import User, { IRedactedUser, IUserModel } from '../mongo/models/User'
 
 const router = new Router({
   prefix: '/users',
@@ -28,5 +28,12 @@ router.get(
     return (ctx.body = userInfo)
   }
 )
+
+router.get('/find/:id', async ctx => {
+  const user = await User.findById(ctx.params.id, '-password -email')
+  if (!user) return (ctx.status = 404)
+
+  return (ctx.body = user)
+})
 
 export { router as usersRouter }
