@@ -25,4 +25,9 @@ It is recommended to use Redis caching and a long, random JWT token in productio
 Configuration is done using environment variables. Please refer to `.env.example` for more information.
 
 ## 🔧 Developing
-If you wish to contribute, please refer to the [contribution guidelines](https://github.com/lolPants/beatsaver-reloaded/blob/master/.github/CONTRIBUTING.md).
+If you wish to contribute, please refer to the [contribution guidelines](https://github.com/lolPants/beatsaver-reloaded/blob/master/.github/CONTRIBUTING.md) or the documentation.
+
+## ℹ Documentation
+Documentation is available as a vuepress site at `/docs`.
+
+The code that builds the site is licensed under the [project's ISC License](https://github.com/lolPants/beatsaver-reloaded/blob/master/LICENSE). However the content of the documentation is licensed using the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) license, as documented [here](https://github.com/lolPants/beatsaver-reloaded/tree/master/docs/LICENSE).
