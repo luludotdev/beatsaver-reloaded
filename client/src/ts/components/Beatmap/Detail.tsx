@@ -1,6 +1,5 @@
 import { AxiosError } from 'axios'
 import React, { FunctionComponent, useEffect, useState } from 'react'
-import { IBeatmap } from '../../remote/beatmap'
 import { NotFound } from '../../routes/NotFound'
 import { axios } from '../../utils/axios'
 import { Loader } from '../Loader'
