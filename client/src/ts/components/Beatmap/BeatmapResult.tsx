@@ -1,5 +1,4 @@
 import { push as pushFn } from 'connected-react-router'
-import dateFormat from 'dateformat'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import React, {
@@ -13,10 +12,9 @@ import { Link } from 'react-router-dom'
 import { IBeatmap } from '../../remote/beatmap'
 
 import Placeholder from '../../../images/placeholder.svg'
+import { getUploadedString } from '../../utils/utils'
 
 TimeAgo.addLocale(en)
-const timeAgo = new TimeAgo('en-US')
-const SEVEN_DAYS = 1000 * 60 * 60 * 24 * 7
 
 interface IConnectedProps {
   push: typeof pushFn
@@ -35,12 +33,6 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
     if (e.target instanceof HTMLAnchorElement) return
     else push(`/beatmap/${map.key}`)
   }
-
-  const uploaded = new Date(map.uploaded)
-  const uploadedStr =
-    Date.now() - uploaded.getTime() < SEVEN_DAYS
-      ? timeAgo.format(uploaded)
-      : dateFormat(uploaded, 'yyyy/mm/dd')
 
   const characteristics = map.metadata.characteristics.map(characteristic =>
     characteristic
@@ -77,7 +69,7 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
             <Link to={`/uploader/${map.uploader._id}`}>
               {map.uploader.username}
             </Link>{' '}
-            <span className='uploaded'>{uploadedStr}</span>
+            <span className='uploaded'>{getUploadedString(map)}</span>
           </h2>
         </div>
 
