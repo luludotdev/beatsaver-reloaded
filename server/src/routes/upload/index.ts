@@ -51,15 +51,6 @@ router.post(
     }
 
     const { parsed: beatmap, cover } = await parseBeatmap(beatmapFile.buffer)
-    const duplicates = await Beatmap.find(
-      {
-        deletedAt: null,
-        hash: beatmap.hash,
-      },
-      '-votes'
-    )
-
-    if (duplicates.length > 0) throw ERR_DUPLICATE_BEATMAP
 
     const [latest] = await Beatmap.find()
       .sort({ key: -1 })
@@ -98,7 +89,10 @@ router.post(
       await newBeatmap.populate('uploader').execPopulate()
       return (ctx.body = newBeatmap)
     } catch (err) {
-      if (err instanceof MongoError || err.name === 'ValidationError') throw err
+      if (err instanceof MongoError || err.name === 'ValidationError') {
+        if (err.code === 11000) throw ERR_DUPLICATE_BEATMAP
+        else throw err
+      }
 
       signale.error(err)
       throw ERR_BEATMAP_SAVE_FAILURE
