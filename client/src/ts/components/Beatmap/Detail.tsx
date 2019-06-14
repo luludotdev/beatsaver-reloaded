@@ -64,7 +64,7 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
       <div className='beatmap-detail'>
         <div className='cover'>
           <img
-            src={Placeholder}
+            src={beatmap.coverURL || Placeholder}
             alt={`Artwork for ${beatmap.name}`}
             draggable={false}
           />
@@ -127,6 +127,25 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
               {beatmap.metadata.difficulties.expertPlus ? (
                 <span className='tag is-expert-plus'>Expert+</span>
               ) : null}
+            </div>
+
+            <div className='map-info'>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>SONG NAME</td>
+                    <td>{beatmap.metadata.songName}</td>
+                    <td>SONG SUB NAME</td>
+                    <td>{beatmap.metadata.songSubName}</td>
+                  </tr>
+                  <tr>
+                    <td>SONG AUTHOR NAME</td>
+                    <td>{beatmap.metadata.songAuthorName}</td>
+                    <td>LEVEL AUTHOR NAME</td>
+                    <td>{beatmap.metadata.levelAuthorName}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
             <div className='description'>{beatmap.description}</div>

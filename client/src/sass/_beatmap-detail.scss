@@ -57,6 +57,40 @@ div.beatmap-detail {
         }
       }
     }
+
+    & div.map-info {
+      margin: 0 $content-padding 1em $content-padding;
+      td {
+        word-wrap: break-word;
+        vertical-align: middle;
+        &:nth-child(odd) {
+          color: rgba(0, 0, 0, 0.5);
+          font-size: 0.7em;
+          text-align: right;
+          padding-right: 0.7em;
+        }
+
+        &:nth-child(3) {
+          padding-left: 4em;
+        }
+      }
+    }
+
+    & div.stats {
+      margin-bottom: $content-padding;
+
+      & span.stat {
+        margin-right: $stat-padding;
+
+        & i {
+          margin-left: 4px;
+        }
+      }
+    }
+
+    & div.description {
+      margin-bottom: $content-padding;
+    }
   }
 
   & div.links {
@@ -67,21 +101,5 @@ div.beatmap-detail {
       font-size: 1.2em;
       height: 50px;
     }
-  }
-
-  & div.stats {
-    margin-bottom: $content-padding;
-
-    & span.stat {
-      margin-right: $stat-padding;
-
-      & i {
-        margin-left: 4px;
-      }
-    }
-  }
-
-  & div.description {
-    margin-bottom: $content-padding;
   }
 }
