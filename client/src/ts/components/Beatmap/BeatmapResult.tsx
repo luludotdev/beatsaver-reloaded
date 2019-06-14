@@ -1,4 +1,3 @@
-import { push as pushFn } from 'connected-react-router'
 import dateFormat from 'dateformat'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
@@ -8,7 +7,6 @@ import React, {
   useEffect,
   useState,
 } from 'react'
-import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { IBeatmap } from '../../remote/beatmap'
 
@@ -18,23 +16,12 @@ TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en-US')
 const SEVEN_DAYS = 1000 * 60 * 60 * 24 * 7
 
-interface IConnectedProps {
-  push: typeof pushFn
-}
-
-interface IPassedProps {
+interface IProps {
   map: IBeatmap
 }
 
-type IProps = IConnectedProps & IPassedProps
-
-const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
+const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
   const [image, setImage] = useState(undefined as string | undefined)
-
-  const handleClick = (e: MouseEvent<HTMLDivElement>) => {
-    if (e.target instanceof HTMLAnchorElement) return
-    else push(`/beatmap/${map.key}`)
-  }
 
   const uploaded = new Date(map.uploaded)
   const uploadedStr =
@@ -60,7 +47,7 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
   }, [])
 
   return (
-    <div className='beatmap-result' onClick={e => handleClick(e)}>
+    <Link className='beatmap-result' to={`/beatmap/${map.key}`}>
       <div className='cover'>
         <img
           src={image || Placeholder}
@@ -103,13 +90,8 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
           ) : null}
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
-const ConnectedBeatmapResult = connect(
-  null,
-  { push: pushFn }
-)(BeatmapResult)
-
-export { ConnectedBeatmapResult as BeatmapResult }
+export { BeatmapResult }
