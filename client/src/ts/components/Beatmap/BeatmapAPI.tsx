@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react'
-import { createSearch, IBeatmap } from '../../remote/beatmap'
+import { createSearch } from '../../remote/search'
 
 interface IRenderProps {
   maps: IBeatmap[]
