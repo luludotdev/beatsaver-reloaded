@@ -18,9 +18,34 @@ module.exports = {
     lastUpdated: 'Last Updated',
 
     displayAllHeaders: true,
-    sidebar: 'auto',
+    sidebar: {
+      '/endpoints/': generateSidebar('Endpoints', [
+        '',
+        'maps',
+        'search',
+        'vote',
+        'download',
+        'auth',
+        'users',
+      ]),
+      '/responses/': generateSidebar('Responses', [
+        '',
+        'pagination',
+        'beatmap',
+        'user',
+      ]),
+      '/usage/': generateSidebar('Usage', [
+        '',
+        'semantics',
+        'errors',
+        'rate-limits',
+      ]),
+    },
+
     nav: [
-      { text: 'Home', link: '/' },
+      { text: 'Usage', link: '/usage/' },
+      { text: 'Endpoints', link: '/endpoints/' },
+      { text: 'Responses', link: '/responses/' },
     ],
   },
   configureWebpack: {
@@ -30,4 +55,12 @@ module.exports = {
 			},
 		},
 	},
+}
+
+function generateSidebar(title, routes) {
+  return [{
+    title,
+    collapsable: false,
+    children: routes,
+  }]
 }
