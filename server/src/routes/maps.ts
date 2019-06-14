@@ -1,3 +1,4 @@
+import cors from '@koa/cors'
 import Router from 'koa-router'
 import { cache } from '../middleware/cache'
 import Beatmap from '../mongo/models/Beatmap'
@@ -6,7 +7,7 @@ import { parseKey } from '../utils/parseKey'
 
 const router = new Router({
   prefix: '/maps',
-})
+}).use(cors())
 
 const mapCache = cache({ prefix: 'maps', expire: 60 * 10 })
 
