@@ -4,8 +4,8 @@ import { connect, MapStateToProps } from 'react-redux'
 import { IState } from '../../store'
 import { IUser, logout as logoutFn } from '../../store/user'
 import { NavbarDivider } from './NavbarDivider'
-import { NavbarDropdown } from './NavbarDropdown'
-import { NavbarItem, NavbarItemExt } from './NavbarItem'
+import { NavbarDropdown, NavbarDropdownDivider } from './NavbarDropdown'
+import { NavbarClickableItem, NavbarItem, NavbarItemExt } from './NavbarItem'
 
 import Logo from '../../../images/beat_saver_logo_white.png'
 
@@ -109,6 +109,15 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout, push }) => {
                 </NavbarItem>
 
                 <NavbarDropdown label={user.username}>
+                  <NavbarItem
+                    setActive={setActive}
+                    to={`/uploader/${user._id}`}
+                  >
+                    My Beatmaps
+                  </NavbarItem>
+
+                  <NavbarDropdownDivider />
+
                   <NavbarClickableItem onClick={e => handleLogout(e)}>
                     Logout
                   </NavbarClickableItem>
