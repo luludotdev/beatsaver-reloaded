@@ -1,12 +1,7 @@
 import dateFormat from 'dateformat'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
-import React, {
-  FunctionComponent,
-  MouseEvent,
-  useEffect,
-  useState,
-} from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IBeatmap } from '../../remote/beatmap'
 
