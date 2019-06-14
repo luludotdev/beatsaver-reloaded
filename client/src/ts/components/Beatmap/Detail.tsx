@@ -149,6 +149,7 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
             </div>
 
             <div className='description'>{beatmap.description}</div>
+            <div className='key'>Key: {beatmap.key}</div>
           </div>
 
           <div className='links'>

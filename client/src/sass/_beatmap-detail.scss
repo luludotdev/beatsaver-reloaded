@@ -91,6 +91,10 @@ div.beatmap-detail {
     & div.description {
       margin-bottom: $content-padding;
     }
+
+    & div.key {
+      text-align: right;
+    }
   }
 
   & div.links {
