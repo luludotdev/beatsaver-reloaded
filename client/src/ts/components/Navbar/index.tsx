@@ -34,7 +34,7 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout, push }) => {
     <nav className='navbar has-shadow is-dark is-fixed-top'>
       <div className='container'>
         <div className='navbar-brand'>
-          <NavbarItem to='/'>
+          <NavbarItem setActive={setActive} to='/'>
             <img src={Logo} alt='BeatSaver' />
           </NavbarItem>
 
@@ -53,16 +53,27 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout, push }) => {
 
         <div className={`navbar-menu${active ? ' is-active' : ''}`}>
           <div className='navbar-start'>
-            <NavbarItem to='/browse/latest'>Latest</NavbarItem>
+            <NavbarItem setActive={setActive} to='/browse/latest'>
+              Latest
+            </NavbarItem>
 
             <NavbarDropdown label='Sort By'>
-              <NavbarItem to='/browse/hot'>Hot</NavbarItem>
-              <NavbarItem to='/browse/downloads'>Downloads</NavbarItem>
-              <NavbarItem to='/browse/plays'>Plays</NavbarItem>
+              <NavbarItem setActive={setActive} to='/browse/hot'>
+                Hot
+              </NavbarItem>
+
+              <NavbarItem setActive={setActive} to='/browse/downloads'>
+                Downloads
+              </NavbarItem>
+
+              <NavbarItem setActive={setActive} to='/browse/plays'>
+                Plays
+              </NavbarItem>
             </NavbarDropdown>
 
-            <NavbarItem to='/search'>Search</NavbarItem>
-
+            <NavbarItem setActive={setActive} to='/search'>
+              Search
+            </NavbarItem>
             <NavbarDivider />
 
             <NavbarItemExt href='https://bsaber.com'>BeastSaber</NavbarItemExt>
@@ -88,15 +99,19 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout, push }) => {
 
           <div className='navbar-end'>
             {!user ? (
-              <NavbarItem to='/auth/login'>Login</NavbarItem>
+              <NavbarItem setActive={setActive} to='/auth/login'>
+                Login
+              </NavbarItem>
             ) : (
               <>
-                <NavbarItem to='/user/upload'>Upload</NavbarItem>
+                <NavbarItem setActive={setActive} to='/user/upload'>
+                  Upload
+                </NavbarItem>
 
                 <NavbarDropdown label={user.username}>
-                  <a className='navbar-item' onClick={e => handleLogout(e)}>
+                  <NavbarClickableItem onClick={e => handleLogout(e)}>
                     Logout
-                  </a>
+                  </NavbarClickableItem>
                 </NavbarDropdown>
               </>
             )}

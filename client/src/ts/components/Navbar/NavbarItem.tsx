@@ -1,13 +1,24 @@
-import React, { FunctionComponent, MouseEvent } from 'react'
+import React, {
+  Dispatch,
+  FunctionComponent,
+  MouseEvent,
+  SetStateAction,
+} from 'react'
 import { Link } from 'react-router-dom'
 import { ExtLink } from '../ExtLink'
 
 interface IItemProps {
   to: string
+
+  setActive: Dispatch<SetStateAction<boolean>>
 }
 
-export const NavbarItem: FunctionComponent<IItemProps> = ({ to, children }) => (
-  <Link className='navbar-item' to={to}>
+export const NavbarItem: FunctionComponent<IItemProps> = ({
+  to,
+  children,
+  setActive,
+}) => (
+  <Link className='navbar-item' to={to} onClick={() => setActive(false)}>
     {children}
   </Link>
 )
