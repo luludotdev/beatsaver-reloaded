@@ -74,23 +74,23 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
             </div>
             <div className='stats'>
               <span className='stat'>
-                {beatmap.stats.downloads}
+                {beatmap.stats.downloads.toLocaleString()}
                 <i className='fas fa-download' />
               </span>
               <span className='stat'>
-                {beatmap.stats.upVotes}
+                {beatmap.stats.upVotes.toLocaleString()}
                 <i className='fas fa-thumbs-up' />
               </span>
               <span className='stat'>
-                {beatmap.stats.downVotes}
+                {beatmap.stats.downVotes.toLocaleString()}
                 <i className='fas fa-thumbs-down' />
               </span>
               <span className='stat'>
-                {beatmap.stats.rating}
+                {beatmap.stats.rating.toLocaleString()}
                 <i className='fas fa-percent' />
               </span>
               <span className='stat'>
-                {beatmap.stats.plays}
+                {beatmap.stats.plays.toLocaleString()}
                 <i className='fas fa-play' />
               </span>
             </div>
