@@ -64,79 +64,83 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
       <div className='beatmap-detail'>
         <div className='cover'>
           <img
-            src={beatmap.coverURL || Placeholder}
+            src={Placeholder}
             alt={`Artwork for ${beatmap.name}`}
             draggable={false}
           />
         </div>
 
-        <div className='beatmap-content'>
-          <div className='details'>
-            <h1 className='is-size-3 has-text-weight-light'>{beatmap.name}</h1>
-            <h2 className='is-size-5 has-text-weight-normal'>
-              Uploaded by{' '}
-              <Link to={`/uploader/${beatmap.uploader._id}`}>
-                {beatmap.uploader.username}
-              </Link>{' '}
-              <span className='uploaded'>{uploadedStr}</span>
-            </h2>
+        <div className='beatmap-content-container'>
+          <div className='beatmap-content'>
+            <div className='details'>
+              <h1 className='is-size-3 has-text-weight-light'>
+                {beatmap.name}
+              </h1>
+              <h2 className='is-size-5 has-text-weight-normal'>
+                Uploaded by{' '}
+                <Link to={`/uploader/${beatmap.uploader._id}`}>
+                  {beatmap.uploader.username}
+                </Link>{' '}
+                <span className='uploaded'>{uploadedStr}</span>
+              </h2>
+            </div>
+            <div className='stats'>
+              <span className='stat'>
+                {beatmap.stats.downloads}
+                <i className='fas fa-download' />
+              </span>
+              <span className='stat'>
+                {beatmap.stats.upVotes}
+                <i className='fas fa-thumbs-up' />
+              </span>
+              <span className='stat'>
+                {beatmap.stats.downVotes}
+                <i className='fas fa-thumbs-down' />
+              </span>
+              <span className='stat'>
+                {beatmap.stats.rating}
+                <i className='fas fa-percent' />
+              </span>
+              <span className='stat'>
+                {beatmap.stats.plays}
+                <i className='fas fa-play' />
+              </span>
+            </div>
+
+            <div className='tags'>
+              {beatmap.metadata.difficulties.easy ? (
+                <span className='tag is-easy'>Easy</span>
+              ) : null}
+
+              {beatmap.metadata.difficulties.normal ? (
+                <span className='tag is-normal'>Normal</span>
+              ) : null}
+
+              {beatmap.metadata.difficulties.hard ? (
+                <span className='tag is-hard'>Hard</span>
+              ) : null}
+
+              {beatmap.metadata.difficulties.expert ? (
+                <span className='tag is-expert'>Expert</span>
+              ) : null}
+
+              {beatmap.metadata.difficulties.expertPlus ? (
+                <span className='tag is-expert-plus'>Expert+</span>
+              ) : null}
+            </div>
+
+            <div className='description'>{beatmap.description}</div>
           </div>
-          <div className='stats'>
-            <span className='stat'>
-              {beatmap.stats.downloads}
-              <i className='fas fa-download' />
-            </span>
-            <span className='stat'>
-              {beatmap.stats.upVotes}
-              <i className='fas fa-thumbs-up' />
-            </span>
-            <span className='stat'>
-              {beatmap.stats.downVotes}
-              <i className='fas fa-thumbs-down' />
-            </span>
-            <span className='stat'>
-              {beatmap.stats.rating}
-              <i className='fas fa-percent' />
-            </span>
-            <span className='stat'>
-              {beatmap.stats.plays}
-              <i className='fas fa-play' />
-            </span>
+
+          <div className='links'>
+            <a
+              className='button'
+              href={beatmap.downloadURL}
+              style={{ pointerEvents: 'all' }}
+            >
+              Download
+            </a>
           </div>
-
-          <div className='tags'>
-            {beatmap.metadata.difficulties.easy ? (
-              <span className='tag is-easy'>Easy</span>
-            ) : null}
-
-            {beatmap.metadata.difficulties.normal ? (
-              <span className='tag is-normal'>Normal</span>
-            ) : null}
-
-            {beatmap.metadata.difficulties.hard ? (
-              <span className='tag is-hard'>Hard</span>
-            ) : null}
-
-            {beatmap.metadata.difficulties.expert ? (
-              <span className='tag is-expert'>Expert</span>
-            ) : null}
-
-            {beatmap.metadata.difficulties.expertPlus ? (
-              <span className='tag is-expert-plus'>Expert+</span>
-            ) : null}
-          </div>
-
-          <div className='description'>{beatmap.description}</div>
-        </div>
-
-        <div className='links'>
-          <a
-            className='button'
-            href={beatmap.downloadURL}
-            style={{ pointerEvents: 'all', fontSize: '2em' }}
-          >
-            Download
-          </a>
         </div>
       </div>
     </>
