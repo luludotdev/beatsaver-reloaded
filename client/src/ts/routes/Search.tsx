@@ -18,6 +18,14 @@ const Search: FunctionComponent<IProps> = ({ pathname, queryStr, replace }) => {
 
   useEffect(() => {
     const { q } = parse(queryStr)
+    if (q !== query) {
+      setQuery('')
+      window.scroll({ top: 0 })
+    }
+  }, [queryStr])
+
+  useEffect(() => {
+    const { q } = parse(queryStr)
     if (q && typeof q === 'string') setQuery(q)
   }, [pathname])
 
