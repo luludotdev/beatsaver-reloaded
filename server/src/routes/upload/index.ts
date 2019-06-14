@@ -50,7 +50,9 @@ router.post(
       throw ERR_BEATMAP_NOT_ZIP
     }
 
-    const { parsed: beatmap, cover } = await parseBeatmap(beatmapFile.buffer)
+    const { parsed: beatmap, cover, zip } = await parseBeatmap(
+      beatmapFile.buffer
+    )
 
     const [latest] = await Beatmap.find()
       .sort({ key: -1 })
@@ -63,10 +65,7 @@ router.post(
 
       const beatmapDir = join(CDN_PATH, nextKey)
       await mkdirp(beatmapDir)
-      await writeFile(
-        join(beatmapDir, `${beatmap.hash}.zip`),
-        beatmapFile.buffer
-      )
+      await writeFile(join(beatmapDir, `${beatmap.hash}.zip`), zip)
       await writeFile(
         join(beatmapDir, `${beatmap.hash}${beatmap.coverExt}`),
         cover

@@ -85,3 +85,18 @@ export const ERR_BEATMAP_COVER_TOO_SMOL = new CodedError(
   'ERR_BEATMAP_COVER_TOO_SMOL',
   400
 )
+
+export const ERR_BEATMAP_AUDIO_NOT_FOUND = (filename: string) =>
+  new CodedError(
+    `${filename} not found`,
+    0x3000d,
+    'ERR_BEATMAP_AUDIO_NOT_FOUND',
+    400
+  )
+
+export const ERR_BEATMAP_AUDIO_INVALID = new CodedError(
+  'beatmap audio file invalid',
+  0x3000e,
+  'ERR_BEATMAP_AUDIO_INVALID',
+  400
+)

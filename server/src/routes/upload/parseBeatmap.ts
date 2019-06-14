@@ -1,11 +1,13 @@
-import AdmZIP from 'adm-zip'
 import { createHash } from 'crypto'
+import fileType from 'file-type'
 import imageSize from 'image-size'
+import JSZip from 'jszip'
+import { parse } from 'path'
 import { validJSON } from '../../utils/json'
-import { getDataPromise } from '../../utils/zip'
 
-import fileType = require('file-type')
 import {
+  ERR_BEATMAP_AUDIO_INVALID,
+  ERR_BEATMAP_AUDIO_NOT_FOUND,
   ERR_BEATMAP_COVER_INVALID,
   ERR_BEATMAP_COVER_NOT_FOUND,
   ERR_BEATMAP_COVER_NOT_SQUARE,
@@ -17,22 +19,27 @@ import {
 
 export const parseBeatmap: (
   zipBuf: Buffer
-) => Promise<{ parsed: IParsedBeatmap; cover: Buffer }> = async zipBuf => {
-  const zip = new AdmZIP(zipBuf)
+) => Promise<{
+  parsed: IParsedBeatmap
+  cover: Buffer
+  zip: Buffer
+}> = async zipBuf => {
+  const zip = new JSZip()
+  await zip.loadAsync(zipBuf)
 
-  const info = zip.getEntry('info.dat')
+  const info = zip.file('info.dat')
   if (info === null) throw ERR_BEATMAP_INFO_NOT_FOUND
 
-  const infoDAT = await getDataPromise(info, true)
+  let infoDAT = await info.async('text')
   if (!validJSON(infoDAT)) throw ERR_BEATMAP_INFO_INVALID
   const infoJSON: IBeatmapInfo = JSON.parse(infoDAT)
 
-  const coverEntry = zip.getEntry(infoJSON._coverImageFilename)
+  const coverEntry = zip.file(infoJSON._coverImageFilename)
   if (coverEntry === null) {
     throw ERR_BEATMAP_COVER_NOT_FOUND(infoJSON._coverImageFilename)
   }
 
-  const cover = await getDataPromise(coverEntry)
+  const cover = await coverEntry.async('nodebuffer')
   const coverType = fileType(cover)
   if (
     coverType === undefined ||
@@ -45,19 +52,47 @@ export const parseBeatmap: (
   if (size.width !== size.height) throw ERR_BEATMAP_COVER_NOT_SQUARE
   if (size.width < 256 || size.height < 256) throw ERR_BEATMAP_COVER_TOO_SMOL
 
+  const audioEntry = zip.file(infoJSON._songFilename)
+  if (audioEntry === null) {
+    throw ERR_BEATMAP_AUDIO_NOT_FOUND(infoJSON._songFilename)
+  }
+
+  const audio = await audioEntry.async('nodebuffer')
+  const audioType = fileType(audio)
+  if (
+    audioType === undefined ||
+    (audioType.mime !== 'audio/ogg' && audioType.mime !== 'audio/wav')
+  ) {
+    throw ERR_BEATMAP_AUDIO_INVALID
+  }
+
+  const { name, ext } = parse(infoJSON._songFilename)
+  if (ext === '.ogg') {
+    const eggName = `${name}.egg`
+
+    zip.remove(infoJSON._songFilename)
+    zip.file(eggName, audio)
+
+    infoJSON._songFilename = `${name}.egg`
+    infoDAT = `${JSON.stringify(infoJSON, null, 2)}\n`
+
+    zip.remove('info.dat')
+    zip.file('info.dat', infoDAT)
+  }
+
   const difficulties = ([] as IDifficultyBeatmap[]).concat(
     ...infoJSON._difficultyBeatmapSets.map(x => x._difficultyBeatmaps)
   )
 
   for (const diff of difficulties) {
-    const diffEntry = zip.getEntry(diff._beatmapFilename)
+    const diffEntry = zip.file(diff._beatmapFilename)
     if (diffEntry === null) {
       throw ERR_BEATMAP_DIFF_NOT_FOUND(diff._beatmapFilename)
     }
   }
 
   const diffBuffers = await Promise.all(
-    difficulties.map(x => getDataPromise(zip.getEntry(x._beatmapFilename)))
+    difficulties.map(x => zip.file(x._beatmapFilename).async('nodebuffer'))
   )
 
   const hash = createHash('sha1')
@@ -94,5 +129,6 @@ export const parseBeatmap: (
     coverExt: `.${coverType.ext}`,
   }
 
-  return { parsed, cover }
+  const newZip = await zip.generateAsync({ type: 'nodebuffer' })
+  return { parsed, cover, zip: newZip }
 }
