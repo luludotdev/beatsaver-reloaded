@@ -124,7 +124,7 @@ const schema: Schema = new Schema({
   ],
 
   coverExt: { type: String, required: true, maxlength: 5 },
-  hash: { type: String, required: true, index: true, maxlength: 40 },
+  hash: { type: String, required: true, unique: true, maxlength: 40 },
 })
 
 schema.pre('save', async function preSave(this: IBeatmapModel) {
