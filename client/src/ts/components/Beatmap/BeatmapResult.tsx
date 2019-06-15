@@ -12,9 +12,6 @@ interface IProps {
 const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
   const [image, setImage] = useState(undefined as string | undefined)
 
-  const uploaded = new Date(map.uploaded)
-  const uploadedStr = formatDate(uploaded)
-
   const characteristics = map.metadata.characteristics.map(characteristic =>
     characteristic
       .replace(/([A-Z])/g, ' $1')
@@ -50,7 +47,7 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
             <Link to={`/uploader/${map.uploader._id}`}>
               {map.uploader.username}
             </Link>{' '}
-            <span className='uploaded'>{uploadedStr}</span>
+            <span className='uploaded'>{formatDate(map.uploaded)}</span>
           </h2>
         </div>
 
