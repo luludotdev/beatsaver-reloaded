@@ -9,6 +9,7 @@ import { clearCache } from '../../middleware/cache'
 import Beatmap from '../../mongo/models/Beatmap'
 import { IUserModel } from '../../mongo/models/User'
 import { mkdirp, writeFile } from '../../utils/fs'
+import signale from '../../utils/signale'
 import { parseBeatmap } from './parseBeatmap'
 
 import {
@@ -49,16 +50,9 @@ router.post(
       throw ERR_BEATMAP_NOT_ZIP
     }
 
-    const { parsed: beatmap, cover } = await parseBeatmap(beatmapFile.buffer)
-    const duplicates = await Beatmap.find(
-      {
-        deletedAt: null,
-        hash: beatmap.hash,
-      },
-      '-votes'
+    const { parsed: beatmap, cover, zip } = await parseBeatmap(
+      beatmapFile.buffer
     )
-
-    if (duplicates.length > 0) throw ERR_DUPLICATE_BEATMAP
 
     const [latest] = await Beatmap.find()
       .sort({ key: -1 })
@@ -71,10 +65,7 @@ router.post(
 
       const beatmapDir = join(CDN_PATH, nextKey)
       await mkdirp(beatmapDir)
-      await writeFile(
-        join(beatmapDir, `${beatmap.hash}.zip`),
-        beatmapFile.buffer
-      )
+      await writeFile(join(beatmapDir, `${beatmap.hash}.zip`), zip)
       await writeFile(
         join(beatmapDir, `${beatmap.hash}${beatmap.coverExt}`),
         cover
@@ -97,9 +88,12 @@ router.post(
       await newBeatmap.populate('uploader').execPopulate()
       return (ctx.body = newBeatmap)
     } catch (err) {
-      if (err instanceof MongoError || err.name === 'ValidationError') throw err
+      if (err instanceof MongoError || err.name === 'ValidationError') {
+        if (err.code === 11000) throw ERR_DUPLICATE_BEATMAP
+        else throw err
+      }
 
-      console.error(err)
+      signale.error(err)
       throw ERR_BEATMAP_SAVE_FAILURE
     }
   }

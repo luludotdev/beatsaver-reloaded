@@ -1,6 +1,5 @@
-import chunk from 'chunk'
+import cors from '@koa/cors'
 import Router from 'koa-router'
-import { RESULTS_PER_PAGE } from '../env'
 import { cache } from '../middleware/cache'
 import Beatmap from '../mongo/models/Beatmap'
 import { paginate } from '../mongo/plugins/paginate'
@@ -8,7 +7,7 @@ import { parseKey } from '../utils/parseKey'
 
 const router = new Router({
   prefix: '/maps',
-})
+}).use(cors())
 
 const mapCache = cache({ prefix: 'maps', expire: 60 * 10 })
 

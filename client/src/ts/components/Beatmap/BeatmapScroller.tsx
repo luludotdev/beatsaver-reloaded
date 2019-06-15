@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { IBeatmap } from '../../remote/beatmap'
 import { APIError } from '../APIError'
 import { Loader } from '../Loader'
 import { BeatmapResult } from './BeatmapResult'

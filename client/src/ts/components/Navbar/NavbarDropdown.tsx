@@ -13,3 +13,7 @@ export const NavbarDropdown: FunctionComponent<IDropdownProps> = ({
     <div className='navbar-dropdown'>{children}</div>
   </div>
 )
+
+export const NavbarDropdownDivider: FunctionComponent = () => (
+  <hr className='navbar-divider' />
+)

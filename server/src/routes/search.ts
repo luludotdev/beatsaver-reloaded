@@ -1,3 +1,4 @@
+import cors from '@koa/cors'
 import Router from 'koa-router'
 import Beatmap from '../mongo/models/Beatmap'
 import { paginate } from '../mongo/plugins/paginate'
@@ -5,7 +6,7 @@ import CodedError from '../utils/CodedError'
 
 const router = new Router({
   prefix: '/search',
-})
+}).use(cors())
 
 const ERR_NO_QUERY = new CodedError(
   'no query parameter specified',

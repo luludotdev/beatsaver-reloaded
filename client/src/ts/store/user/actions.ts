@@ -6,7 +6,7 @@ type TypedThunk<P = any> = Thunk<UserActionTypes, P>
 
 export const checkUser: () => TypedThunk<IUser | null> = () => async dispatch => {
   try {
-    const user = await axios.get<IUser>('/auth/me')
+    const user = await axios.get<IUser>('/users/me')
 
     dispatch({
       payload: user.data,

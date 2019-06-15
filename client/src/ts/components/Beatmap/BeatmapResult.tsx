@@ -1,32 +1,19 @@
 import { push as pushFn } from 'connected-react-router'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
-import React, {
-  FunctionComponent,
-  MouseEvent,
-  useEffect,
-  useState,
-} from 'react'
-import { connect } from 'react-redux'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { IBeatmap } from '../../remote/beatmap'
 
 import Placeholder from '../../../images/placeholder.svg'
 import { getUploadedString } from '../../utils/utils'
 
 TimeAgo.addLocale(en)
 
-interface IConnectedProps {
-  push: typeof pushFn
-}
-
-interface IPassedProps {
+interface IProps {
   map: IBeatmap
 }
 
-type IProps = IConnectedProps & IPassedProps
-
-const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
+const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
   const [image, setImage] = useState(undefined as string | undefined)
 
   const handleClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -52,7 +39,7 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
   }, [])
 
   return (
-    <div className='beatmap-result' onClick={e => handleClick(e)}>
+    <Link className='beatmap-result' to={`/beatmap/${map.key}`}>
       <div className='cover'>
         <img
           src={image || Placeholder}
@@ -95,13 +82,8 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map, push }) => {
           ) : null}
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
-const ConnectedBeatmapResult = connect(
-  null,
-  { push: pushFn }
-)(BeatmapResult)
-
-export { ConnectedBeatmapResult as BeatmapResult }
+export { BeatmapResult }
