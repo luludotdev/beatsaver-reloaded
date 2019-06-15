@@ -1,5 +1,6 @@
 html, body, div#root {
   height: 100%;
+  overflow: overlay;
 }
 
 @media screen and (max-width: 1023px) {
