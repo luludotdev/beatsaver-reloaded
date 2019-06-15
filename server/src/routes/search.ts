@@ -1,7 +1,8 @@
 import cors from '@koa/cors'
 import Router from 'koa-router'
+import { ISearchResponse } from 'mongoose'
+import { RESULTS_PER_PAGE } from '../env'
 import Beatmap from '../mongo/models/Beatmap'
-import { paginate } from '../mongo/plugins/paginate'
 import CodedError from '../utils/CodedError'
 
 const router = new Router({
@@ -15,23 +16,79 @@ const ERR_NO_QUERY = new CodedError(
   400
 )
 
+interface IQueryField {
+  key: string
+  fuzzy?: boolean
+  distance?: number
+  boost?: number
+}
+
+const buildQuery = (query: string, fields: IQueryField[]) =>
+  fields
+    .map(({ key, fuzzy, distance, boost }) => {
+      const fz = fuzzy ? `~${distance || 1}` : ''
+      const bo = boost ? `^${boost}` : ''
+
+      const escapeRX = /(&&|\|\||[+\-!(){}[\]^"~*?:\\])/
+      const escaped = query.replace(escapeRX, '\\$1')
+
+      return `${key}:${escaped}${fz}${bo}`
+    })
+    .join(' ')
+
 router.get('/text/:page?', async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
-  const query = ctx.query.q
-  if (!query) throw ERR_NO_QUERY
+  const q = ctx.query.q
+  if (!q) throw ERR_NO_QUERY
 
-  const maps = await paginate(
-    Beatmap,
-    { $text: { $search: query }, deletedAt: null },
-    {
-      page,
-      populate: 'uploader',
-      projection: '-votes',
-      sort: '-stats.downloads',
-    }
-  )
+  const fields: IQueryField[] = [
+    { key: 'name', fuzzy: true, boost: 2 },
+    { key: 'metadata.songName', fuzzy: true },
+    { key: 'metadata.songSubName', fuzzy: true },
+    { key: 'metadata.songAuthorName', fuzzy: true },
+    { key: 'metadata.levelAuthorName', fuzzy: true },
+    { key: 'hash', boost: 5 },
+  ]
+  const query = buildQuery(q, fields)
+  const searchPromise: <T>() => Promise<ISearchResponse<T>> = () =>
+    new Promise((resolve, reject) => {
+      Beatmap.esSearch(
+        {
+          from: RESULTS_PER_PAGE * page,
+          query: { query_string: { query } },
+          size: RESULTS_PER_PAGE,
+        },
+        (err, r) => {
+          if (err) return reject(err)
+          return resolve(r)
+        }
+      )
+    })
 
-  return (ctx.body = maps)
+  const {
+    hits: {
+      total: { value: totalDocs },
+      hits,
+    },
+  } = await searchPromise()
+
+  const lastPage = Math.floor(totalDocs / RESULTS_PER_PAGE)
+  const prevPage = page - 1 === -1 ? null : page - 1
+  const nextPage = page + 1 > lastPage ? null : page + 1
+
+  const IDs = hits.map(({ _id, _score }) => ({ _id, _score }))
+  const maps = await Beatmap.find({ _id: { $in: IDs } }, '-votes')
+  const docs = maps
+    .map(map => {
+      const result = IDs.find(x => x._id.toString() === map._id.toString())
+      const score = (result && result._score) || 0
+
+      return { map, score }
+    })
+    .sort((a, b) => b.score - a.score)
+    .map(({ map }) => map)
+
+  return (ctx.body = { docs, totalDocs, lastPage, prevPage, nextPage })
 })
 
 export { router as searchRouter }

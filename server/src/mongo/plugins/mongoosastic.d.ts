@@ -64,6 +64,12 @@ declare module 'mongoose' {
     }
   }
 
+  declare interface IFullSearch {
+    query: any
+    from: number
+    size: number
+  }
+
   // tslint:disable-next-line: interface-name
   declare interface Model<T extends Document, QueryHelpers = {}> {
     public synchronize(query?: any): Readable
@@ -71,6 +77,11 @@ declare module 'mongoose' {
 
     public search<S = any>(
       query: any,
+      callback: (err: Error | undefined, results: ISearchResponse<S>) => any
+    ): void
+
+    public esSearch<S = any>(
+      query: IFullSearch,
       callback: (err: Error | undefined, results: ISearchResponse<S>) => any
     ): void
   }
