@@ -2,7 +2,7 @@ import mongoosastic from 'mongoosastic'
 import mongoose, { Document, PaginateModel, Schema, Types } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
 import { BEATSAVER_EPOCH } from '../../constants'
-import { IS_DEV, PORT } from '../../env'
+import { ELASTIC_HOST, ELASTIC_PORT, IS_DEV, PORT } from '../../env'
 import withoutKeys from '../plugins/withoutKeys'
 import withVirtuals from '../plugins/withVirtuals'
 import { IUserModel } from './User'
@@ -205,7 +205,7 @@ schema.virtual('coverURL').get(function(this: IBeatmapModel) {
 })
 
 schema.plugin(paginate)
-schema.plugin(mongoosastic, {})
+schema.plugin(mongoosastic, { host: ELASTIC_HOST, port: ELASTIC_PORT })
 schema.plugin(withoutKeys(['__v', 'votes', 'id', 'coverExt', 'directDownload']))
 schema.plugin(withVirtuals)
 

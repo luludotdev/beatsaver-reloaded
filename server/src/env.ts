@@ -61,3 +61,10 @@ export const REDIS_HOST =
 export const REDIS_PASSWORD = process.env.REDIS_PASSWORD
 export const REDIS_PORT =
   parseInt(process.env.REDIS_PORT || `${redisPort}`, 10) || redisPort
+
+const elasticPort = 9200
+export const ELASTIC_HOST =
+  process.env.ELASTIC_HOST || (IS_DEV ? 'localhost' : 'elastic')
+
+export const ELASTIC_PORT =
+  parseInt(process.env.ELASTIC_PORT || `${elasticPort}`, 10) || elasticPort
