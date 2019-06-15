@@ -48,7 +48,7 @@ declare module 'mongoose' {
     }
 
     hits: {
-      max_score: number
+      max_score: number | null
       total: {
         value: number
         relation: string

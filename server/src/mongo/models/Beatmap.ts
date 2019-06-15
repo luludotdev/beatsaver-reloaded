@@ -82,7 +82,7 @@ const schema: Schema = new Schema({
   },
 
   deletedAt: { type: Date, default: null, index: true },
-  uploaded: { type: Date, default: Date.now, index: true },
+  uploaded: { type: Date, default: Date.now, index: true, es_indexed: true },
   uploader: { type: Schema.Types.ObjectId, required: true, ref: 'user' },
 
   metadata: {
