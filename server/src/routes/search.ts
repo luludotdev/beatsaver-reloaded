@@ -76,6 +76,7 @@ const elasticSearch = async (query: any, page: number = 0) => {
     .sort((a, b) => b.score - a.score)
     .map(({ map }) => map)
 
+  await Promise.all(docs.map(d => d.populate('uploader').execPopulate()))
   return { docs, totalDocs, lastPage, prevPage, nextPage }
 }
 
