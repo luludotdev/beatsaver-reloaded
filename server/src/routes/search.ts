@@ -98,4 +98,13 @@ router.get('/text/:page?', async ctx => {
   return (ctx.body = resp)
 })
 
+router.get('/advanced/:page?', async ctx => {
+  const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+  const query = ctx.query.q
+  if (!query) throw ERR_NO_QUERY
+
+  const resp = await elasticSearch({ query_string: { query } }, page)
+  return (ctx.body = resp)
+})
+
 export { router as searchRouter }
