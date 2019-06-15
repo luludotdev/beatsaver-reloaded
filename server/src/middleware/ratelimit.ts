@@ -1,4 +1,4 @@
-import { Context } from 'koa'
+import { Context, Middleware } from 'koa'
 import koaRateLimit, {
   HeaderNameOptions,
   MiddlewareOptions,
@@ -48,7 +48,15 @@ interface IOptions {
   headers?: HeaderNameOptions
 }
 
-export const rateLimit = (opts: IOptions) => {
+export function rateLimit(opts: IOptions): Middleware
+export function rateLimit(duration: number, max: number): Middleware
+export function rateLimit(
+  optsOrDur: number | IOptions,
+  max?: number
+): Middleware {
+  const opts: Partial<IOptions> =
+    typeof optsOrDur === 'number' ? { duration: optsOrDur, max } : optsOrDur
+
   const defaultOpts: Partial<IOptions> = {
     headers: {
       remaining: 'Rate-Limit-Remaining',
