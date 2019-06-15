@@ -2,6 +2,7 @@ import cors from '@koa/cors'
 import Router from 'koa-router'
 import { ISearchResponse } from 'mongoose'
 import { RESULTS_PER_PAGE } from '../env'
+import { rateLimit } from '../middleware/ratelimit'
 import Beatmap from '../mongo/models/Beatmap'
 import CodedError from '../utils/CodedError'
 
@@ -78,7 +79,7 @@ const elasticSearch = async (query: any, page: number = 0) => {
   return { docs, totalDocs, lastPage, prevPage, nextPage }
 }
 
-router.get('/text/:page?', async ctx => {
+router.get('/text/:page?', rateLimit(1 * 1000, 2), async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const q = ctx.query.q
   if (!q) throw ERR_NO_QUERY
@@ -98,7 +99,7 @@ router.get('/text/:page?', async ctx => {
   return (ctx.body = resp)
 })
 
-router.get('/advanced/:page?', async ctx => {
+router.get('/advanced/:page?', rateLimit(1 * 1000, 1), async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const query = ctx.query.q
   if (!query) throw ERR_NO_QUERY
