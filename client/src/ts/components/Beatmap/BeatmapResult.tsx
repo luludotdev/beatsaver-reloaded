@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formatDate } from '../../utils/formatDate'
+import { DiffTags } from './DiffTags'
 
 import Placeholder from '../../../images/placeholder.svg'
 
@@ -53,27 +54,13 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
           </h2>
         </div>
 
-        <div className='tags'>
-          {map.metadata.difficulties.easy ? (
-            <span className='tag is-easy'>Easy</span>
-          ) : null}
-
-          {map.metadata.difficulties.normal ? (
-            <span className='tag is-normal'>Normal</span>
-          ) : null}
-
-          {map.metadata.difficulties.hard ? (
-            <span className='tag is-hard'>Hard</span>
-          ) : null}
-
-          {map.metadata.difficulties.expert ? (
-            <span className='tag is-expert'>Expert</span>
-          ) : null}
-
-          {map.metadata.difficulties.expertPlus ? (
-            <span className='tag is-expert-plus'>Expert+</span>
-          ) : null}
-        </div>
+        <DiffTags
+          easy={map.metadata.difficulties.easy}
+          normal={map.metadata.difficulties.normal}
+          hard={map.metadata.difficulties.hard}
+          expert={map.metadata.difficulties.expert}
+          expertPlus={map.metadata.difficulties.expertPlus}
+        />
       </div>
     </Link>
   )
