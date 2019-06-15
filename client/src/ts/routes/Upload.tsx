@@ -107,6 +107,14 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
           setFileErr('Beatmap cover image must be at least 256x256px!')
           return showProblems()
 
+        case 'ERR_BEATMAP_AUDIO_NOT_FOUND':
+          setFileErr('Beatmap audio file was not found!')
+          return showProblems()
+
+        case 'ERR_BEATMAP_AUDIO_INVALID':
+          setFileErr('Beatmap audio file is invalid!')
+          return showProblems()
+
         case 'ERR_BEATMAP_DIFF_NOT_FOUND':
           setFileErr('One or more beatmap difficulty files cannot be found!')
           return showProblems()
