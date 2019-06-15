@@ -1,3 +1,4 @@
+import mongoosastic from 'mongoosastic'
 import mongoose, { Document, PaginateModel, Schema, Types } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
 import { BEATSAVER_EPOCH } from '../../constants'
@@ -64,7 +65,7 @@ export type IBeatmapModel = IBeatmapLean & Document
 
 const schema: Schema = new Schema({
   key: {
-    get: (v: number) => v.toString(16),
+    get: (v: number | undefined) => (v ? v.toString(16) : 0),
     required: true,
     set: (v: string) => parseInt(v, 16),
     type: Number,
@@ -72,7 +73,13 @@ const schema: Schema = new Schema({
   },
 
   description: { type: String, default: '', maxlength: 10000 },
-  name: { type: String, required: true, index: true, maxlength: 255 },
+  name: {
+    es_indexed: true,
+    index: true,
+    maxlength: 255,
+    required: true,
+    type: String,
+  },
 
   deletedAt: { type: Date, default: null, index: true },
   uploaded: { type: Date, default: Date.now, index: true },
@@ -80,17 +87,24 @@ const schema: Schema = new Schema({
 
   metadata: {
     levelAuthorName: {
+      es_indexed: true,
       maxlength: 255,
       required: true,
       type: String,
     },
     songAuthorName: {
+      es_indexed: true,
       maxlength: 255,
       required: true,
       type: String,
     },
-    songName: { type: String, required: true, maxlength: 255 },
-    songSubName: { type: String, maxlength: 255 },
+    songName: {
+      es_indexed: true,
+      maxlength: 255,
+      required: true,
+      type: String,
+    },
+    songSubName: { type: String, maxlength: 255, es_indexed: false },
 
     bpm: { type: Number, required: true },
 
@@ -106,25 +120,40 @@ const schema: Schema = new Schema({
   },
 
   stats: {
-    downloads: { type: Number, default: 0 },
-    plays: { type: Number, default: 0 },
+    downloads: { type: Number, default: 0, es_indexed: false },
+    plays: { type: Number, default: 0, es_indexed: false },
 
-    downVotes: { type: Number, default: 0 },
-    upVotes: { type: Number, default: 0 },
+    downVotes: { type: Number, default: 0, es_indexed: false },
+    upVotes: { type: Number, default: 0, es_indexed: false },
 
-    heat: { type: Number, default: 0, index: true },
-    rating: { type: Number, default: 0, index: true },
+    heat: { type: Number, default: 0, index: true, es_indexed: false },
+    rating: { type: Number, default: 0, index: true, es_indexed: false },
   },
 
-  votes: [
-    {
-      direction: { type: Number, required: true, default: 1, min: -1, max: 1 },
-      voterUID: { type: String, required: true, index: true },
-    },
-  ],
+  votes: {
+    es_indexed: false,
+    type: [
+      {
+        direction: {
+          default: 1,
+          max: 1,
+          min: -1,
+          required: true,
+          type: Number,
+        },
+        voterUID: { type: String, required: true, index: true },
+      },
+    ],
+  },
 
   coverExt: { type: String, required: true, maxlength: 5 },
-  hash: { type: String, required: true, unique: true, maxlength: 40 },
+  hash: {
+    es_indexed: true,
+    maxlength: 40,
+    required: true,
+    type: String,
+    unique: true,
+  },
 })
 
 schema.pre('save', async function preSave(this: IBeatmapModel) {
@@ -176,6 +205,7 @@ schema.virtual('coverURL').get(function(this: IBeatmapModel) {
 })
 
 schema.plugin(paginate)
+schema.plugin(mongoosastic, {})
 schema.plugin(withoutKeys(['__v', 'votes', 'id', 'coverExt', 'directDownload']))
 schema.plugin(withVirtuals)
 
