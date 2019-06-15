@@ -40,24 +40,37 @@ a.beatmap-result {
     padding: $content-padding;
 
     display: flex;
-    flex-direction: column;
 
-    & div.details {
-      flex-grow: 1;
-      margin-bottom: $content-padding;
+    & .stats {
+      text-align: right;
+      font-family: monospace;
 
       color: rgb(23, 23, 24);
+    }
 
-      & h1, h2 {
-        line-height: 1em;
-      }
+    & .outer {
+      flex-grow: 1;
 
-      & h2 {
-        margin-top: 6px;
+      display: flex;
+      flex-direction: column;
 
-        & > span.uploaded {
-          color: rgba(0, 0, 0, 0.5);
-          font-size: 0.7em;
+      & div.details {
+        flex-grow: 1;
+        margin-bottom: $content-padding;
+
+        color: rgb(23, 23, 24);
+
+        & h1, h2 {
+          line-height: 1em;
+        }
+
+        & h2 {
+          margin-top: 6px;
+
+          & > span.uploaded {
+            color: rgba(0, 0, 0, 0.5);
+            font-size: 0.7em;
+          }
         }
       }
     }

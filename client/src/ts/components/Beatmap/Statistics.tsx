@@ -4,18 +4,22 @@ import { Statistic } from './Statistic'
 
 interface IProps {
   map: IBeatmap
+
+  hideTime?: boolean
 }
 
-export const BeatmapStats: FunctionComponent<IProps> = ({ map }) => (
+export const BeatmapStats: FunctionComponent<IProps> = ({ map, hideTime }) => (
   <ul>
     <Statistic type='text' emoji='🔑' text={map.key} />
 
-    <Statistic
-      type='text'
-      emoji='🕔'
-      text={formatDate(map.uploaded)}
-      hover={new Date(map.uploaded).toISOString()}
-    />
+    {hideTime ? null : (
+      <Statistic
+        type='text'
+        emoji='🕔'
+        text={formatDate(map.uploaded)}
+        hover={new Date(map.uploaded).toISOString()}
+      />
+    )}
 
     <Statistic
       type='num'
