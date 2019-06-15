@@ -36,26 +36,13 @@ const buildQuery = (query: string, fields: IQueryField[]) =>
     })
     .join(' ')
 
-router.get('/text/:page?', async ctx => {
-  const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
-  const q = ctx.query.q
-  if (!q) throw ERR_NO_QUERY
-
-  const fields: IQueryField[] = [
-    { key: 'name', fuzzy: true, boost: 2 },
-    { key: 'metadata.songName', fuzzy: true },
-    { key: 'metadata.songSubName', fuzzy: true },
-    { key: 'metadata.songAuthorName', fuzzy: true },
-    { key: 'metadata.levelAuthorName', fuzzy: true },
-    { key: 'hash', boost: 5 },
-  ]
-  const query = buildQuery(q, fields)
+const elasticSearch = async (query: any, page: number = 0) => {
   const searchPromise: <T>() => Promise<ISearchResponse<T>> = () =>
     new Promise((resolve, reject) => {
       Beatmap.esSearch(
         {
           from: RESULTS_PER_PAGE * page,
-          query: { query_string: { query } },
+          query,
           size: RESULTS_PER_PAGE,
         },
         (err, r) => {
@@ -88,7 +75,27 @@ router.get('/text/:page?', async ctx => {
     .sort((a, b) => b.score - a.score)
     .map(({ map }) => map)
 
-  return (ctx.body = { docs, totalDocs, lastPage, prevPage, nextPage })
+  return { docs, totalDocs, lastPage, prevPage, nextPage }
+}
+
+router.get('/text/:page?', async ctx => {
+  const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+  const q = ctx.query.q
+  if (!q) throw ERR_NO_QUERY
+
+  const fields: IQueryField[] = [
+    { key: 'name', fuzzy: true, boost: 2 },
+    { key: 'metadata.songName', fuzzy: true },
+    { key: 'metadata.songSubName', fuzzy: true },
+    { key: 'metadata.songAuthorName', fuzzy: true },
+    { key: 'metadata.levelAuthorName', fuzzy: true },
+    { key: 'hash', boost: 5 },
+  ]
+
+  const query = buildQuery(q, fields)
+  const resp = await elasticSearch({ query_string: { query } }, page)
+
+  return (ctx.body = resp)
 })
 
 export { router as searchRouter }
