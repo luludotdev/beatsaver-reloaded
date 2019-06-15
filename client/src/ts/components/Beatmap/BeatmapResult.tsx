@@ -1,14 +1,8 @@
-import dateFormat from 'dateformat'
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { formatDate } from '../../utils/formatDate'
 
 import Placeholder from '../../../images/placeholder.svg'
-
-TimeAgo.addLocale(en)
-const timeAgo = new TimeAgo('en-US')
-const SEVEN_DAYS = 1000 * 60 * 60 * 24 * 7
 
 interface IProps {
   map: IBeatmap
@@ -18,10 +12,7 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
   const [image, setImage] = useState(undefined as string | undefined)
 
   const uploaded = new Date(map.uploaded)
-  const uploadedStr =
-    Date.now() - uploaded.getTime() < SEVEN_DAYS
-      ? timeAgo.format(uploaded)
-      : dateFormat(uploaded, 'yyyy/mm/dd')
+  const uploadedStr = formatDate(uploaded)
 
   const characteristics = map.metadata.characteristics.map(characteristic =>
     characteristic
