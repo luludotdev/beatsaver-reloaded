@@ -140,14 +140,19 @@ router.get(
   }),
   cache({ prefix: ctx => `uploader:${ctx.params.id}:`, expire: 60 * 10 }),
   async ctx => {
-    const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
-    const maps = await paginate(
-      Beatmap,
-      { uploader: ctx.params.id, deletedAt: null },
-      { page, sort: '-uploaded', populate: 'uploader', projection: '-votes' }
-    )
+    try {
+      const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+      const maps = await paginate(
+        Beatmap,
+        { uploader: ctx.params.id, deletedAt: null },
+        { page, sort: '-uploaded', populate: 'uploader', projection: '-votes' }
+      )
 
-    return (ctx.body = maps)
+      return (ctx.body = maps)
+    } catch (err) {
+      if (err.name === 'CastError') return (ctx.status = 404)
+      else throw err
+    }
   }
 )
 
