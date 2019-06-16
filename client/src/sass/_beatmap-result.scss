@@ -1,4 +1,6 @@
 div.beatmap-result {
+  $hide-cover: 750px;
+
   $radius: 8px;
   margin-bottom: 14px;
   border-radius: $radius;
@@ -21,7 +23,7 @@ div.beatmap-result {
     height: $image-size;
     overflow: hidden;
 
-    @media screen and (max-width: 1023px) {
+    @media screen and (max-width: $hide-cover) {
       width: 0;
     }
 
@@ -42,15 +44,46 @@ div.beatmap-result {
     background-color: rgba(255, 255, 255, 0.92);
     padding: $content-padding;
 
-    @media screen and (max-width: 1023px) {
+    @media screen and (max-width: $hide-cover) {
       border-radius: $radius;
     }
 
     display: flex;
 
-    & .stats {
-      text-align: right;
-      color: rgb(23, 23, 24);
+    & .right {
+      display: flex;
+      flex-direction: column;
+
+      & .stats {
+        flex: 1;
+
+        text-align: right;
+        color: rgb(23, 23, 24);
+      }
+
+      & a, button {
+        color: $text;
+        padding: 8px 20px;
+
+        margin-right: $content-padding * -1;
+        margin-bottom: $content-padding * -1;
+        border-radius: 0 0 $radius 0;
+
+        $border: 1px solid rgba(0, 0, 0, .1);
+        border-top: $border;
+        border-left: $border;
+
+        background-color: rgba(255, 255, 255, .4);
+        transition: background-color 100ms ease;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, .05);
+        }
+
+        &:active {
+          background-color: rgba(0, 0, 0, .1);
+        }
+      }
     }
 
     & .outer {
@@ -78,7 +111,7 @@ div.beatmap-result {
           }
         }
 
-        @media screen and (max-width: 1023px) {
+        @media screen and (max-width: $hide-cover) {
           & h1 {
             font-size: 1.8rem !important;
           }

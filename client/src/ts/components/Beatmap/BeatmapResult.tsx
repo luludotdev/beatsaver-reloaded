@@ -68,8 +68,12 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
           </div>
         </div>
 
-        <div className='stats'>
-          <BeatmapStats map={map} hideTime={true} />
+        <div className='right'>
+          <div className='stats'>
+            <BeatmapStats map={map} hideTime={true} />
+          </div>
+
+          <a href={map.downloadURL}>Download</a>
         </div>
       </div>
     </div>
