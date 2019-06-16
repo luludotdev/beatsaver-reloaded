@@ -53,13 +53,13 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout, push }) => {
 
         <div className={`navbar-menu${active ? ' is-active' : ''}`}>
           <div className='navbar-start'>
-            <NavbarItem setActive={setActive} to='/browse/latest'>
-              Latest
+            <NavbarItem setActive={setActive} to='/browse/hot'>
+              Hot
             </NavbarItem>
 
             <NavbarDropdown label='Sort By'>
-              <NavbarItem setActive={setActive} to='/browse/hot'>
-                Hot
+              <NavbarItem setActive={setActive} to='/browse/latest'>
+                Latest
               </NavbarItem>
 
               <NavbarItem setActive={setActive} to='/browse/downloads'>
