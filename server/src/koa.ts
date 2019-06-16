@@ -13,7 +13,18 @@ export const app = new Koa()
 const router = new Router()
 
 if (!IS_DEV) app.proxy = true
-else app.use(cors({ exposeHeaders: ['x-auth-token'] }))
+else {
+  app.use(
+    cors({
+      exposeHeaders: [
+        'x-auth-token',
+        'rate-limit-remaining',
+        'rate-limit-reset',
+        'rate-limit-total',
+      ],
+    })
+  )
+}
 
 app
   .use(realIP)
