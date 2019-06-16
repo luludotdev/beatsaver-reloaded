@@ -9,8 +9,8 @@ const router = new Router({
 })
   .use(
     rateLimit({
-      duration: 1000,
-      max: 1,
+      duration: 10 * 60 * 1000,
+      max: 10,
     })
   )
   .use(cors())
