@@ -1,5 +1,12 @@
 import mongoose from 'mongoose'
-import { ELASTIC_HOST, ELASTIC_PORT, IS_DEV, MONGO_URL, PORT } from './env'
+import {
+  ELASTIC_DISABLED,
+  ELASTIC_HOST,
+  ELASTIC_PORT,
+  IS_DEV,
+  MONGO_URL,
+  PORT,
+} from './env'
 import { app } from './koa'
 import { awaitCacheDB, awaitRateLimitDB } from './redis'
 import './strategies'
@@ -16,7 +23,10 @@ mongoose
   })
   .then(() => {
     try {
-      axios.get(`http://${ELASTIC_HOST}:${ELASTIC_PORT}`)
+      if (!ELASTIC_DISABLED) {
+        axios.get(`http://${ELASTIC_HOST}:${ELASTIC_PORT}`)
+        signale.info('Connected to Elasticsearch instance!')
+      }
     } catch (err) {
       signale.fatal('Failed to connect to Elasticsearch!')
       process.exit(1)

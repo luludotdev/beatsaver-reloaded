@@ -63,6 +63,7 @@ export const REDIS_PORT =
   parseInt(process.env.REDIS_PORT || `${redisPort}`, 10) || redisPort
 
 const elasticPort = 9200
+export const ELASTIC_DISABLED = process.env.ELASTIC_DISABLED === 'true'
 export const ELASTIC_HOST =
   process.env.ELASTIC_HOST || (IS_DEV ? 'localhost' : 'elastic')
 

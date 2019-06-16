@@ -1,14 +1,19 @@
 import cors from '@koa/cors'
 import Router from 'koa-router'
 import { ISearchResponse } from 'mongoose'
-import { RESULTS_PER_PAGE } from '../env'
+import { ELASTIC_DISABLED, RESULTS_PER_PAGE } from '../env'
 import { rateLimit } from '../middleware/ratelimit'
 import Beatmap from '../mongo/models/Beatmap'
 import CodedError from '../utils/CodedError'
 
 const router = new Router({
   prefix: '/search',
-}).use(cors())
+})
+  .use((ctx, next) => {
+    if (ELASTIC_DISABLED) return (ctx.status = 501)
+    else return next()
+  })
+  .use(cors())
 
 const ERR_NO_QUERY = new CodedError(
   'no query parameter specified',
