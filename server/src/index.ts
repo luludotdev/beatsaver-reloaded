@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
-import { IS_DEV, MONGO_URL, PORT } from './env'
+import { ELASTIC_HOST, ELASTIC_PORT, IS_DEV, MONGO_URL, PORT } from './env'
 import { app } from './koa'
 import { awaitCacheDB, awaitRateLimitDB } from './redis'
 import './strategies'
+import axios from './utils/axios'
 import signale, { panic } from './utils/signale'
 
 if (IS_DEV) signale.warn('Running in development environment!')
@@ -12,6 +13,14 @@ mongoose
   .then(() => {
     signale.info(`Connected to MongoDB ${IS_DEV ? 'Instance' : 'Cluster'}`)
     return Promise.all([awaitCacheDB(), awaitRateLimitDB()])
+  })
+  .then(() => {
+    try {
+      axios.get(`http://${ELASTIC_HOST}:${ELASTIC_PORT}`)
+    } catch (err) {
+      signale.fatal('Failed to connect to Elasticsearch!')
+      process.exit(1)
+    }
   })
   .then(() => {
     app.listen(PORT).on('listening', () => {
