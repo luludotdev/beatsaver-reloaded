@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios'
 import { push as pushFn, replace as replaceFn } from 'connected-react-router'
+import ms from 'ms'
 import React, { FunctionComponent, useRef, useState } from 'react'
 import { connect, MapStateToProps } from 'react-redux'
 import { FileInput } from '../components/FileInput'
@@ -67,8 +68,18 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
       }
 
       if (response.status === 429) {
+        const reset = response.headers['rate-limit-reset']
+        const getTimeStr = () => {
+          if (!reset) return 'a bit'
+
+          const resetTime = new Date(parseInt(reset, 10) * 1000)
+          const offset = resetTime.getTime() - Date.now()
+
+          return ms(offset, { long: true })
+        }
+
         setTitleErr(
-          'You are uploading too quickly! Please wait 10 minutes and try again.'
+          `You are uploading too quickly! Please wait ${getTimeStr()} and try again.`
         )
 
         return
