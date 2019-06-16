@@ -81,7 +81,7 @@ const schema: Schema = new Schema({
     type: String,
   },
 
-  deletedAt: { type: Date, default: null, index: true },
+  deletedAt: { type: Date, default: null, index: true, es_indexed: true },
   uploaded: { type: Date, default: Date.now, index: true, es_indexed: true },
   uploader: {
     es_indexed: true,

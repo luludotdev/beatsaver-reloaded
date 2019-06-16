@@ -110,7 +110,17 @@ router.get(
     ]
 
     const query = buildQuery(q, fields)
-    const resp = await elasticSearch({ query_string: { query } }, page)
+    const resp = await elasticSearch(
+      {
+        bool: {
+          must: { query_string: { query } },
+          must_not: {
+            exists: { field: 'deletedAt' },
+          },
+        },
+      },
+      page
+    )
 
     return (ctx.body = resp)
   }
@@ -128,7 +138,18 @@ router.get(
     const query = ctx.query.q
     if (!query) throw ERR_NO_QUERY
 
-    const resp = await elasticSearch({ query_string: { query } }, page)
+    const resp = await elasticSearch(
+      {
+        bool: {
+          must: { query_string: { query } },
+          must_not: {
+            exists: { field: 'deletedAt' },
+          },
+        },
+      },
+      page
+    )
+
     return (ctx.body = resp)
   }
 )
