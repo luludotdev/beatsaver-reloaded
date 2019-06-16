@@ -85,33 +85,49 @@ const elasticSearch = async (query: any, page: number = 0) => {
   return { docs, totalDocs, lastPage, prevPage, nextPage }
 }
 
-router.get('/text/:page?', rateLimit(1 * 1000, 2), async ctx => {
-  const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
-  const q = ctx.query.q
-  if (!q) throw ERR_NO_QUERY
+router.get(
+  '/text/:page?',
+  rateLimit({
+    duration: 1 * 1000,
+    id: ctx => `/search/text:${ctx.realIP}`,
+    max: 2,
+  }),
+  async ctx => {
+    const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+    const q = ctx.query.q
+    if (!q) throw ERR_NO_QUERY
 
-  const fields: IQueryField[] = [
-    { key: 'name', fuzzy: true, boost: 2 },
-    { key: 'metadata.songName', fuzzy: true },
-    { key: 'metadata.songSubName', fuzzy: true },
-    { key: 'metadata.songAuthorName', fuzzy: true },
-    { key: 'metadata.levelAuthorName', fuzzy: true },
-    { key: 'hash', boost: 5 },
-  ]
+    const fields: IQueryField[] = [
+      { key: 'name', fuzzy: true, boost: 2 },
+      { key: 'metadata.songName', fuzzy: true },
+      { key: 'metadata.songSubName', fuzzy: true },
+      { key: 'metadata.songAuthorName', fuzzy: true },
+      { key: 'metadata.levelAuthorName', fuzzy: true },
+      { key: 'hash', boost: 5 },
+    ]
 
-  const query = buildQuery(q, fields)
-  const resp = await elasticSearch({ query_string: { query } }, page)
+    const query = buildQuery(q, fields)
+    const resp = await elasticSearch({ query_string: { query } }, page)
 
-  return (ctx.body = resp)
-})
+    return (ctx.body = resp)
+  }
+)
 
-router.get('/advanced/:page?', rateLimit(1 * 1000, 1), async ctx => {
-  const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
-  const query = ctx.query.q
-  if (!query) throw ERR_NO_QUERY
+router.get(
+  '/advanced/:page?',
+  rateLimit({
+    duration: 1 * 1000,
+    id: ctx => `/search/advanced:${ctx.realIP}`,
+    max: 1,
+  }),
+  async ctx => {
+    const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+    const query = ctx.query.q
+    if (!query) throw ERR_NO_QUERY
 
-  const resp = await elasticSearch({ query_string: { query } }, page)
-  return (ctx.body = resp)
-})
+    const resp = await elasticSearch({ query_string: { query } }, page)
+    return (ctx.body = resp)
+  }
+)
 
 export { router as searchRouter }
