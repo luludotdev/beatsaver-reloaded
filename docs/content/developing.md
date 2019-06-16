@@ -10,6 +10,7 @@ sidebar: auto
 * [Yarn](https://yarnpkg.com/) package manager
 * [MongoDB](https://www.mongodb.com/) *(v4 or later)*
 * [Redis](https://redis.io/)
+* [Elasticsearch](https://www.elastic.co/) *(optional)*
 
 ## Repo Layout
 The BeatSaver Reloaded repo uses a monorepo format, in that both the client and the server are in the same repository. They are located at `/client` and `/server` respectively. Unless otherwise specified, commands to be run for either the client or the server should be run in their directories.
@@ -35,6 +36,22 @@ BeatSaver Reloaded uses database 0 for ratelimit sessions and database 1 for cac
 If you have Docker installed, you can start a Redis instance locally with the following command:
 ```
 $ docker run --name redis -p 6379:6379 redis:alpine
+```
+
+### Elasticsearch
+Elasticsearch is a search engine for text and JSON-based documents which is used to power the `/search` endpoints. The default host for development is `localhost:9200`, but this can be overriden with environment variables (see [Configuration](#configuration) for more info).
+
+::: warning
+Elasticsearch is optional for development, but if you wish to disable it, please set `ELASTIC_DISABLED=true` in your `.env` file.
+
+Disabling Elasticsearch will return HTTP 501 on all `/search` endpoints.
+:::
+
+If you have Docker installed, you can start an Elasticsearch instance locally with the following command:
+```
+$ docker run --name elastic -p 9200:9200 \
+  -e "discovery.type=single-node" \
+  docker.elastic.co/elasticsearch/elasticsearch:7.1.1
 ```
 
 ## Configuration
