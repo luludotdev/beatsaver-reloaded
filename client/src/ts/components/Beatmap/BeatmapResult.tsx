@@ -2,6 +2,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formatDate } from '../../utils/formatDate'
 import { DiffTags } from './DiffTags'
+import { BeatmapStats } from './Statistics'
 
 import Placeholder from '../../../images/placeholder.svg'
 
@@ -40,24 +41,30 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
       </div>
 
       <div className='beatmap-content'>
-        <div className='details'>
-          <h1 className='is-size-3 has-text-weight-light'>{map.name}</h1>
-          <h2 className='is-size-5 has-text-weight-normal'>
-            Uploaded by{' '}
-            <Link to={`/uploader/${map.uploader._id}`}>
-              {map.uploader.username}
-            </Link>{' '}
-            <span className='uploaded'>{formatDate(map.uploaded)}</span>
-          </h2>
+        <div className='outer'>
+          <div className='details'>
+            <h1 className='is-size-3 has-text-weight-light'>{map.name}</h1>
+            <h2 className='is-size-5 has-text-weight-normal'>
+              Uploaded by{' '}
+              <Link to={`/uploader/${map.uploader._id}`}>
+                {map.uploader.username}
+              </Link>{' '}
+              <span className='uploaded'>{formatDate(map.uploaded)}</span>
+            </h2>
+          </div>
+
+          <DiffTags
+            easy={map.metadata.difficulties.easy}
+            normal={map.metadata.difficulties.normal}
+            hard={map.metadata.difficulties.hard}
+            expert={map.metadata.difficulties.expert}
+            expertPlus={map.metadata.difficulties.expertPlus}
+          />
         </div>
 
-        <DiffTags
-          easy={map.metadata.difficulties.easy}
-          normal={map.metadata.difficulties.normal}
-          hard={map.metadata.difficulties.hard}
-          expert={map.metadata.difficulties.expert}
-          expertPlus={map.metadata.difficulties.expertPlus}
-        />
+        <div className='stats'>
+          <BeatmapStats map={map} hideTime={true} />
+        </div>
       </div>
     </Link>
   )
