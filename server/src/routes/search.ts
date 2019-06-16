@@ -99,6 +99,9 @@ router.get(
 
     const fields: IQueryField[] = [
       { key: 'name', fuzzy: true, boost: 2 },
+      { key: 'name', boost: 3 },
+      { key: 'uploader.username', fuzzy: true, boost: 1.5 },
+      { key: 'uploader.username', boost: 2 },
       { key: 'metadata.songName', fuzzy: true },
       { key: 'metadata.songSubName', fuzzy: true },
       { key: 'metadata.songAuthorName', fuzzy: true },
