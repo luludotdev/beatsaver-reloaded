@@ -5,7 +5,7 @@ import { BEATSAVER_EPOCH } from '../../constants'
 import { ELASTIC_HOST, ELASTIC_PORT, IS_DEV, PORT } from '../../env'
 import withoutKeys from '../plugins/withoutKeys'
 import withVirtuals from '../plugins/withVirtuals'
-import { IUserModel } from './User'
+import { IUserModel, userSchema } from './User'
 
 export interface IVoteLean {
   direction: -1 | 1
@@ -83,7 +83,13 @@ const schema: Schema = new Schema({
 
   deletedAt: { type: Date, default: null, index: true },
   uploaded: { type: Date, default: Date.now, index: true, es_indexed: true },
-  uploader: { type: Schema.Types.ObjectId, required: true, ref: 'user' },
+  uploader: {
+    es_indexed: true,
+    es_schema: userSchema,
+    ref: 'user',
+    required: true,
+    type: Schema.Types.ObjectId,
+  },
 
   metadata: {
     levelAuthorName: {
@@ -128,6 +134,8 @@ const schema: Schema = new Schema({
 
     heat: { type: Number, default: 0, index: true, es_indexed: false },
     rating: { type: Number, default: 0, index: true, es_indexed: false },
+
+    es_indexed: false,
   },
 
   votes: {
@@ -205,7 +213,15 @@ schema.virtual('coverURL').get(function(this: IBeatmapModel) {
 })
 
 schema.plugin(paginate)
-schema.plugin(mongoosastic, { host: ELASTIC_HOST, port: ELASTIC_PORT })
+schema.plugin(mongoosastic, {
+  host: ELASTIC_HOST,
+  populate: [
+    {
+      path: 'uploader',
+    },
+  ],
+  port: ELASTIC_PORT,
+})
 schema.plugin(withoutKeys(['__v', 'votes', 'id', 'coverExt', 'directDownload']))
 schema.plugin(withVirtuals)
 

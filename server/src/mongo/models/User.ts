@@ -33,6 +33,7 @@ const schema: Schema = new Schema({
   },
   password: { type: String, required: true, maxlength: 72 },
   username: {
+    es_indexed: true,
     lowercase: true,
     maxlength: 24,
     required: true,
@@ -60,3 +61,4 @@ schema.plugin(
 
 const User = mongoose.model<IUserModel>('user', schema)
 export default User
+export { schema as userSchema }

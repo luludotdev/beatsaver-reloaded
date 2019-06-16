@@ -10,7 +10,7 @@ declare module 'mongoosastic' {
     port: number
     protocol: 'http' | 'https'
 
-    populate: string[]
+    populate: Array<{ path: string; select?: string }>
     hydrate: boolean
     indexAutomatically: boolean
     saveOnSynchronize: boolean
@@ -35,6 +35,7 @@ declare module 'mongoose' {
     es_boost?: number
     es_null_value?: any
     es_type?: 'integer' | 'date' | 'string'
+    es_schema?: Schema
   }
 
   declare interface ISearchResponse<T> {
