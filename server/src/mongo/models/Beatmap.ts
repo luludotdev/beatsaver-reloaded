@@ -120,8 +120,8 @@ const schema: Schema = new Schema({
   },
 
   stats: {
-    downloads: { type: Number, default: 0, es_indexed: false },
-    plays: { type: Number, default: 0, es_indexed: false },
+    downloads: { type: Number, default: 0, index: true, es_indexed: false },
+    plays: { type: Number, default: 0, index: true, es_indexed: false },
 
     downVotes: { type: Number, default: 0, es_indexed: false },
     upVotes: { type: Number, default: 0, es_indexed: false },
