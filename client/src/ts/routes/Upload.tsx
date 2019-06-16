@@ -61,8 +61,16 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
       push(`/beatmap/${resp.data.key}`)
     } catch (err) {
       const { response } = err as AxiosError<IRespError>
-      if (response === undefined || !response.data.code) {
+      if (response === undefined) {
         setFileErr('Something went wrong! Try again later.')
+        return
+      }
+
+      if (response.status === 429) {
+        setTitleErr(
+          'You are uploading too quickly! Please wait 10 minutes and try again.'
+        )
+
         return
       }
 

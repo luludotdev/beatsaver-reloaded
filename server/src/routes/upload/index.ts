@@ -6,6 +6,7 @@ import { MongoError } from 'mongodb'
 import { join } from 'path'
 import { CDN_PATH } from '../../constants'
 import { clearCache } from '../../middleware/cache'
+import { rateLimit } from '../../middleware/ratelimit'
 import Beatmap from '../../mongo/models/Beatmap'
 import { IUserModel } from '../../mongo/models/User'
 import { mkdirp, writeFile } from '../../utils/fs'
@@ -27,7 +28,9 @@ const upload = multer({
 
 const router = new Router({
   prefix: '/upload',
-}).use(upload.any())
+})
+  .use(rateLimit(10 * 60 * 1000, 10))
+  .use(upload.any())
 
 router.post(
   '/',
