@@ -1,6 +1,12 @@
 import { AxiosError } from 'axios'
 import chunk from 'chunk'
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, {
+  FunctionComponent,
+  MouseEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import Linkify from 'react-linkify'
 import nl2br from 'react-nl2br'
 import { Link } from 'react-router-dom'
@@ -21,6 +27,20 @@ interface IProps {
 export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
   const [map, setMap] = useState(undefined as IBeatmap | undefined | Error)
   const [image, setImage] = useState(undefined as string | undefined)
+
+  const [copied, setCopied] = useState(false)
+  const bsrRef = useRef(null as HTMLInputElement | null)
+
+  const copyBSR = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    if (!bsrRef.current) return
+
+    bsrRef.current.select()
+    document.execCommand('copy')
+
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1000)
+  }
 
   useEffect(() => {
     axios
@@ -123,6 +143,28 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
           <a href={map.downloadURL}>Download</a>
           {/* <a href={`beatsaver://${map.key}`}>OneClick&trade; Install</a> */}
           {/* <a href='/'>View on BeastSaber</a> */}
+          <a href='/' onClick={e => copyBSR(e)}>
+            {copied ? (
+              'Copied!'
+            ) : (
+              <>
+                <p>
+                  Copy{' '}
+                  <span className='mono' style={{ fontSize: '0.9em' }}>
+                    !bsr
+                  </span>
+                </p>
+
+                <input
+                  ref={bsrRef}
+                  readOnly={true}
+                  type='text'
+                  value={`!bsr ${map.key}`}
+                  style={{ position: 'absolute', top: 0, left: -100000 }}
+                />
+              </>
+            )}
+          </a>
           {/* <a href='/'>Preview</a> */}
         </div>
       </div>
