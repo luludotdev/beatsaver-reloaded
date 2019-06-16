@@ -16,6 +16,22 @@ services:
     networks:
       - internal
 
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
+    restart: always
+    networks:
+      - internal
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data:rw
+
   client:
     image: lolpants/beatsaver-reloaded:client-latest
     build: client
@@ -29,6 +45,7 @@ services:
     restart: always
     depends_on:
       - mongo
+      - elastic
       - redis
     networks:
       - internal
@@ -52,3 +69,4 @@ networks:
 volumes:
   cdn:
   mongo:
+  esdata:
