@@ -14,16 +14,21 @@ div.beatmap-result {
   }
 
   & div.cover {
-    $image-size: 172px;
+    $image-size: 180px;
 
     border-radius: $radius 0 0 $radius;
     width: $image-size;
     height: $image-size;
     overflow: hidden;
 
+    @media screen and (max-width: 1023px) {
+      width: 0;
+    }
+
     & img {
       width: $image-size;
       height: $image-size;
+      object-fit: cover;
 
       border-radius: $radius 0 0 $radius;
     }
@@ -36,6 +41,10 @@ div.beatmap-result {
     border-radius: 0 $radius $radius 0;
     background-color: rgba(255, 255, 255, 0.92);
     padding: $content-padding;
+
+    @media screen and (max-width: 1023px) {
+      border-radius: $radius;
+    }
 
     display: flex;
 
@@ -68,6 +77,16 @@ div.beatmap-result {
           & > span.uploaded {
             color: rgba(0, 0, 0, 0.5);
             font-size: 0.7em;
+          }
+        }
+
+        @media screen and (max-width: 1023px) {
+          & h1 {
+            font-size: 1.8rem !important;
+          }
+
+          & h2 {
+            font-size: 1.05rem !important;
           }
         }
       }
