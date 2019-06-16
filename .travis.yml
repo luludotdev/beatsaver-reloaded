@@ -24,4 +24,4 @@ after_success:
   - docker pull $REPO:$PROJECT_DIR-latest || true
   - docker build --build-arg VCS_REF=`git rev-parse --short HEAD` --pull --cache-from $REPO:$PROJECT_DIR-latest -f Dockerfile -t $REPO:$PROJECT_DIR-$TRAVIS_COMMIT .
   - docker tag $REPO:$PROJECT_DIR-$TRAVIS_COMMIT $REPO:$PROJECT_DIR-$TAG
-  - docker push $REPO
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push $REPO; fi
