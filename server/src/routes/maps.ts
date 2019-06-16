@@ -42,7 +42,7 @@ router.get(
         page,
         populate: 'uploader',
         projection: '-votes',
-        sort: '-stats.downloads -uploaded',
+        sort: '-stats.downloads',
       }
     )
 
@@ -59,7 +59,7 @@ router.get('/plays/:page?', routeLimiter('/plays'), mapCache, async ctx => {
       page,
       populate: 'uploader',
       projection: '-votes',
-      sort: '-stats.plays -uploaded',
+      sort: '-stats.plays',
     }
   )
 
