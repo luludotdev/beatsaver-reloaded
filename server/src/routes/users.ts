@@ -1,6 +1,7 @@
 import cors from '@koa/cors'
 import passport from 'koa-passport'
 import Router from 'koa-router'
+import { rateLimit } from '../middleware/ratelimit'
 import User, { IRedactedUser, IUserModel } from '../mongo/models/User'
 
 const router = new Router({
@@ -9,6 +10,7 @@ const router = new Router({
 
 router.get(
   '/me',
+  rateLimit(1 * 1000, 1),
   passport.authenticate('jwt', { session: false }),
   async ctx => {
     const user: IUserModel = ctx.state.user
@@ -29,11 +31,24 @@ router.get(
   }
 )
 
-router.get('/find/:id', async ctx => {
-  const user = await User.findById(ctx.params.id, '-password -email')
-  if (!user) return (ctx.status = 404)
+router.get(
+  '/find/:id',
+  rateLimit({
+    duration: 2 * 1000,
+    id: ctx => `/users/find:${ctx.realIP}`,
+    max: 1,
+  }),
+  async ctx => {
+    try {
+      const user = await User.findById(ctx.params.id, '-password -email')
+      if (!user) return (ctx.status = 404)
 
-  return (ctx.body = user)
-})
+      return (ctx.body = user)
+    } catch (err) {
+      if (err.name === 'CastError') return (ctx.status = 404)
+      else throw err
+    }
+  }
+)
 
 export { router as usersRouter }
