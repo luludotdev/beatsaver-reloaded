@@ -32,7 +32,7 @@ export const Statistic: FunctionComponent<IStatProps> = props => {
         : multiplied.toLocaleString()
 
     return (
-      <li title={hover}>
+      <li className='mono' title={hover}>
         {num}
         {percentage !== undefined ? '%' : ''} {emoji}
       </li>
@@ -41,7 +41,7 @@ export const Statistic: FunctionComponent<IStatProps> = props => {
     const { text, emoji, hover } = props
 
     return (
-      <li title={hover}>
+      <li className='mono' title={hover}>
         {text} {emoji}
       </li>
     )
