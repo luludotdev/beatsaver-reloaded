@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios'
 import chunk from 'chunk'
 import React, { FunctionComponent, useEffect, useState } from 'react'
+import Linkify from 'react-linkify'
 import nl2br from 'react-nl2br'
 import { Link } from 'react-router-dom'
 import { NotFound } from '../../routes/NotFound'
@@ -11,6 +12,7 @@ import { DiffTags } from './DiffTags'
 import { BeatmapStats } from './Statistics'
 
 import Placeholder from '../../../images/placeholder.svg'
+import { ExtLink } from '../ExtLink'
 
 interface IProps {
   mapKey: string
@@ -89,7 +91,15 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
 
             <div className='description'>
               {map.description ? (
-                nl2br(map.description)
+                <Linkify
+                  componentDecorator={(href, text, key) => (
+                    <ExtLink key={`${href}:${text}:${key}`} href={href}>
+                      {text}
+                    </ExtLink>
+                  )}
+                >
+                  {nl2br(map.description)}
+                </Linkify>
               ) : (
                 <i>No description given.</i>
               )}
