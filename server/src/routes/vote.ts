@@ -3,6 +3,7 @@ import koaBody from 'koa-body'
 import passport from 'koa-passport'
 import Router from 'koa-router'
 import { STEAM_API_KEY } from '../env'
+import { rateLimit } from '../middleware/ratelimit'
 import Beatmap from '../mongo/models/Beatmap'
 import { IUserModel } from '../mongo/models/User'
 import axios from '../utils/axios'
@@ -54,8 +55,15 @@ const ERR_BAD_TICKET = new CodedError(
   401
 )
 
+const voteRL = rateLimit({
+  duration: 1 * 1000,
+  id: ctx => `/vote/${parseKey(ctx.params.key)}:${ctx.realIP}`,
+  max: 1,
+})
+
 router.post(
   '/user/:key',
+  voteRL,
   passport.authenticate('jwt', { session: false }),
   async ctx => {
     const user: IUserModel = ctx.state.user
@@ -84,7 +92,7 @@ interface ISteamError {
   }
 }
 
-router.post('/steam/:key', async ctx => {
+router.post('/steam/:key', voteRL, async ctx => {
   const { steamID, ticket } = ctx.request.body
 
   if (!steamID) throw ERR_INVALID_STEAM_ID
