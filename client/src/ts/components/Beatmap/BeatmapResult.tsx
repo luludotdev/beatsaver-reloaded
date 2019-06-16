@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { parseCharacteristics } from '../../utils/characteristics'
 import { formatDate } from '../../utils/formatDate'
 import { DiffTags } from './DiffTags'
 import { BeatmapStats } from './Statistics'
@@ -12,14 +13,6 @@ interface IProps {
 
 const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
   const [image, setImage] = useState(undefined as string | undefined)
-
-  const characteristics = map.metadata.characteristics.map(characteristic =>
-    characteristic
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/^./, str => str.toUpperCase())
-      .trim()
-      .replace(/(  )/g, ' ')
-  )
 
   useEffect(() => {
     fetch(map.coverURL)
@@ -58,12 +51,21 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
           </div>
 
           <DiffTags
+            style={{ marginBottom: 0 }}
             easy={map.metadata.difficulties.easy}
             normal={map.metadata.difficulties.normal}
             hard={map.metadata.difficulties.hard}
             expert={map.metadata.difficulties.expert}
             expertPlus={map.metadata.difficulties.expertPlus}
           />
+
+          <div className='tags'>
+            {parseCharacteristics(map.metadata.characteristics).map((x, i) => (
+              <span key={`${x}:${i}`} className='tag is-dark'>
+                {x}
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className='stats'>

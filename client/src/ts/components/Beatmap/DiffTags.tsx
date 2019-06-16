@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import React, { CSSProperties, FunctionComponent } from 'react'
 
 interface IProps {
   easy?: boolean
@@ -6,6 +6,8 @@ interface IProps {
   hard?: boolean
   expert?: boolean
   expertPlus?: boolean
+
+  style?: CSSProperties
 }
 
 export const DiffTags: FunctionComponent<IProps> = ({
@@ -14,8 +16,10 @@ export const DiffTags: FunctionComponent<IProps> = ({
   hard,
   expert,
   expertPlus,
+
+  style,
 }) => (
-  <div className='tags'>
+  <div className='tags' style={style}>
     {easy ? <span className='tag is-easy'>Easy</span> : null}
     {normal ? <span className='tag is-normal'>Normal</span> : null}
     {hard ? <span className='tag is-hard'>Hard</span> : null}
