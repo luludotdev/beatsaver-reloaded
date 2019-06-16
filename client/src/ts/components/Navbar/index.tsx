@@ -2,7 +2,7 @@ import { push as pushFn } from 'connected-react-router'
 import React, { FunctionComponent, MouseEvent, useState } from 'react'
 import { connect, MapStateToProps } from 'react-redux'
 import { IState } from '../../store'
-import { IUser, logout as logoutFn } from '../../store/user'
+import { IUser, Logout, logout as logoutFn } from '../../store/user'
 import { NavbarDivider } from './NavbarDivider'
 import { NavbarDropdown, NavbarDropdownDivider } from './NavbarDropdown'
 import { NavbarClickableItem, NavbarItem, NavbarItemExt } from './NavbarItem'
@@ -12,7 +12,7 @@ import Logo from '../../../images/beat_saver_logo_white.png'
 interface IProps {
   user: IUser | null | undefined
 
-  logout: typeof logoutFn
+  logout: Logout
   push: typeof pushFn
 }
 

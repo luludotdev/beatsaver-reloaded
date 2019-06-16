@@ -1,5 +1,10 @@
 import { AxiosError } from 'axios'
-import { push as pushFn, replace as replaceFn } from 'connected-react-router'
+import {
+  Push,
+  push as pushFn,
+  Replace,
+  replace as replaceFn,
+} from 'connected-react-router'
 import ms from 'ms'
 import React, { FunctionComponent, useRef, useState } from 'react'
 import { connect, MapStateToProps } from 'react-redux'
@@ -10,13 +15,16 @@ import { IUser } from '../store/user'
 import { axios } from '../utils/axios'
 import swal from '../utils/swal'
 
-interface IProps {
+interface IPassedProps {
   user: IUser | null | undefined
-
-  push: typeof pushFn
-  replace: typeof replaceFn
 }
 
+interface IDispatchProps {
+  push: Push
+  replace: Replace
+}
+
+type IProps = IPassedProps & IDispatchProps
 const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
   if (user === null) {
     replace('/')
@@ -243,12 +251,14 @@ const mapStateToProps: MapStateToProps<IProps, {}, IState> = state => ({
   replace: replaceFn,
 })
 
+const mapDispatchToProps: IDispatchProps = {
+  push: pushFn,
+  replace: replaceFn,
+}
+
 const ConnectedUpload = connect(
   mapStateToProps,
-  {
-    push: pushFn,
-    replace: replaceFn,
-  }
+  mapDispatchToProps
 )(Upload)
 
 export default ConnectedUpload

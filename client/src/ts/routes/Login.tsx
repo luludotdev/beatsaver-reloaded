@@ -4,10 +4,10 @@ import React, { FunctionComponent, useState } from 'react'
 import { connect, MapStateToProps } from 'react-redux'
 import { IconInput } from '../components/Input'
 import { IState } from '../store'
-import { login as loginFn } from '../store/user'
+import { Login, login as loginFn } from '../store/user'
 
 interface IProps {
-  login: typeof loginFn
+  login: Login
   push: typeof pushFn
 }
 
