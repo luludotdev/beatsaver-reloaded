@@ -31,19 +31,23 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
   }, [])
 
   return (
-    <Link className='beatmap-result' to={`/beatmap/${map.key}`}>
+    <div className='beatmap-result'>
       <div className='cover'>
-        <img
-          src={image || Placeholder}
-          alt={`Artwork for ${map.name}`}
-          draggable={false}
-        />
+        <Link to={`/beatmap/${map.key}`}>
+          <img
+            src={image || Placeholder}
+            alt={`Artwork for ${map.name}`}
+            draggable={false}
+          />
+        </Link>
       </div>
 
       <div className='beatmap-content'>
         <div className='outer'>
           <div className='details'>
-            <h1 className='is-size-3 has-text-weight-light'>{map.name}</h1>
+            <h1 className='is-size-3 has-text-weight-light'>
+              <Link to={`/beatmap/${map.key}`}>{map.name}</Link>
+            </h1>
             <h2 className='is-size-5 has-text-weight-normal'>
               Uploaded by{' '}
               <Link to={`/uploader/${map.uploader._id}`}>
@@ -66,7 +70,7 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
           <BeatmapStats map={map} hideTime={true} />
         </div>
       </div>
-    </Link>
+    </div>
   )
 }
 
