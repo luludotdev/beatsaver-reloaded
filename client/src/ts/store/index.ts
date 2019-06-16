@@ -8,16 +8,19 @@ import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 
+import { IScrollersState, scrollersReducer } from './scrollers'
 import { IUserState, userReducer } from './user'
 
 export interface IState {
   router: RouterState
+  scrollers: IScrollersState
   user: IUserState
 }
 
 const createRootReducer = (hist: History) =>
   combineReducers<IState>({
     router: connectRouter(hist),
+    scrollers: scrollersReducer,
     user: userReducer,
   })
 

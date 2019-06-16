@@ -1,17 +1,53 @@
-import { FunctionComponent, useEffect, useState } from 'react'
-import { createSearch } from '../../remote/search'
+import { FunctionComponent, useEffect } from 'react'
+import { connect, MapStateToProps } from 'react-redux'
+import { IState } from '../../store'
+import { IScroller } from '../../store/scrollers'
+import {
+  RequestNextMaps,
+  requestNextMaps as requestNextMapsFn,
+} from '../../store/scrollers'
 
 interface IRenderProps {
   maps: IBeatmap[]
   loading: boolean
   done: boolean
-  error: Error | null
+  error: Error | undefined
 
   next: () => any
 }
 
 interface ICommonProps {
   render: (props: IRenderProps) => JSX.Element
+}
+
+interface IConnectedProps {
+  scroller: IScroller
+}
+
+interface IFunctionProps {
+  requestNextMaps: RequestNextMaps
+}
+
+type IPassedProps = ICommonProps & IBeatmapSearch
+type IProps = IPassedProps & IConnectedProps & IFunctionProps
+
+const BeatmapAPI: FunctionComponent<IProps> = ({
+  render,
+  scroller,
+  requestNextMaps,
+}) => {
+  const request = () =>
+    requestNextMaps(scroller.key, scroller.type, scroller.query)
+
+  const next = () => {
+    if (scroller.maps.length !== 0) request()
+  }
+
+  useEffect(() => {
+    if (scroller.maps.length === 0) request()
+  }, [scroller.key])
+
+  return render({ ...scroller, next })
 }
 
 export type SearchType = 'latest' | 'hot' | 'downloads' | 'plays'
@@ -26,58 +62,40 @@ interface IQueryProps {
   query: string
 }
 
+export type SearchTypes = SearchType | QueryType
 export type IBeatmapSearch = ISearchProps | IQueryProps
-type IProps = ICommonProps & IBeatmapSearch
 
-const search = createSearch()
-export const BeatmapAPI: FunctionComponent<IProps> = ({
-  render,
-  type,
-  query,
-}) => {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null as Error | null)
-  const [done, setDone] = useState(false)
-  const [maps, setMaps] = useState([] as IBeatmap[])
+const mapStateToProps: MapStateToProps<
+  IConnectedProps,
+  IPassedProps,
+  IState
+> = (state, { type, query }) => {
+  const key = query !== undefined ? `${type}?q=${query}` : type
 
-  useEffect(() => {
-    setMaps([])
-    setLoading(true)
-    setError(null)
-    setDone(false)
+  const defaultScroller: IScroller = {
+    key,
+    query,
+    type,
 
-    search
-      .next({ type, query, reset: true })
-      .then(resp => {
-        setLoading(false)
-        setMaps(resp.value)
-        setDone(resp.done)
-        setError(null)
-      })
-      .catch(err => {
-        console.error(err)
-        setLoading(false)
-        setError(err)
-      })
-  }, [query])
-
-  const next = async () => {
-    setLoading(true)
-
-    search
-      .next({ type, query })
-      .then(resp => {
-        setLoading(false)
-        setMaps([...maps, ...resp.value])
-        setDone(resp.done)
-        setError(null)
-      })
-      .catch(err => {
-        console.error(err)
-        setLoading(false)
-        setError(err)
-      })
+    done: false,
+    error: undefined,
+    lastPage: null,
+    loading: false,
+    maps: [],
   }
 
-  return render({ maps, loading, done, error, next })
+  return {
+    scroller: state.scrollers[key] || defaultScroller,
+  }
 }
+
+const dispatchProps: IFunctionProps = {
+  requestNextMaps: requestNextMapsFn,
+}
+
+const ConnectedBeatmapAPI = connect(
+  mapStateToProps,
+  dispatchProps
+)(BeatmapAPI)
+
+export { ConnectedBeatmapAPI as BeatmapAPI }
