@@ -1,6 +1,7 @@
 import cors from '@koa/cors'
 import Router from 'koa-router'
 import { cache } from '../middleware/cache'
+import { rateLimit } from '../middleware/ratelimit'
 import Beatmap from '../mongo/models/Beatmap'
 import { paginate } from '../mongo/plugins/paginate'
 import { parseKey } from '../utils/parseKey'
@@ -10,8 +11,14 @@ const router = new Router({
 }).use(cors())
 
 const mapCache = cache({ prefix: 'maps', expire: 60 * 10 })
+const routeLimiter = (id: string) =>
+  rateLimit({
+    duration: 30 * 1000,
+    id: ctx => `/maps${id}:${ctx.realIP}`,
+    max: 90,
+  })
 
-router.get('/latest/:page?', mapCache, async ctx => {
+router.get('/latest/:page?', routeLimiter('/latest'), mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const maps = await paginate(
     Beatmap,
@@ -22,23 +29,28 @@ router.get('/latest/:page?', mapCache, async ctx => {
   return (ctx.body = maps)
 })
 
-router.get('/downloads/:page?', mapCache, async ctx => {
-  const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
-  const maps = await paginate(
-    Beatmap,
-    { deletedAt: null },
-    {
-      page,
-      populate: 'uploader',
-      projection: '-votes',
-      sort: '-stats.downloads -uploaded',
-    }
-  )
+router.get(
+  '/downloads/:page?',
+  routeLimiter('/downloads'),
+  mapCache,
+  async ctx => {
+    const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+    const maps = await paginate(
+      Beatmap,
+      { deletedAt: null },
+      {
+        page,
+        populate: 'uploader',
+        projection: '-votes',
+        sort: '-stats.downloads -uploaded',
+      }
+    )
 
-  return (ctx.body = maps)
-})
+    return (ctx.body = maps)
+  }
+)
 
-router.get('/plays/:page?', mapCache, async ctx => {
+router.get('/plays/:page?', routeLimiter('/plays'), mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const maps = await paginate(
     Beatmap,
@@ -54,7 +66,7 @@ router.get('/plays/:page?', mapCache, async ctx => {
   return (ctx.body = maps)
 })
 
-router.get('/hot/:page?', mapCache, async ctx => {
+router.get('/hot/:page?', routeLimiter('/hot'), mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const maps = await paginate(
     Beatmap,
@@ -65,7 +77,7 @@ router.get('/hot/:page?', mapCache, async ctx => {
   return (ctx.body = maps)
 })
 
-router.get('/rating/:page?', mapCache, async ctx => {
+router.get('/rating/:page?', routeLimiter('/rating'), mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
   const maps = await paginate(
     Beatmap,
@@ -76,8 +88,14 @@ router.get('/rating/:page?', mapCache, async ctx => {
   return (ctx.body = maps)
 })
 
+const detailRL = rateLimit({
+  duration: 10 * 60 * 1000,
+  max: 50,
+})
+
 router.get(
   '/detail/:key',
+  detailRL,
   cache({ prefix: ctx => `key:${ctx.params.key}:`, expire: 60 * 10 }),
   async ctx => {
     const key = parseKey(ctx.params.key)
@@ -93,6 +111,7 @@ router.get(
 
 router.get(
   '/by-hash/:hash',
+  detailRL,
   cache({ prefix: ctx => `hash:${ctx.params.hash}:`, expire: 60 * 10 }),
   async ctx => {
     if (typeof ctx.params.hash !== 'string') return (ctx.status = 400)
@@ -114,6 +133,11 @@ router.get(
 
 router.get(
   '/uploader/:id/:page?',
+  rateLimit({
+    duration: 30 * 1000,
+    id: ctx => `/maps/uploader/${ctx.params.id}:${ctx.realIP}`,
+    max: 90,
+  }),
   cache({ prefix: ctx => `uploader:${ctx.params.id}:`, expire: 60 * 10 }),
   async ctx => {
     const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
