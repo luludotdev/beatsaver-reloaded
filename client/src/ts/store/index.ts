@@ -8,10 +8,12 @@ import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 
+import { IImagesState, imagesReducer } from './images'
 import { IScrollersState, scrollersReducer } from './scrollers'
 import { IUserState, userReducer } from './user'
 
 export interface IState {
+  images: IImagesState
   router: RouterState
   scrollers: IScrollersState
   user: IUserState
@@ -19,6 +21,7 @@ export interface IState {
 
 const createRootReducer = (hist: History) =>
   combineReducers<IState>({
+    images: imagesReducer,
     router: connectRouter(hist),
     scrollers: scrollersReducer,
     user: userReducer,
