@@ -37,6 +37,8 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   async ctx => {
     const user: IUserModel = ctx.state.user
+    if (!user.verified) return (ctx.status = 403)
+
     const { files: f, body } = ctx.req as MulterIncomingMessage
     const { name, description } = body || ({} as any)
     const files = f as File[]

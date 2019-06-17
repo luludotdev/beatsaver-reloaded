@@ -26,7 +26,7 @@ interface IDispatchProps {
 
 type IProps = IPassedProps & IDispatchProps
 const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
-  if (user === null) {
+  if (user === null || (user && user.verified === false)) {
     replace('/')
     return null
   }
@@ -78,6 +78,11 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
       const { response } = err as AxiosError<IRespError>
       if (response === undefined) {
         setFileErr('Something went wrong! Try again later.')
+        return
+      }
+
+      if (response.status === 403) {
+        setTitleErr('You must verify your account to upload beatmaps!')
         return
       }
 
