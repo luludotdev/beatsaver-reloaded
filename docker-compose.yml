@@ -36,8 +36,10 @@ services:
     image: lolpants/beatsaver-reloaded:client-latest
     build: client
     restart: always
+    networks:
+      - internal
     ports:
-      - 8000:80
+      - 8000:1234
 
   server:
     image: lolpants/beatsaver-reloaded:server-latest

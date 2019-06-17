@@ -4,10 +4,9 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 
 import { App } from './ts/App'
-import { history, store } from './ts/store'
 
 import './sass/global.scss'
-import './ts/init'
+import { history, store } from './ts/init'
 
 render(
   <Provider store={store}>
