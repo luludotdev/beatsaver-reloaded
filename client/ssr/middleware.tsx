@@ -3,11 +3,30 @@ import send from 'koa-send'
 import mongoose from 'mongoose'
 import { generateOpenGraph, html, htmlPath } from './generateHTML'
 
+const oldKeyRX = /^\d+-(\d+)$/
+const newKeyRX = /^[0-9a-f]+$/
+
+export const parseKey: (key: string) => string | false = key => {
+  if (typeof key !== 'string') return false
+
+  const isOld = key.match(oldKeyRX)
+  if (isOld !== null) {
+    const oldKey = isOld[1]
+    return parseInt(oldKey, 10).toString(16)
+  }
+
+  const isNew = key.match(newKeyRX)
+  if (isNew === null) return false
+
+  const k = key.toLowerCase()
+  return k
+}
+
 export const middleware: Middleware = async ctx => {
   ctx.set('cache-control', 'max-age=0')
   const notFound = () => send(ctx, htmlPath, { root: '/', maxAge: -1 })
 
-  const key: string = ctx.params.key
+  const key = parseKey(ctx.params.key)
   if (!key) return notFound()
 
   const numKey = await parseInt(key, 16)
