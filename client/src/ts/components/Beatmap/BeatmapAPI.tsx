@@ -8,11 +8,7 @@ import {
 } from '../../store/scrollers'
 
 interface IRenderProps {
-  maps: IBeatmap[]
-  loading: boolean
-  done: boolean
-  error: Error | undefined
-
+  scroller: IScroller
   next: () => any
 }
 
@@ -47,7 +43,7 @@ const BeatmapAPI: FunctionComponent<IProps> = ({
     if (scroller.maps.length === 0) request()
   }, [scroller.key])
 
-  return render({ ...scroller, next })
+  return render({ scroller, next })
 }
 
 export type SearchType = 'latest' | 'hot' | 'downloads' | 'plays'

@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react'
-import { Loader } from '../Loader'
 import { IBeatmapSearch } from './BeatmapAPI'
 import { BeatmapAPI } from './BeatmapAPI'
 import { BeatmapScroller } from './BeatmapScroller'

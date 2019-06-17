@@ -1,27 +1,22 @@
 import React, { FunctionComponent } from 'react'
 import { useInView } from 'react-intersection-observer'
+import { IScroller } from '../../store/scrollers'
 import { APIError } from '../APIError'
 import { Loader } from '../Loader'
 import { BeatmapResult } from './BeatmapResult'
 
 interface IProps {
-  maps: IBeatmap[]
-  loading: boolean
-  done: boolean
-  error: Error | undefined
-  finite: boolean | undefined
+  scroller: IScroller
 
+  finite: boolean | undefined
   fallback?: JSX.Element
   next: () => any
 }
 
 export const BeatmapScroller: FunctionComponent<IProps> = ({
-  maps,
-  loading,
-  done,
-  error,
-  finite,
+  scroller: { maps, loading, done, error },
 
+  finite,
   fallback,
   next,
 }) => {
