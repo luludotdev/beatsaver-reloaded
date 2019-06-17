@@ -70,9 +70,6 @@ $button-disabled-background-color: $btn;
 .button[disabled]:active, fieldset[disabled] .button:active {
   color: $tex;
 }
-.button[disabled], fieldset[disabled] .button {
-  filter: blur(1px);
-}
 
 // Text Boxes
 $input-color: $tex;
