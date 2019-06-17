@@ -3,8 +3,13 @@ import {
   routerMiddleware,
   RouterState,
 } from 'connected-react-router'
-import { createBrowserHistory, History } from 'history'
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
+import { History } from 'history'
+import {
+  applyMiddleware,
+  combineReducers,
+  compose,
+  createStore as createReduxStore,
+} from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 
@@ -27,15 +32,13 @@ const createRootReducer = (hist: History) =>
     user: userReducer,
   })
 
-export const history = createBrowserHistory()
-const rootReducer = createRootReducer(history)
-
 const composeEnhancers: typeof compose =
   process.env.NODE_ENV === 'production'
     ? compose
     : (composeWithDevTools as typeof compose)
 
-export const store = createStore(
-  rootReducer,
-  composeEnhancers(applyMiddleware(thunk, routerMiddleware(history)))
-)
+export const createStore = (hist: History) =>
+  createReduxStore(
+    createRootReducer(hist),
+    composeEnhancers(applyMiddleware(thunk, routerMiddleware(hist)))
+  )

@@ -3,11 +3,15 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 
+import { createBrowserHistory } from 'history'
 import { App } from './ts/App'
-import { history, store } from './ts/store'
+import { createStore } from './ts/store'
 
 import './sass/global.scss'
 import './ts/init'
+
+export const history = createBrowserHistory()
+export const store = createStore(history)
 
 render(
   <Provider store={store}>
