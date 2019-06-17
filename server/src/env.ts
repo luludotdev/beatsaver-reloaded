@@ -70,7 +70,7 @@ export const ELASTIC_HOST =
 export const ELASTIC_PORT =
   parseInt(process.env.ELASTIC_PORT || `${elasticPort}`, 10) || elasticPort
 
-export type MailDriver = 'smtp' | 'log'
+export type MailDriver = 'sendgrid' | 'log'
 export const MAIL_DRIVER = (process.env.MAIL_DRIVER || 'log') as MailDriver
 if (MAIL_DRIVER === 'log') {
   signale.warn(
@@ -79,15 +79,12 @@ if (MAIL_DRIVER === 'log') {
 }
 
 export const MAIL_FROM = process.env.MAIL_FROM as string
-export const SMTP_HOST = process.env.SMTP_HOST as string
-export const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10) || 465
-export const SMTP_USER = process.env.SMTP_USER as string
-export const SMTP_PASS = process.env.SMTP_PASS as string
+export const SENDGRID_KEY = process.env.SENDGRID_KEY as string
 
 try {
-  const mailVars = ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS']
+  const sendgridVars = ['SENDGRID_KEY']
 
-  for (const variable of mailVars) {
+  for (const variable of sendgridVars) {
     if (MAIL_DRIVER === 'log') break
     if (!process.env[variable]) throw new Error(variable)
   }
