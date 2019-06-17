@@ -31,6 +31,8 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
     return null
   }
 
+  const [loading, setLoading] = useState(false)
+
   const [title, setTitle] = useState('')
   const [titleErr, setTitleErr] = useState(undefined as string | undefined)
 
@@ -65,10 +67,14 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
     form.set('description', description)
     form.set('beatmap', file)
 
+    setLoading(true)
     try {
       const resp = await axios.post<IBeatmap>('/upload', form)
+
+      setLoading(false)
       push(`/beatmap/${resp.data.key}`)
     } catch (err) {
+      setLoading(false)
       const { response } = err as AxiosError<IRespError>
       if (response === undefined) {
         setFileErr('Something went wrong! Try again later.')
@@ -211,7 +217,11 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
         </div>
       </details>
 
-      <button className='button is-fullwidth' onClick={() => submit()}>
+      <button
+        className={`button is-fullwidth ${loading ? 'is-loading' : ''}`}
+        disabled={loading}
+        onClick={() => submit()}
+      >
         Upload
       </button>
     </div>
