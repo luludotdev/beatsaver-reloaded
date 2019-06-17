@@ -12,6 +12,7 @@ interface IProps {
 }
 
 const Login: FunctionComponent<IProps> = ({ login, push }) => {
+  const [loading, setLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -24,10 +25,16 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
     | undefined)
 
   const submit = async () => {
+    setLoading(true)
+
     try {
       await login(username, password)
+
+      setLoading(false)
       push('/')
     } catch (err) {
+      setLoading(false)
+
       const { response } = err as AxiosError
       if (response === undefined) {
         setUsernameErr('Unknown server error!')
@@ -75,8 +82,8 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
       />
 
       <button
-        className='button is-fullwidth'
-        disabled={!username || !password}
+        className={`button is-fullwidth ${loading ? 'is-loading' : ''}`}
+        disabled={loading || !username || !password}
         onClick={() => submit()}
       >
         Login
