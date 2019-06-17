@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
+import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
 import { parseCharacteristics } from '../../utils/characteristics'
 import { formatDate } from '../../utils/formatDate'
@@ -12,6 +13,7 @@ interface IProps {
 }
 
 const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
+  const [inViewRef, inView] = useInView({ rootMargin: '240px' })
   const [image, setImage] = useState(undefined as string | undefined)
 
   useEffect(() => {
@@ -23,8 +25,12 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
       .catch(() => setImage(undefined))
   }, [])
 
+  if (!inView) {
+    return <div ref={inViewRef} style={{ height: `${180 + 14}px` }} />
+  }
+
   return (
-    <div className='beatmap-result'>
+    <div className='beatmap-result' ref={inViewRef}>
       <div className='cover'>
         <Link to={`/beatmap/${map.key}`}>
           <img
