@@ -5,7 +5,7 @@ import { join } from 'path'
 export const root =
   process.env.NODE_ENV !== 'production'
     ? join(__dirname, '..', 'client')
-    : join(__dirname)
+    : join(__dirname, '..', 'public')
 
 export const htmlPath = join(root, 'index.html')
 export const html = readFileSync(htmlPath, 'utf8')
