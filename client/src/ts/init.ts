@@ -1,3 +1,4 @@
+import 'intersection-observer-polyfill'
 import { store } from './store'
 import { checkUser } from './store/user'
 
