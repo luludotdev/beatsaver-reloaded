@@ -5,10 +5,10 @@ type TypedThunk<P = any> = Thunk<ImagesActionTypes, P>
 export type LoadImage = ThunkFunction<typeof loadImage>
 export const loadImage: (
   url: string
-) => TypedThunk<boolean> = url => async dispatch => {
-  const setImage = (payload: boolean) => {
+) => TypedThunk<{ key: string; value: boolean }> = url => async dispatch => {
+  const setImage = (value: boolean) => {
     dispatch({
-      payload,
+      payload: { key: url, value },
       type: ImagesActionTypes.SET_IMAGE,
     })
   }
