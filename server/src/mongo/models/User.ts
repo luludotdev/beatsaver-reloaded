@@ -17,7 +17,7 @@ export interface IUserLean extends IRedactedUser {
   email: string
   password: string
 
-  verifyToken: string
+  verifyToken: string | null
 }
 
 export type IUserModel = IUserLean & Document

@@ -43,6 +43,19 @@ router.post('/register', async ctx => {
   return (ctx.status = 204)
 })
 
+router.get('/verify/:token', async ctx => {
+  const verifyToken: string = ctx.params.token
+
+  const user = await User.findOne({ verifyToken })
+  if (!user) return (ctx.status = 404)
+
+  user.verified = true
+  user.verifyToken = null
+  await user.save()
+
+  return ctx.redirect('/')
+})
+
 router.post(
   '/login',
   passport.authenticate('local', { session: false }),
