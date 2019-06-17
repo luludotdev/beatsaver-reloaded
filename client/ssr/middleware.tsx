@@ -20,7 +20,7 @@ export const middleware: Middleware = async ctx => {
   if (!map) return notFound()
   const metaTags = generateOpenGraph({
     description: map.description,
-    image: `${ctx.request.origin}/cdn/${map.key}/${map.hash}${map.coverExt}`,
+    image: `${ctx.request.origin}/cdn/${key}/${map.hash}${map.coverExt}`,
     siteName: 'BeatSaver',
     title: map.name,
     url: `${ctx.request.origin}${ctx.originalUrl}`,
