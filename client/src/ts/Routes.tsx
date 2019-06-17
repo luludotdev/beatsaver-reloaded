@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react'
 import { Route, Switch } from 'react-router'
 
 import { Beatmap } from './routes/Beatmap'
-import { Downloads, Hot, Latest, Plays } from './routes/Browse'
+import { Downloads, Hot, Latest, Plays, Rating } from './routes/Browse'
 import { Index } from './routes/Index'
 import Legacy from './routes/Legacy'
 import Login from './routes/Login'
@@ -15,6 +15,7 @@ export const Routes: FunctionComponent = () => (
   <Switch>
     <Route path='/browse/latest' component={Latest} />
     <Route path='/browse/hot' component={Hot} />
+    <Route path='/browse/rating' component={Rating} />
     <Route path='/browse/downloads' component={Downloads} />
     <Route path='/browse/plays' component={Plays} />
     <Route path='/beatmap/:key' component={Beatmap} />

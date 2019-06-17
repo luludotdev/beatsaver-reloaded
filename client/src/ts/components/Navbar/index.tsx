@@ -58,6 +58,10 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout, push }) => {
             </NavbarItem>
 
             <NavbarDropdown label='Sort By'>
+              <NavbarItem setActive={setActive} to='/browse/rating'>
+                Rating
+              </NavbarItem>
+
               <NavbarItem setActive={setActive} to='/browse/latest'>
                 Latest
               </NavbarItem>

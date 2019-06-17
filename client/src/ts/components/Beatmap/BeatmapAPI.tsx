@@ -46,7 +46,7 @@ const BeatmapAPI: FunctionComponent<IProps> = ({
   return render({ scroller, next })
 }
 
-export type SearchType = 'latest' | 'hot' | 'downloads' | 'plays'
+export type SearchType = 'latest' | 'hot' | 'downloads' | 'plays' | 'rating'
 interface ISearchProps {
   type: SearchType
   query?: string
