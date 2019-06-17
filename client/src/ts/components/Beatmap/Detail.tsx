@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import Helmet from 'react-helmet'
 import Linkify from 'react-linkify'
 import nl2br from 'react-nl2br'
 import { Link } from 'react-router-dom'
@@ -70,6 +71,10 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
 
   return (
     <>
+      <Helmet>
+        <title>BeatSaver - {map.name}</title>
+      </Helmet>
+
       <div className='detail-artwork'>
         <Image
           src={map.coverURL}

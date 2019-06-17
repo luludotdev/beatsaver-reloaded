@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from 'react'
+import Helmet from 'react-helmet'
 import { useInView } from 'react-intersection-observer'
 import { IScroller } from '../../store/scrollers'
 import { APIError } from '../APIError'
@@ -14,7 +15,7 @@ interface IProps {
 }
 
 export const BeatmapScroller: FunctionComponent<IProps> = ({
-  scroller: { maps, loading, done, error },
+  scroller: { maps, loading, done, error, type },
 
   finite,
   fallback,
@@ -24,8 +25,26 @@ export const BeatmapScroller: FunctionComponent<IProps> = ({
   if (inView && !loading && !done && !finite) next()
   if (error) return <APIError error={error} />
 
+  const capitalize = (s: string) => {
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toUpperCase() + s.slice(1)
+  }
+
+  const title =
+    type === 'text'
+      ? 'Search'
+      : type === 'uploader'
+      ? undefined
+      : capitalize(type)
+
   return (
     <>
+      {title === undefined ? null : (
+        <Helmet>
+          <title>BeatSaver - {title}</title>
+        </Helmet>
+      )}
+
       {maps.length === 0
         ? fallback || null
         : maps.map(m => <BeatmapResult key={m._id} map={m} />)}

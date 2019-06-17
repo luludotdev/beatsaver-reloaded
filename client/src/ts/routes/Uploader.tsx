@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios'
 import React, { FunctionComponent, useEffect, useState } from 'react'
+import Helmet from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { BeatmapList } from '../components/Beatmap'
 import { Loader } from '../components/Loader'
@@ -50,6 +51,10 @@ export const Uploader: FunctionComponent<RouteComponentProps<IParams>> = ({
 
   return (
     <>
+      <Helmet>
+        <title>BeatSaver - Beatmaps by {user.username}</title>
+      </Helmet>
+
       <div className='thin'>
         <h1 className='is-size-2 has-text-weight-light has-text-centered'>
           Beatmaps by {user.username}
