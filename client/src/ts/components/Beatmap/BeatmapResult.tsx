@@ -3,10 +3,9 @@ import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
 import { parseCharacteristics } from '../../utils/characteristics'
 import { formatDate } from '../../utils/formatDate'
+import { Image } from '../Image'
 import { DiffTags } from './DiffTags'
 import { BeatmapStats } from './Statistics'
-
-import Placeholder from '../../../images/placeholder.svg'
 
 interface IProps {
   map: IBeatmap
@@ -14,17 +13,6 @@ interface IProps {
 
 const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
   const [inViewRef, inView] = useInView({ rootMargin: '240px' })
-  const [image, setImage] = useState(undefined as string | undefined)
-
-  useEffect(() => {
-    fetch(map.coverURL)
-      .then(resp => {
-        if (resp.ok) setImage(map.coverURL)
-        else setImage(undefined)
-      })
-      .catch(() => setImage(undefined))
-  }, [])
-
   if (!inView) {
     return <div ref={inViewRef} style={{ height: `${180 + 14}px` }} />
   }
@@ -33,8 +21,8 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
     <div className='beatmap-result' ref={inViewRef}>
       <div className='cover'>
         <Link to={`/beatmap/${map.key}`}>
-          <img
-            src={image || Placeholder}
+          <Image
+            src={map.coverURL}
             alt={`Artwork for ${map.name}`}
             draggable={false}
           />

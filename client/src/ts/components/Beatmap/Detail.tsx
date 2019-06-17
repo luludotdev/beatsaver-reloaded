@@ -12,13 +12,12 @@ import nl2br from 'react-nl2br'
 import { Link } from 'react-router-dom'
 import { NotFound } from '../../routes/NotFound'
 import { axios } from '../../utils/axios'
+import { ExtLink } from '../ExtLink'
+import { Image } from '../Image'
 import { Loader } from '../Loader'
 import { TextPage } from '../TextPage'
 import { DiffTags } from './DiffTags'
 import { BeatmapStats } from './Statistics'
-
-import Placeholder from '../../../images/placeholder.svg'
-import { ExtLink } from '../ExtLink'
 
 interface IProps {
   mapKey: string
@@ -26,7 +25,6 @@ interface IProps {
 
 export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
   const [map, setMap] = useState(undefined as IBeatmap | undefined | Error)
-  const [image, setImage] = useState(undefined as string | undefined)
 
   const [copied, setCopied] = useState(false)
   const bsrRef = useRef(null as HTMLInputElement | null)
@@ -47,13 +45,6 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
       .get<IBeatmap>(`/maps/detail/${mapKey}`)
       .then(resp => {
         setMap(resp.data)
-
-        fetch(resp.data.coverURL)
-          .then(r => {
-            if (r.ok) setImage(resp.data.coverURL)
-            else setImage(undefined)
-          })
-          .catch(() => setImage(undefined))
       })
       .catch(err => setMap(err))
 
@@ -80,8 +71,8 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
   return (
     <>
       <div className='detail-artwork'>
-        <img
-          src={image || Placeholder}
+        <Image
+          src={map.coverURL}
           alt={`Artwork for ${map.name}`}
           draggable={false}
         />
