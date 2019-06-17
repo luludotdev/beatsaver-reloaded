@@ -10,7 +10,7 @@ RUN yarn build:prod
 
 FROM nginx:alpine
 
-COPY --from=builder /usr/app/dist /usr/share/nginx/html
+COPY --from=builder /usr/app/dist/client /usr/share/nginx/html
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 ARG VCS_REF
