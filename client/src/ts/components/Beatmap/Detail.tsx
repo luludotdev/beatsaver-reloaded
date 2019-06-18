@@ -13,6 +13,7 @@ import nl2br from 'react-nl2br'
 import { Link } from 'react-router-dom'
 import { NotFound } from '../../routes/NotFound'
 import { axios } from '../../utils/axios'
+import { parseCharacteristics } from '../../utils/characteristics'
 import { ExtLink } from '../ExtLink'
 import { Image } from '../Image'
 import { Loader } from '../Loader'
@@ -122,12 +123,23 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
             </div>
 
             <DiffTags
+              style={{ marginBottom: 0, marginTop: '10px' }}
               easy={map.metadata.difficulties.easy}
               normal={map.metadata.difficulties.normal}
               hard={map.metadata.difficulties.hard}
               expert={map.metadata.difficulties.expert}
               expertPlus={map.metadata.difficulties.expertPlus}
             />
+
+            <div className='tags' style={{ marginBottom: '-10px' }}>
+              {parseCharacteristics(map.metadata.characteristics).map(
+                (x, i) => (
+                  <span key={`${x}:${i}`} className='tag is-dark'>
+                    {x}
+                  </span>
+                )
+              )}
+            </div>
           </div>
 
           <div className='right'>
