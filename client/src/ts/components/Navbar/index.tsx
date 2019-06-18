@@ -108,11 +108,9 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout, push }) => {
               </NavbarItem>
             ) : (
               <>
-                {user.verified ? (
-                  <NavbarItem setActive={setActive} to='/user/upload'>
-                    Upload
-                  </NavbarItem>
-                ) : null}
+                <NavbarItem setActive={setActive} to='/user/upload'>
+                  Upload
+                </NavbarItem>
 
                 <NavbarDropdown label={user.username}>
                   <NavbarItem

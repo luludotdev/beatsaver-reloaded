@@ -26,9 +26,24 @@ interface IDispatchProps {
 
 type IProps = IPassedProps & IDispatchProps
 const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
-  if (user === null || (user && user.verified === false)) {
+  if (user === null) {
     replace('/')
     return null
+  } else if (user && user.verified === false) {
+    return (
+      <div className='thin'>
+        <article className='message is-danger'>
+          <div className='message-body'>
+            <p>
+              You must verify your account before you can upload beatmaps. Check
+              your email for a verification URL.
+            </p>
+
+            <p>It might be in spam, check there too.</p>
+          </div>
+        </article>
+      </div>
+    )
   }
 
   const [loading, setLoading] = useState(false)
