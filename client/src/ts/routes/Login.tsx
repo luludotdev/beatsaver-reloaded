@@ -1,9 +1,8 @@
 import { AxiosError } from 'axios'
 import { push as pushFn } from 'connected-react-router'
 import React, { FunctionComponent, useState } from 'react'
-import { connect, MapStateToProps } from 'react-redux'
+import { connect } from 'react-redux'
 import { IconInput } from '../components/Input'
-import { IState } from '../store'
 import { Login, login as loginFn } from '../store/user'
 
 interface IProps {
@@ -92,17 +91,14 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
   )
 }
 
-const mapStateToProps: MapStateToProps<IProps, {}, IState> = () => ({
+const mapDispatchToProps: IProps = {
   login: loginFn,
   push: pushFn,
-})
+}
 
 const ConnectedLogin = connect(
-  mapStateToProps,
-  {
-    login: loginFn,
-    push: pushFn,
-  }
+  undefined,
+  mapDispatchToProps
 )(Login)
 
 export default ConnectedLogin
