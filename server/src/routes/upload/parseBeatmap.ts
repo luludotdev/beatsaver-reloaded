@@ -101,6 +101,24 @@ export const parseBeatmap: (
     hash.update(b)
   }
 
+  const difficultiesData = await Promise.all([1, 3, 5, 7, 9].map(async rank => {
+    let diff = difficulties.find(x => x._difficultyRank === rank)
+    if (!diff) {
+      return false
+    }
+    try {
+      const diffContent = await zip.file(_beatmapFilename).async('text')
+      const diffData = JSON.parse(diffContent)
+      return {
+        notes: diffData._notes.length,
+        obstacles: diffData._obstacles.length,
+        duration: Math.max(...diffData._notes.map(note => note._time))
+      }
+    } catch (err) {
+      return false;
+    }
+  }));
+
   const sha1 = hash.digest('hex')
   const parsed: IParsedBeatmap = {
     hash: sha1,
@@ -114,11 +132,11 @@ export const parseBeatmap: (
       bpm: infoJSON._beatsPerMinute,
 
       difficulties: {
-        easy: difficulties.some(x => x._difficultyRank === 1),
-        expert: difficulties.some(x => x._difficultyRank === 7),
-        expertPlus: difficulties.some(x => x._difficultyRank === 9),
-        hard: difficulties.some(x => x._difficultyRank === 5),
-        normal: difficulties.some(x => x._difficultyRank === 3),
+        easy: difficultiesData[0],
+        normal: difficultiesData[1],
+        hard: difficultiesData[2],
+        expert: difficultiesData[3],
+        expertPlus: difficultiesData[4],
       },
 
       characteristics: infoJSON._difficultyBeatmapSets.map(
