@@ -101,4 +101,4 @@ const ConnectedLogin = connect(
   mapDispatchToProps
 )(Login)
 
-export default ConnectedLogin
+export { ConnectedLogin as Login }

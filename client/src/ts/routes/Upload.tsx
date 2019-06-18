@@ -276,4 +276,4 @@ const ConnectedUpload = connect(
   mapDispatchToProps
 )(Upload)
 
-export default ConnectedUpload
+export { ConnectedUpload as Upload }
