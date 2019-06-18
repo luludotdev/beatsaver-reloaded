@@ -21,6 +21,49 @@ declare interface IDifficultyBeatmap {
   _beatmapFilename: string
 }
 
+declare interface IDifficultyJSON {
+  _version: string
+  _BPMChanges: IBPMChange[]
+  _events: IEvent[]
+  _notes: INote[]
+  _obstacles: IObstacle[]
+  _bookmarks: IBookmark[]
+}
+
+declare interface IBPMChange {
+  _BPM: number
+  _time: number
+  _beatsPerBar: number
+  _metronomeOffset: number
+}
+
+declare interface IEvent {
+  _time: number
+  _type: number
+  _value: number
+}
+
+declare interface INote {
+  _time: number
+  _lineIndex: number
+  _lineLayer: number
+  _type: number
+  _cutDirection: number
+}
+
+declare interface IObstacle {
+  _time: number
+  _lineIndex: number
+  _type: number
+  _duration: number
+  _width: number
+}
+
+declare interface IBookmark {
+  _time: number
+  _name: string
+}
+
 declare interface IParsedBeatmap {
   metadata: {
     songName: string
@@ -31,11 +74,11 @@ declare interface IParsedBeatmap {
     bpm: number
 
     difficulties: {
-      easy: boolean
-      normal: boolean
-      hard: boolean
-      expert: boolean
-      expertPlus: boolean
+      easy: IParsedDifficulty | null
+      normal: IParsedDifficulty | null
+      hard: IParsedDifficulty | null
+      expert: IParsedDifficulty | null
+      expertPlus: IParsedDifficulty | null
     }
 
     characteristics: string[]
@@ -43,4 +86,10 @@ declare interface IParsedBeatmap {
 
   hash: string
   coverExt: string
+}
+
+declare interface IParsedDifficulty {
+  notes: number
+  obstacles: number
+  duration: number
 }
