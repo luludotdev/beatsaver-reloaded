@@ -19,7 +19,7 @@ router.get('/maps', rateLimit(1000 * 60 * 60 * 12, 10), async ctx => {
 })
 
 router.get('/users', rateLimit(1000 * 60 * 60 * 12, 10), async ctx => {
-  const maps = User.find({}, '-password -email')
+  const maps = User.find({}, '-password -email -verified -verifyToken -admin')
     .cursor()
     .pipe(jsonStream())
 
