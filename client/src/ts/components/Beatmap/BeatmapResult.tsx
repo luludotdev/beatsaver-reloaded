@@ -14,11 +14,13 @@ interface IProps {
 const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
   const [inViewRef, inView] = useInView({ rootMargin: '240px' })
   if (!inView) {
-    return <div ref={inViewRef} style={{ height: `${180 + 14}px` }} />
+    return (
+      <div ref={inViewRef} id={map.key} style={{ height: `${180 + 14}px` }} />
+    )
   }
 
   return (
-    <div className='beatmap-result' ref={inViewRef}>
+    <div className='beatmap-result' id={map.key} ref={inViewRef}>
       <div className='cover'>
         <Link to={`/beatmap/${map.key}`}>
           <Image
