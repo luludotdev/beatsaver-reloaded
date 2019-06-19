@@ -83,6 +83,7 @@
     "typescript": "^3.5.2"
   },
   "dependencies": {
+    "debounce-fn": "^3.0.1",
     "dotenv": "^8.0.0",
     "he": "^1.2.0",
     "koa": "^2.7.0",

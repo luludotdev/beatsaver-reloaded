@@ -1,4 +1,6 @@
-import { history } from '../init'
+import { replace } from 'connected-react-router'
+import debounceFn from 'debounce-fn'
+import { history, store } from '../init'
 
 export const resetScroll = () => {
   const layout = document.getElementById('layout')
@@ -29,3 +31,35 @@ export const checkHash = () => {
 }
 
 history.listen(() => setTimeout(() => checkHash(), 0))
+
+const inView = (elem: Element) => {
+  const bounding = elem.getBoundingClientRect()
+  return (
+    bounding.top >= 0 &&
+    bounding.left >= 0 &&
+    bounding.bottom <=
+      (window.innerHeight || document.documentElement.clientHeight) &&
+    bounding.right <=
+      (window.innerWidth || document.documentElement.clientWidth)
+  )
+}
+
+const initScrollHandler = () => {
+  const root = document.getElementById('root')
+  if (!root) return
+
+  root.onscroll = debounceFn(
+    () => {
+      // todo
+      const [visible] = [
+        ...document.getElementsByClassName('beatmap-result'),
+      ].filter(x => inView(x))
+
+      if (visible) store.dispatch(replace({ hash: visible.id }))
+      else store.dispatch(replace({ hash: undefined }))
+    },
+    { wait: 50 }
+  )
+}
+
+initScrollHandler()
