@@ -1,7 +1,9 @@
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import Helmet from 'react-helmet'
 import { useInView } from 'react-intersection-observer'
+import { history } from '../../init'
 import { IScroller } from '../../store/scrollers'
+import { checkHash } from '../../utils/scroll'
 import { APIError } from '../APIError'
 import { Loader } from '../Loader'
 import { BeatmapResult } from './BeatmapResult'
@@ -24,6 +26,16 @@ export const BeatmapScroller: FunctionComponent<IProps> = ({
   const [ref, inView] = useInView({ rootMargin: '240px' })
   if (inView && !loading && !done && !finite) next()
   if (error) return <APIError error={error} />
+
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    if (maps.length === 0) return
+    if (scrolled) return
+    if (history.action !== 'POP') return
+
+    setScrolled(true)
+    checkHash()
+  }, [maps.length])
 
   const capitalize = (s: string) => {
     if (typeof s !== 'string') return ''
