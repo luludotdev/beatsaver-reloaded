@@ -15,7 +15,7 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
   const [inViewRef, inView] = useInView({ rootMargin: '240px' })
   if (!inView) {
     return (
-      <div ref={inViewRef} id={map.key} style={{ height: `${180 + 14}px` }} />
+      <div ref={inViewRef} className='beatmap-result-hidden' id={map.key} />
     )
   }
 

@@ -1,8 +1,11 @@
+$margin: 14px;
+$image-size: 180px;
+
 div.beatmap-result {
   $hide-cover: 750px;
 
   $radius: 8px;
-  margin-bottom: 14px;
+  margin-bottom: $margin;
   border-radius: $radius;
   display: flex;
 
@@ -16,8 +19,6 @@ div.beatmap-result {
   }
 
   & div.cover {
-    $image-size: 180px;
-
     border-radius: $radius 0 0 $radius;
     width: $image-size;
     height: $image-size;
@@ -123,4 +124,8 @@ div.beatmap-result {
       }
     }
   }
+}
+
+div.beatmap-result-hidden {
+  height: $margin + $image-size;
 }
