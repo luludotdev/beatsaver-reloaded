@@ -149,7 +149,7 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
 
         <div className='buttons'>
           <a href={map.downloadURL}>Download</a>
-          {/* <a href={`beatsaver://${map.key}`}>OneClick&trade; Install</a> */}
+          <a href={`beatsaver://${map.key}`}>OneClick&trade; Install</a>
           {/* <a href='/'>View on BeastSaber</a> */}
           <a href='/' onClick={e => copyBSR(e)}>
             {copied ? (
