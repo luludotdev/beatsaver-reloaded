@@ -38,9 +38,12 @@ const writeDump: DumpFunction<void> = (path, query) =>
       .on('close', () => resolve())
   })
 
-const checkAndDump: DumpFunction<void> = async (path, query) => {
+const checkAndDump: DumpFunction<boolean> = async (path, query) => {
   const stale = await isStale(path)
-  if (stale) return writeDump(path, query)
+  if (!stale) return false
+
+  await writeDump(path, query)
+  return true
 }
 
 const dumpTask = async () => {
