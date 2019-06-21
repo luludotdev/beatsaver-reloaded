@@ -1,10 +1,12 @@
 import { createWriteStream, PathLike } from 'fs'
 import { Document, DocumentQuery } from 'mongoose'
+import { schedule } from 'node-cron'
 import { join } from 'path'
 import { DUMP_PATH } from '../constants'
 import Beatmap from '../mongo/models/Beatmap'
 import User from '../mongo/models/User'
 import { exists, mkdirp, stat } from '../utils/fs'
+import signale from '../utils/signale'
 import { jsonStream } from '../utils/streams'
 
 const mapDump = join(DUMP_PATH, 'maps.json')
@@ -62,3 +64,12 @@ const dumpTask = async () => {
     ),
   ])
 }
+
+signale.pending('Starting JSON dump task...')
+schedule('*/10 * * * *', async () => {
+  signale.start('Creating JSON dumps!')
+  const [maps, users] = await dumpTask()
+
+  if (maps || users) signale.complete('Dumping complete!')
+  else signale.complete('Dumps were not modified.')
+})
