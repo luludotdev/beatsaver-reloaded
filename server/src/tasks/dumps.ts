@@ -8,7 +8,7 @@ import { DUMP_PATH } from '../constants'
 import { DISABLE_DUMPS } from '../env'
 import Beatmap from '../mongo/models/Beatmap'
 import User from '../mongo/models/User'
-import { globStats, mkdirp, rename, rimraf } from '../utils/fs'
+import { exists, globStats, mkdirp, rename, rimraf } from '../utils/fs'
 import signale from '../utils/signale'
 import { jsonStream } from '../utils/streams'
 
@@ -20,6 +20,8 @@ const writeDump: <D, DocType extends Document, QueryHelpers = {}>(
 
   const filePath = join(DUMP_PATH, `${name}.temp.json`)
   const gzPath = join(DUMP_PATH, `${name}.temp.json.gz`)
+
+  if (await exists(filePath)) return
 
   const hash = createHash('sha1')
   const fileStream = createWriteStream(filePath)
