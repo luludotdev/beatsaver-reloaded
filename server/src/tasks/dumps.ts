@@ -5,6 +5,7 @@ import { schedule } from 'node-cron'
 import { join } from 'path'
 import { createGzip } from 'zlib'
 import { DUMP_PATH } from '../constants'
+import { DISABLE_DUMPS } from '../env'
 import Beatmap from '../mongo/models/Beatmap'
 import User from '../mongo/models/User'
 import { globStats, mkdirp, rename, rimraf } from '../utils/fs'
@@ -74,6 +75,10 @@ const dumpTask = async () => {
   signale.complete('JSON dumps written!')
 }
 
-signale.pending('Starting JSON dump task...')
-dumpTask()
-schedule('0 */12 * * *', async () => dumpTask())
+if (DISABLE_DUMPS) {
+  signale.warn('Nightly dumps are disabled!')
+} else {
+  signale.pending('Starting JSON dump task...')
+  dumpTask()
+  schedule('0 */12 * * *', async () => dumpTask())
+}
