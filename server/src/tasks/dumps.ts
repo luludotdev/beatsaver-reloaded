@@ -1,7 +1,9 @@
+import { createHash } from 'crypto'
 import { createWriteStream, PathLike } from 'fs'
 import { Document, DocumentQuery } from 'mongoose'
 import { schedule } from 'node-cron'
 import { join } from 'path'
+import { createGzip } from 'zlib'
 import { DUMP_PATH } from '../constants'
 import Beatmap from '../mongo/models/Beatmap'
 import User from '../mongo/models/User'
@@ -32,12 +34,22 @@ type DumpFunction<R> = <T, DocType extends Document, QueryHelpers = {}>(
 ) => Promise<R>
 
 const writeDump: DumpFunction<void> = (path, query) =>
-  new Promise(resolve => {
-    query
-      .cursor()
-      .pipe(jsonStream())
-      .pipe(createWriteStream(path))
-      .on('close', () => resolve())
+  new Promise(async resolve => {
+    const hash = createHash('sha1')
+    const writeStream = createWriteStream(path)
+    const zipStream = createWriteStream(`${path}.gz`)
+
+    const source = query.cursor().pipe(jsonStream())
+    source.on('data', chunk => hash.update(chunk))
+
+    const file = source.pipe(writeStream)
+    const zip = source.pipe(createGzip()).pipe(zipStream)
+
+    const [sha1] = await Promise.all([
+      new Promise(r => source.on('end', () => r(hash.digest('hex')))),
+      new Promise(r => file.on('close', () => r())),
+      new Promise(r => zip.on('close', () => r())),
+    ])
   })
 
 const checkAndDump: DumpFunction<boolean> = async (path, query) => {
