@@ -1,5 +1,5 @@
 import { createHash } from 'crypto'
-import { createWriteStream, PathLike } from 'fs'
+import { createWriteStream } from 'fs'
 import { Document, DocumentQuery } from 'mongoose'
 import { schedule } from 'node-cron'
 import { join } from 'path'
@@ -7,33 +7,14 @@ import { createGzip } from 'zlib'
 import { DUMP_PATH } from '../constants'
 import Beatmap from '../mongo/models/Beatmap'
 import User from '../mongo/models/User'
-import { exists, mkdirp, rename, stat } from '../utils/fs'
+import { globStats, mkdirp, rename, rimraf } from '../utils/fs'
 import signale from '../utils/signale'
 import { jsonStream } from '../utils/streams'
 
-const mapDump = join(DUMP_PATH, 'maps.json')
-const userDump = join(DUMP_PATH, 'users.json')
-
-const isStale = async (path: PathLike) => {
-  const fileExists = await exists(path)
-  if (!fileExists) return true
-
-  const stats = await stat(path)
-  const now = new Date()
-
-  if (stats.mtime.getUTCDay() !== now.getUTCDay()) return true
-  if (stats.mtime.getUTCMonth() !== now.getUTCMonth()) return true
-  if (stats.mtime.getUTCFullYear() !== now.getUTCFullYear()) return true
-
-  return false
-}
-
-type DumpFunction<R = void> = <D, DocType extends Document, QueryHelpers = {}>(
+const writeDump: <D, DocType extends Document, QueryHelpers = {}>(
   path: string,
   query: DocumentQuery<D, DocType, QueryHelpers>
-) => Promise<R>
-
-const writeDump: DumpFunction = async (name, query) => {
+) => Promise<void> = async (name, query) => {
   await mkdirp(DUMP_PATH)
 
   const filePath = join(DUMP_PATH, `${name}.temp.json`)
@@ -60,35 +41,39 @@ const writeDump: DumpFunction = async (name, query) => {
   const shortHash = sha1.substr(0, 6)
   await rename(filePath, join(DUMP_PATH, `${name}.${shortHash}.json`))
   await rename(gzPath, join(DUMP_PATH, `${name}.${shortHash}.json.gz`))
+
+  const oneDay = 1000 * 60 * 60 * 24
+  const now = Date.now()
+  const cleanup = await globStats([`${name}.*`, `!${name}.temp.*`], {
+    cwd: DUMP_PATH,
+  })
+
+  await Promise.all(
+    cleanup
+      .filter(x => now - x.mtimeMs > oneDay * 5)
+      .map(x => x.absolute)
+      .map(path => rimraf(path))
+  )
 }
 
-const checkAndDump: DumpFunction<boolean> = async (path, query) => {
-  const stale = await isStale(path)
-  if (!stale) return false
-
-  await writeDump(path, query)
-  return true
-}
-
-const dumpTask = async () =>
-  Promise.all([
-    checkAndDump(
+const dumpTask = async () => {
+  signale.start('Creating JSON dumps!')
+  await Promise.all([
+    writeDump(
       'maps',
       Beatmap.find({}, '-votes')
         .sort({ uploaded: -1 })
         .populate('uploader')
     ),
-    checkAndDump(
+    writeDump(
       'users',
       User.find({}, '-password -email -verified -verifyToken -admin')
     ),
   ])
 
-signale.pending('Starting JSON dump task...')
-schedule('*/10 * * * *', async () => {
-  signale.start('Creating JSON dumps!')
-  const [maps, users] = await dumpTask()
+  signale.complete('JSON dumps written!')
+}
 
-  if (maps || users) signale.complete('Dumping complete!')
-  else signale.complete('Dumps were not modified.')
-})
+signale.pending('Starting JSON dump task...')
+dumpTask()
+schedule('0 */12 * * *', async () => dumpTask())
