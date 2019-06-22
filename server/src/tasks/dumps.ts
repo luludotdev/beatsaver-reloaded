@@ -7,7 +7,7 @@ import { createGzip } from 'zlib'
 import { DUMP_PATH } from '../constants'
 import Beatmap from '../mongo/models/Beatmap'
 import User from '../mongo/models/User'
-import { exists, mkdirp, stat } from '../utils/fs'
+import { exists, mkdirp, rename, stat } from '../utils/fs'
 import signale from '../utils/signale'
 import { jsonStream } from '../utils/streams'
 
@@ -28,29 +28,39 @@ const isStale = async (path: PathLike) => {
   return false
 }
 
-type DumpFunction<R> = <T, DocType extends Document, QueryHelpers = {}>(
-  path: PathLike,
-  query: DocumentQuery<T, DocType, QueryHelpers>
+type DumpFunction<R = void> = <D, DocType extends Document, QueryHelpers = {}>(
+  path: string,
+  query: DocumentQuery<D, DocType, QueryHelpers>
 ) => Promise<R>
 
-const writeDump: DumpFunction<void> = (path, query) =>
-  new Promise(async resolve => {
-    const hash = createHash('sha1')
-    const writeStream = createWriteStream(path)
-    const zipStream = createWriteStream(`${path}.gz`)
+const writeDump: DumpFunction = async (name, query) => {
+  await mkdirp(DUMP_PATH)
 
-    const source = query.cursor().pipe(jsonStream())
-    source.on('data', chunk => hash.update(chunk))
+  const filePath = join(DUMP_PATH, `${name}.temp.json`)
+  const gzPath = join(DUMP_PATH, `${name}.temp.json.gz`)
 
-    const file = source.pipe(writeStream)
-    const zip = source.pipe(createGzip()).pipe(zipStream)
+  const hash = createHash('sha1')
+  const fileStream = createWriteStream(filePath)
+  const gzStream = createWriteStream(gzPath)
 
-    const [sha1] = await Promise.all([
-      new Promise(r => source.on('end', () => r(hash.digest('hex')))),
-      new Promise(r => file.on('close', () => r())),
-      new Promise(r => zip.on('close', () => r())),
-    ])
-  })
+  const source = query.cursor().pipe(jsonStream())
+  source.on('data', chunk => hash.update(chunk))
+
+  const file = source.pipe(fileStream)
+  const zip = source.pipe(createGzip()).pipe(gzStream)
+
+  const [sha1] = await Promise.all([
+    new Promise(resolve =>
+      source.on('end', () => resolve(hash.digest('hex')))
+    ) as Promise<string>,
+    new Promise(resolve => file.on('close', () => resolve())),
+    new Promise(resolve => zip.on('close', () => resolve())),
+  ])
+
+  const shortHash = sha1.substr(0, 6)
+  await rename(filePath, join(DUMP_PATH, `${name}.${shortHash}.json`))
+  await rename(gzPath, join(DUMP_PATH, `${name}.${shortHash}.json.gz`))
+}
 
 const checkAndDump: DumpFunction<boolean> = async (path, query) => {
   const stale = await isStale(path)
@@ -60,22 +70,19 @@ const checkAndDump: DumpFunction<boolean> = async (path, query) => {
   return true
 }
 
-const dumpTask = async () => {
-  await mkdirp(DUMP_PATH)
-
-  return Promise.all([
+const dumpTask = async () =>
+  Promise.all([
     checkAndDump(
-      mapDump,
+      'maps',
       Beatmap.find({}, '-votes')
         .sort({ uploaded: -1 })
         .populate('uploader')
     ),
     checkAndDump(
-      userDump,
+      'users',
       User.find({}, '-password -email -verified -verifyToken -admin')
     ),
   ])
-}
 
 signale.pending('Starting JSON dump task...')
 schedule('*/10 * * * *', async () => {

@@ -12,6 +12,7 @@ export { rimrafPromise as rimraf }
 export const access = promisify(fs.access)
 export const writeFile = promisify(fs.writeFile)
 export const stat = promisify(fs.stat)
+export const rename = promisify(fs.rename)
 
 export const exists = async (path: PathLike) => {
   try {
