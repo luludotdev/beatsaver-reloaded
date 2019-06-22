@@ -6,6 +6,9 @@
   "author": "Jack Baron <jackmbaron@gmail.com> (https://www.jackbaron.com)",
   "license": "ISC",
   "private": true,
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "scripts": {
     "test": "yarn run check && yarn run lint",
     "check": "yarn run build --noEmit",
