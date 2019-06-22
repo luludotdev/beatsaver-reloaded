@@ -50,13 +50,14 @@ const initScrollHandler = () => {
 
   root.onscroll = debounceFn(
     () => {
-      // todo
       const [visible] = [
         ...document.getElementsByClassName('beatmap-result'),
       ].filter(x => inView(x))
 
-      if (visible) store.dispatch(replace({ hash: visible.id }))
-      else store.dispatch(replace({ hash: undefined }))
+      const { search } = store.getState().router.location
+
+      if (visible) store.dispatch(replace({ hash: visible.id, search }))
+      else store.dispatch(replace({ hash: undefined, search }))
     },
     { wait: 50 }
   )
