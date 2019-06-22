@@ -24,10 +24,8 @@ export const BeatmapScroller: FunctionComponent<IProps> = ({
   next,
 }) => {
   const [ref, inView] = useInView({ rootMargin: '240px' })
-  if (inView && !loading && !done && !finite) next()
-  if (error) return <APIError error={error} />
-
   const [scrolled, setScrolled] = useState(false)
+
   useEffect(() => {
     if (maps.length === 0) return
     if (scrolled) return
@@ -36,6 +34,9 @@ export const BeatmapScroller: FunctionComponent<IProps> = ({
     setScrolled(true)
     checkHash()
   }, [maps.length])
+
+  if (inView && !loading && !done && !finite) next()
+  if (error) return <APIError error={error} />
 
   const capitalize = (s: string) => {
     if (typeof s !== 'string') return ''
