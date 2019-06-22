@@ -10,6 +10,7 @@ import {
 import { app } from './koa'
 import { awaitCacheDB, awaitRateLimitDB } from './redis'
 import './strategies'
+import './tasks'
 import axios from './utils/axios'
 import signale, { panic } from './utils/signale'
 

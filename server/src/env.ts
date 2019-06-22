@@ -91,3 +91,6 @@ try {
 } catch (err) {
   panic(`Missing environment variable ${err.message}`)
 }
+
+export const DISABLE_DUMPS: boolean =
+  process.env.DISABLE_DUMPS === 'true' || false
