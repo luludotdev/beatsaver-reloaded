@@ -5,10 +5,11 @@ import { schedule } from 'node-cron'
 import { join } from 'path'
 import { createGzip } from 'zlib'
 import { DUMP_PATH } from '../constants'
-import { DISABLE_DUMPS } from '../env'
+import { DISABLE_DUMPS, PORT } from '../env'
 import Beatmap from '../mongo/models/Beatmap'
 import User from '../mongo/models/User'
 import { exists, globStats, mkdirp, rename, rimraf } from '../utils/fs'
+import { waitForMS } from '../utils/misc'
 import signale from '../utils/signale'
 import { jsonStream } from '../utils/streams'
 
@@ -22,6 +23,7 @@ const writeDump: <D, DocType extends Document, QueryHelpers = {}>(
   const gzPath = join(DUMP_PATH, `${name}.temp.json.gz`)
 
   if (await exists(filePath)) return
+  if (await exists(gzPath)) return
 
   const hash = createHash('sha1')
   const fileStream = createWriteStream(filePath)
@@ -60,6 +62,9 @@ const writeDump: <D, DocType extends Document, QueryHelpers = {}>(
 }
 
 const dumpTask = async () => {
+  const delay = Math.max(0, PORT - 3000) * 1000
+  await waitForMS(delay)
+
   signale.start('Creating JSON dumps!')
   await Promise.all([
     writeDump(
