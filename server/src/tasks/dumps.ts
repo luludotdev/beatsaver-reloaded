@@ -5,7 +5,7 @@ import { schedule } from 'node-cron'
 import { join } from 'path'
 import { createGzip } from 'zlib'
 import { DUMP_PATH } from '../constants'
-import { DISABLE_DUMPS, PORT } from '../env'
+import { DISABLE_DUMPS } from '../env'
 import Beatmap from '../mongo/models/Beatmap'
 import User from '../mongo/models/User'
 import { exists, globStats, mkdirp, rename, rimraf } from '../utils/fs'
@@ -61,8 +61,17 @@ const writeDump: <D, DocType extends Document, QueryHelpers = {}>(
   )
 }
 
+const calculateDelay = () => {
+  const hostname: string = process.env.HOSTNAME || 'ff'
+  const shortHost = hostname.substr(0, 2)
+  const hostDec = parseInt(shortHost, 16) || 255
+
+  const random = Math.floor(Math.random() * 10000)
+  return hostDec * 20 + random
+}
+
 const dumpTask = async () => {
-  const delay = Math.max(0, PORT - 3000) * 1000
+  const delay = Math.max(0, calculateDelay())
   await waitForMS(delay)
 
   signale.start('Creating JSON dumps!')
