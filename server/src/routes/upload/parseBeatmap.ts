@@ -101,22 +101,42 @@ export const parseBeatmap: (
     hash.update(b)
   }
 
-  const difficultiesData = await Promise.all(
-    [1, 3, 5, 7, 9].map(async rank => {
-      const diff = difficulties.find(x => x._difficultyRank === rank)
-      if (!diff) {
-        return null
-      }
-      try {
-        const diffContent = await zip.file(diff._beatmapFilename).async('text')
-        const diffData: IDifficultyJSON = JSON.parse(diffContent)
-        return {
-          duration: Math.max(...diffData._notes.map(note => note._time)),
-          notes: diffData._notes.length,
-          obstacles: diffData._obstacles.length,
-        }
-      } catch (err) {
-        return null
+  const characteristics = await Promise.all(
+    infoJSON._difficultyBeatmapSets.map(async set => {
+      const [easy, normal, hard, expert, expertPlus] = await Promise.all(
+        [1, 3, 5, 7, 9].map(async rank => {
+          const diff = set._difficultyBeatmaps.find(
+            x => x._difficultyRank === rank
+          )
+          if (!diff) return null
+          try {
+            const diffContent = await zip
+              .file(diff._beatmapFilename)
+              .async('text')
+            const diffData: IDifficultyJSON = JSON.parse(diffContent)
+            const bombs = diffData._notes.filter(note => note._type === 3)
+              .length
+            return {
+              bombs,
+              duration: Math.max(...diffData._notes.map(note => note._time)),
+              notes: diffData._notes.length - bombs,
+              obstacles: diffData._obstacles.length,
+            }
+          } catch (err) {
+            return null
+          }
+        })
+      )
+
+      return {
+        difficulties: {
+          easy,
+          expert,
+          expertPlus,
+          hard,
+          normal,
+        },
+        name: set._beatmapCharacteristicName,
       }
     })
   )
@@ -134,16 +154,14 @@ export const parseBeatmap: (
       bpm: infoJSON._beatsPerMinute,
 
       difficulties: {
-        easy: difficultiesData[0],
-        expert: difficultiesData[3],
-        expertPlus: difficultiesData[4],
-        hard: difficultiesData[2],
-        normal: difficultiesData[1],
+        easy: difficulties.some(x => x._difficultyRank === 1),
+        expert: difficulties.some(x => x._difficultyRank === 7),
+        expertPlus: difficulties.some(x => x._difficultyRank === 9),
+        hard: difficulties.some(x => x._difficultyRank === 5),
+        normal: difficulties.some(x => x._difficultyRank === 3),
       },
 
-      characteristics: infoJSON._difficultyBeatmapSets.map(
-        x => x._beatmapCharacteristicName
-      ),
+      characteristics,
     },
 
     coverExt: `.${coverType.ext}`,

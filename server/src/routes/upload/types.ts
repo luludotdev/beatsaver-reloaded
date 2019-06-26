@@ -74,22 +74,34 @@ declare interface IParsedBeatmap {
     bpm: number
 
     difficulties: {
-      easy: IParsedDifficulty | null
-      normal: IParsedDifficulty | null
-      hard: IParsedDifficulty | null
-      expert: IParsedDifficulty | null
-      expertPlus: IParsedDifficulty | null
+      easy: boolean
+      normal: boolean
+      hard: boolean
+      expert: boolean
+      expertPlus: boolean
     }
 
-    characteristics: string[]
+    characteristics: IBeatmapCharacteristic[]
   }
 
   hash: string
   coverExt: string
 }
 
+declare interface IBeatmapCharacteristic {
+  name: string
+  difficulties: {
+    easy: IParsedDifficulty | null
+    normal: IParsedDifficulty | null
+    hard: IParsedDifficulty | null
+    expert: IParsedDifficulty | null
+    expertPlus: IParsedDifficulty | null
+  }
+}
+
 declare interface IParsedDifficulty {
+  duration: number
+  bombs: number
   notes: number
   obstacles: number
-  duration: number
 }
