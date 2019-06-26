@@ -108,17 +108,23 @@ export const parseBeatmap: (
           const diff = set._difficultyBeatmaps.find(
             x => x._difficultyRank === rank
           )
+
           if (!diff) return null
           try {
             const diffContent = await zip
               .file(diff._beatmapFilename)
               .async('text')
+
             const diffData: IDifficultyJSON = JSON.parse(diffContent)
             const bombs = diffData._notes.filter(note => note._type === 3)
               .length
+
+            const duration =
+              Math.max(...diffData._notes.map(note => note._time)) || 0
+
             return {
               bombs,
-              duration: Math.max(...diffData._notes.map(note => note._time)),
+              duration,
               notes: diffData._notes.length - bombs,
               obstacles: diffData._obstacles.length,
             }
