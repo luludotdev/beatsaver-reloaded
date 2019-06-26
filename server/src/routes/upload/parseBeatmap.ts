@@ -101,50 +101,50 @@ export const parseBeatmap: (
     hash.update(b)
   }
 
-  const characteristics = await Promise.all(
-    infoJSON._difficultyBeatmapSets.map(async set => {
-      const [easy, normal, hard, expert, expertPlus] = await Promise.all(
-        [1, 3, 5, 7, 9].map(async rank => {
-          const diff = set._difficultyBeatmaps.find(
-            x => x._difficultyRank === rank
-          )
+  const parseCharacteristic = async (
+    rank: number,
+    set: Readonly<IBeatmapSet>
+  ) => {
+    const diff = set._difficultyBeatmaps.find(x => x._difficultyRank === rank)
+    if (!diff) return null
 
-          if (!diff) return null
-          try {
-            const diffContent = await zip
-              .file(diff._beatmapFilename)
-              .async('text')
+    try {
+      const content = await zip.file(diff._beatmapFilename).async('text')
+      const data: IDifficultyJSON = JSON.parse(content)
 
-            const diffData: IDifficultyJSON = JSON.parse(diffContent)
-            const bombs = diffData._notes.filter(note => note._type === 3)
-              .length
-
-            const duration =
-              Math.max(...diffData._notes.map(note => note._time)) || 0
-
-            return {
-              bombs,
-              duration,
-              notes: diffData._notes.length - bombs,
-              obstacles: diffData._obstacles.length,
-            }
-          } catch (err) {
-            return null
-          }
-        })
-      )
+      const bombs = data._notes.filter(note => note._type === 3).length
+      const duration = Math.max(...data._notes.map(note => note._time)) || 0
 
       return {
-        difficulties: {
-          easy,
-          expert,
-          expertPlus,
-          hard,
-          normal,
-        },
-        name: set._beatmapCharacteristicName,
+        bombs,
+        duration,
+        notes: data._notes.length - bombs,
+        obstacles: data._obstacles.length,
       }
-    })
+    } catch (err) {
+      return null
+    }
+  }
+
+  const parseSet = async (set: Readonly<IBeatmapSet>) => {
+    const [easy, normal, hard, expert, expertPlus] = await Promise.all(
+      [1, 3, 5, 7, 9].map(x => parseCharacteristic(x, set))
+    )
+
+    return {
+      difficulties: {
+        easy,
+        expert,
+        expertPlus,
+        hard,
+        normal,
+      },
+      name: set._beatmapCharacteristicName,
+    }
+  }
+
+  const characteristics = await Promise.all(
+    infoJSON._difficultyBeatmapSets.map(parseSet)
   )
 
   const sha1 = hash.digest('hex')
