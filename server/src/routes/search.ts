@@ -103,9 +103,12 @@ router.get(
       { key: 'uploader.username', fuzzy: true, boost: 1.5 },
       { key: 'uploader.username', boost: 2 },
       { key: 'metadata.songName', fuzzy: true },
+      { key: 'metadata.songName', boost: 1.5 },
       { key: 'metadata.songSubName', fuzzy: true },
       { key: 'metadata.songAuthorName', fuzzy: true },
+      { key: 'metadata.songAuthorName', boost: 1.5 },
       { key: 'metadata.levelAuthorName', fuzzy: true },
+      { key: 'metadata.levelAuthorName', boost: 1.5 },
       { key: 'hash', boost: 5 },
     ]
 
