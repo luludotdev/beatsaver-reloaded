@@ -35,7 +35,7 @@ const buildQuery = (query: string, fields: IQueryField[]) =>
       const fz = fuzzy ? `~${distance || 1}` : ''
       const bo = boost ? `^${boost}` : ''
 
-      const escapeRX = /(&&|\|\||[+\-!(){}[\]^"~*?:\\])/
+      const escapeRX = /(&&|\|\||[+\-!(){}[\]^"~*?:\\])/g
       const escaped = query.replace(escapeRX, '\\$1')
 
       return `${key}:${escaped}${fz}${bo}`
