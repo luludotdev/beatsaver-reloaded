@@ -88,9 +88,9 @@ const elasticSearch = async (query: any, page: number = 0) => {
 router.get(
   '/text/:page?',
   rateLimit({
-    duration: 1 * 1000,
+    duration: 5 * 1000,
     id: ctx => `/search/text:${ctx.realIP}`,
-    max: 2,
+    max: 25,
   }),
   async ctx => {
     const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
@@ -132,9 +132,9 @@ router.get(
 router.get(
   '/advanced/:page?',
   rateLimit({
-    duration: 1 * 1000,
+    duration: 5 * 1000,
     id: ctx => `/search/advanced:${ctx.realIP}`,
-    max: 1,
+    max: 15,
   }),
   async ctx => {
     const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
