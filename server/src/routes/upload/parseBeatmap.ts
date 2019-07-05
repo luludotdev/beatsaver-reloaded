@@ -115,8 +115,14 @@ export const parseBeatmap: (
       const bombs = data._notes.filter(note => note._type === 3).length
       const duration = Math.max(...data._notes.map(note => note._time)) || 0
 
+      const length =
+        infoJSON._beatsPerMinute === 0
+          ? 0
+          : (duration / infoJSON._beatsPerMinute) * 60
+
       return {
         duration,
+        length,
         njs: 0,
 
         bombs,
