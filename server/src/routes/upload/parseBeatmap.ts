@@ -101,10 +101,10 @@ export const parseBeatmap: (
     hash.update(b)
   }
 
-  const parseCharacteristic = async (
+  const parseCharacteristic: (
     rank: number,
     set: Readonly<IBeatmapSet>
-  ) => {
+  ) => Promise<IParsedDifficulty | null> = async (rank, set) => {
     const diff = set._difficultyBeatmaps.find(x => x._difficultyRank === rank)
     if (!diff) return null
 
