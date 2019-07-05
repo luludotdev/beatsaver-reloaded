@@ -19,6 +19,7 @@ declare interface IDifficultyBeatmap {
   _difficulty: string
   _difficultyRank: number
   _beatmapFilename: string
+  _noteJumpMovementSpeed: number
 }
 
 declare interface IDifficultyJSON {
@@ -104,4 +105,5 @@ declare interface IParsedDifficulty {
   bombs: number
   notes: number
   obstacles: number
+  njs: number
 }

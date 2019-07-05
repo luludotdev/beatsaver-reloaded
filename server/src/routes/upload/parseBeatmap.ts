@@ -116,8 +116,10 @@ export const parseBeatmap: (
       const duration = Math.max(...data._notes.map(note => note._time)) || 0
 
       return {
-        bombs,
         duration,
+        njs: 0,
+
+        bombs,
         notes: data._notes.length - bombs,
         obstacles: data._obstacles.length,
       }
@@ -139,6 +141,7 @@ export const parseBeatmap: (
         hard,
         normal,
       },
+
       name: set._beatmapCharacteristicName,
     }
   }
