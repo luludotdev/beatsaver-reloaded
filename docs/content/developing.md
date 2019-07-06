@@ -57,6 +57,11 @@ $ docker run --name elastic -p 9200:9200 \
 ## Configuration
 All config for BeatSaver reloaded is done using environment variables. An example `.env` file has been provided at the root of the repo. To use this in development, copy it into the `/server` directory and rename it to `.env`.
 
+::: danger
+You must set all required envrionment variables or the server will not start.  
+An error with the missing variable will be printed to the console.
+:::
+
 The example `.env` file documents everything relevant that you can change. However there are some extra variables that are not meant for general use.
 
 ```env
