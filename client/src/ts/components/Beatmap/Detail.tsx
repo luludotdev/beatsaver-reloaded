@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios'
 import chunk from 'chunk'
+import { Push, push as pushFn } from 'connected-react-router'
 import React, {
   FunctionComponent,
   MouseEvent,
@@ -17,6 +18,7 @@ import { IState } from '../../store'
 import { IUser } from '../../store/user'
 import { axios } from '../../utils/axios'
 import { parseCharacteristics } from '../../utils/characteristics'
+import swal from '../../utils/swal'
 import { ExtLink } from '../ExtLink'
 import { Image } from '../Image'
 import { Loader } from '../Loader'
@@ -28,13 +30,17 @@ interface IConnectedProps {
   user: IUser | null | undefined
 }
 
+interface IDispatchProps {
+  push: Push
+}
+
 interface IPassedProps {
   mapKey: string
 }
 
-type IProps = IConnectedProps & IPassedProps
+type IProps = IConnectedProps & IDispatchProps & IPassedProps
 
-const BeatmapDetail: FunctionComponent<IProps> = ({ user, mapKey }) => {
+const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
   const [map, setMap] = useState(undefined as IBeatmap | undefined | Error)
 
   const [copied, setCopied] = useState(false)
@@ -80,6 +86,34 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, mapKey }) => {
   }
 
   const isUploader = user && user._id === map.uploader._id
+
+  const deleteMap = async (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    if (!isUploader) return
+
+    const result = await swal.fire({
+      confirmButtonColor: '#bf2a42',
+      reverseButtons: true,
+      showCancelButton: true,
+      text: 'Are you sure? This cannot be undone!',
+      title: 'Delete Beatmap',
+      type: 'warning',
+    })
+
+    if (!result.value) return
+    try {
+      await axios.post(`/manage/delete/${map.key}`)
+      return push('/')
+    } catch (err) {
+      swal.fire({
+        title: 'Delete Failed',
+        type: 'error',
+      })
+
+      console.error(err)
+    }
+  }
+
   return (
     <>
       <Helmet>
@@ -107,7 +141,9 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, mapKey }) => {
           <div className='buttons top'>
             <a href={map.downloadURL}>📤 Upload new version</a>
             <a href={map.downloadURL}>📝 Edit</a>
-            <a href={map.downloadURL}>❌ Delete</a>
+            <a href='/' onClick={e => deleteMap(e)}>
+              ❌ Delete
+            </a>
           </div>
         )}
 
@@ -210,7 +246,14 @@ const mapStateToProps: MapStateToProps<
   user: state.user.login,
 })
 
-const ConnectedBeatmapDetail = connect(mapStateToProps)(BeatmapDetail)
+const mapDispatchToProps: IDispatchProps = {
+  push: pushFn,
+}
+
+const ConnectedBeatmapDetail = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BeatmapDetail)
 export { ConnectedBeatmapDetail as BeatmapDetail }
 
 interface IMetadataProps {

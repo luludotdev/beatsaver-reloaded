@@ -140,6 +140,37 @@
       &:not(:last-child) {
         margin-bottom: 0;
       }
+
+      & a, button {
+        &:first-child {
+          border-top-left-radius: 6px;
+          border-bottom-left-radius: 0;
+        }
+
+        &:last-child {
+          border-top-right-radius: 6px;
+          border-bottom-right-radius: 0;
+        }
+      }
+    }
+
+    & button {
+      appearance: none;
+      border: none;
+      background-color: transparent;
+      border-radius: 0;
+      outline: none;
+
+      font-size: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, .05);
+      }
+
+      &:active {
+        background-color: rgba(0, 0, 0, .1);
+      }
     }
 
     & a, button {
