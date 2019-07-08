@@ -1089,7 +1089,7 @@
   resolved "https://registry.yarnpkg.com/@types/parcel-env/-/parcel-env-0.0.0.tgz#c8ed2c06cd70c9cb89d50bbb1688404fc2a93f33"
   integrity sha512-GcmAgBcg/SG5Hy3MVvcTRXf4PUIxQoNUMCjTvG6DSWAfoFwd1FKG0HxVZqHgRE4JuusR6DTrNetKi2WliIiY/g==
 
-"@types/prop-types@*":
+"@types/prop-types@*", "@types/prop-types@^15.5.6":
   version "15.7.1"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
   integrity sha512-CFzn9idOEpHrgdw8JsoTkaDDyRWk1jrzIV8djzcgpq0y9tG4B4lFT+Nxh52DVpDXV+n4+NPNv7M1Dj5uMp6XFg==
@@ -5415,6 +5415,14 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
     ini "~1.3.0"
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
+
+react-contenteditable@^3.2.6:
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/react-contenteditable/-/react-contenteditable-3.2.6.tgz#66c26e1c4fbbcf2e50ed9243329163e6396b2167"
+  integrity sha512-jmr/wnuaU0teJ7U5ePUtEV4xDqaJS3jAFaXMF/3Dyr0COLV6gegcH0Yj727BdT7DnHWVoXVpR7m1s9hDgmSBTw==
+  dependencies:
+    "@types/prop-types" "^15.5.6"
+    fast-deep-equal "^2.0.1"
 
 react-dom@^16.8.6:
   version "16.8.6"

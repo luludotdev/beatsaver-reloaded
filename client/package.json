@@ -91,6 +91,7 @@
     "koa-send": "^5.0.0",
     "koa-static": "^5.0.0",
     "mongoose": "^5.6.0",
+    "react-contenteditable": "^3.2.6",
     "signale": "^1.4.0"
   },
   "browserslist": [

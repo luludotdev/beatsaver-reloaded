@@ -46,6 +46,15 @@
     }
   }
 
+  & h1 .is-editable {
+    outline: none;
+    border: 1px dashed white;
+    border-radius: 5px;
+
+    text-decoration: underline;
+    padding: 4px 8px;
+  }
+
   & h2 {
     margin-bottom: 18px;
   }
@@ -106,6 +115,13 @@
       & .description {
         flex-grow: 1;
         margin-bottom: 12px;
+
+        & .is-editable {
+          padding: 4px 8px;
+          border: 1px dashed currentColor;
+          border-radius: 5px;
+          outline: none;
+        }
       }
     }
 

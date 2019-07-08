@@ -2,12 +2,14 @@ import { AxiosError } from 'axios'
 import chunk from 'chunk'
 import { Push, push as pushFn } from 'connected-react-router'
 import React, {
+  ChangeEvent,
   FunctionComponent,
   MouseEvent,
   useEffect,
   useRef,
   useState,
 } from 'react'
+import ContentEditable from 'react-contenteditable'
 import Helmet from 'react-helmet'
 import Linkify from 'react-linkify'
 import nl2br from 'react-nl2br'
@@ -43,6 +45,25 @@ type IProps = IConnectedProps & IDispatchProps & IPassedProps
 const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
   const [map, setMap] = useState<IBeatmap | undefined | Error>(undefined)
 
+  const [editing, setEditing] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
+  const descriptionRef = useRef<ContentEditable | null>(null)
+  useEffect(() => {
+    if (!editing) {
+      const sel = document.getSelection()
+      if (sel) sel.removeAllRanges()
+
+      return
+    }
+
+    if (descriptionRef.current === null) return
+    const div: HTMLDivElement = descriptionRef.current.el.current
+
+    div.focus()
+    document.execCommand('selectAll', false, undefined)
+  }, [editing])
+
   const [copied, setCopied] = useState<boolean>(false)
   const bsrRef = useRef<HTMLInputElement | null>(null)
 
@@ -62,6 +83,8 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
       .get<IBeatmap>(`/maps/detail/${mapKey}`)
       .then(resp => {
         setMap(resp.data)
+        setTitle(resp.data.name)
+        setDescription(resp.data.description)
       })
       .catch(err => setMap(err))
 
@@ -117,6 +140,33 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
     }
   }
 
+  const editMap = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    setEditing(true)
+  }
+
+  const stopEditing = async (
+    e: MouseEvent<HTMLAnchorElement>,
+    save: boolean = false
+  ) => {
+    e.preventDefault()
+    if (!save) return loadMap()
+
+    try {
+      await axios.post(`/manage/edit/${map.key}`)
+
+      setEditing(false)
+      return loadMap()
+    } catch (err) {
+      swal.fire({
+        title: 'Edit Failed',
+        type: 'error',
+      })
+
+      console.error(err)
+    }
+  }
+
   return (
     <>
       <Helmet>
@@ -132,7 +182,21 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
       </div>
 
       <div className='detail-content'>
-        <h1 className='is-size-1'>{map.name}</h1>
+        <h1 className='is-size-1'>
+          {editing ? (
+            <ContentEditable
+              html={title}
+              disabled={false}
+              className='is-editable'
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setTitle(e.target.value)
+              }
+            />
+          ) : (
+            map.name
+          )}
+        </h1>
+
         <h2 className='is-size-4'>
           Uploaded by{' '}
           <Link to={`/uploader/${map.uploader._id}`}>
@@ -143,10 +207,28 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
         {!isUploader ? null : (
           <div className='buttons top'>
             {/* <a href='#'>📤 Upload new version</a> */}
-            {/* <a href='#'>📝 Edit</a> */}
-            <a href='/' onClick={e => deleteMap(e)}>
-              ❌ Delete
-            </a>
+
+            {editing ? (
+              <>
+                <a href='/' onClick={e => stopEditing(e, true)}>
+                  💾 Save
+                </a>
+
+                <a href='/' onClick={e => stopEditing(e, false)}>
+                  🔥 Discard
+                </a>
+              </>
+            ) : (
+              <>
+                <a href='/' onClick={e => editMap(e)}>
+                  📝 Edit
+                </a>
+
+                <a href='/' onClick={e => deleteMap(e)}>
+                  ❌ Delete
+                </a>
+              </>
+            )}
           </div>
         )}
 
@@ -168,7 +250,17 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
             </div>
 
             <div className='description'>
-              {map.description ? (
+              {editing ? (
+                <ContentEditable
+                  html={description}
+                  disabled={false}
+                  ref={descriptionRef}
+                  className='is-editable'
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setDescription(e.target.value)
+                  }
+                />
+              ) : map.description ? (
                 <Linkify
                   componentDecorator={(href, text, key) => (
                     <ExtLink key={`${href}:${text}:${key}`} href={href}>
