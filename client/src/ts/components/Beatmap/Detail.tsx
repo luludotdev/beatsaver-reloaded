@@ -4,6 +4,7 @@ import { Push, push as pushFn } from 'connected-react-router'
 import React, {
   ChangeEvent,
   FunctionComponent,
+  KeyboardEvent,
   MouseEvent,
   useEffect,
   useRef,
@@ -214,6 +215,9 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setName(e.target.value)
               }
+              onKeyDown={(e: KeyboardEvent) => {
+                if (e.key === 'Enter') e.preventDefault()
+              }}
             />
           ) : (
             map.name
