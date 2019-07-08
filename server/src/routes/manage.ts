@@ -1,6 +1,7 @@
 import { Middleware } from 'koa'
 import passport from 'koa-passport'
 import Router from 'koa-router'
+import { clearCache } from '../middleware/cache'
 import Beatmap, { IBeatmapModel } from '../mongo/models/Beatmap'
 import { IUserModel } from '../mongo/models/User'
 import { parseKey } from '../utils/parseKey'
@@ -33,6 +34,11 @@ router.post('/delete/:key', userBeatmap, async ctx => {
 
   map.deletedAt = new Date()
   await map.save()
+
+  await Promise.all([
+    clearCache('maps'),
+    clearCache(`uploader:${map.uploader}`),
+  ])
 
   return (ctx.status = 204)
 })
