@@ -5,6 +5,7 @@ import { adminRouter } from './admin'
 import { authRouter } from './auth'
 import { cdnRouter } from './cdn'
 import { downloadRouter } from './download'
+import { manageRouter } from './manage'
 import { mapsRouter } from './maps'
 import { searchRouter } from './search'
 import { uploadRouter } from './upload'
@@ -15,6 +16,7 @@ export const routes: Router[] = [
   adminRouter,
   authRouter,
   downloadRouter,
+  manageRouter,
   mapsRouter,
   searchRouter,
   uploadRouter,
