@@ -10,8 +10,11 @@ import React, {
 import Helmet from 'react-helmet'
 import Linkify from 'react-linkify'
 import nl2br from 'react-nl2br'
+import { connect, MapStateToProps } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { NotFound } from '../../routes/NotFound'
+import { IState } from '../../store'
+import { IUser } from '../../store/user'
 import { axios } from '../../utils/axios'
 import { parseCharacteristics } from '../../utils/characteristics'
 import { ExtLink } from '../ExtLink'
@@ -21,11 +24,17 @@ import { TextPage } from '../TextPage'
 import { DiffTags } from './DiffTags'
 import { BeatmapStats } from './Statistics'
 
-interface IProps {
+interface IConnectedProps {
+  user: IUser | null | undefined
+}
+
+interface IPassedProps {
   mapKey: string
 }
 
-export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
+type IProps = IConnectedProps & IPassedProps
+
+const BeatmapDetail: FunctionComponent<IProps> = ({ user, mapKey }) => {
   const [map, setMap] = useState(undefined as IBeatmap | undefined | Error)
 
   const [copied, setCopied] = useState(false)
@@ -70,6 +79,7 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
     )
   }
 
+  const isUploader = user && user._id === map.uploader._id
   return (
     <>
       <Helmet>
@@ -179,6 +189,17 @@ export const BeatmapDetail: FunctionComponent<IProps> = ({ mapKey }) => {
     </>
   )
 }
+
+const mapStateToProps: MapStateToProps<
+  IConnectedProps,
+  IPassedProps,
+  IState
+> = state => ({
+  user: state.user.login,
+})
+
+const ConnectedBeatmapDetail = connect(mapStateToProps)(BeatmapDetail)
+export { ConnectedBeatmapDetail as BeatmapDetail }
 
 interface IMetadataProps {
   metadata: ReadonlyArray<readonly [string, any]>
