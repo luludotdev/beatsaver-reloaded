@@ -21,6 +21,7 @@ import { IState } from '../../store'
 import { IUser } from '../../store/user'
 import { axios } from '../../utils/axios'
 import { parseCharacteristics } from '../../utils/characteristics'
+import { stripHTML, unstripHTML } from '../../utils/stripHTML'
 import swal from '../../utils/swal'
 import { ExtLink } from '../ExtLink'
 import { Image } from '../Image'
@@ -85,7 +86,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
       .then(resp => {
         setMap(resp.data)
         setName(resp.data.name)
-        setDescription(resp.data.description)
+        setDescription(unstripHTML(resp.data.description))
 
         if (callback) callback()
       })
@@ -156,7 +157,9 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
     if (!save) return loadMap(() => setEditing(false))
 
     try {
-      await axios.post(`/manage/edit/${map.key}`, { name, description })
+      const desc = stripHTML(description)
+      await axios.post(`/manage/edit/${map.key}`, { name, description: desc })
+
       loadMap(() => setEditing(false))
     } catch (err) {
       const { response } = err as AxiosError<IRespError>
