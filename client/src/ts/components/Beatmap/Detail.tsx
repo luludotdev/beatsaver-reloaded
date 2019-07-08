@@ -46,7 +46,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
   const [map, setMap] = useState<IBeatmap | undefined | Error>(undefined)
 
   const [editing, setEditing] = useState<boolean>(false)
-  const [title, setTitle] = useState<string>('')
+  const [name, setName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const descriptionRef = useRef<ContentEditable | null>(null)
   useEffect(() => {
@@ -83,7 +83,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
       .get<IBeatmap>(`/maps/detail/${mapKey}`)
       .then(resp => {
         setMap(resp.data)
-        setTitle(resp.data.name)
+        setName(resp.data.name)
         setDescription(resp.data.description)
       })
       .catch(err => setMap(err))
@@ -185,11 +185,11 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
         <h1 className='is-size-1'>
           {editing ? (
             <ContentEditable
-              html={title}
+              html={name}
               disabled={false}
               className='is-editable'
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setTitle(e.target.value)
+                setName(e.target.value)
               }
             />
           ) : (
