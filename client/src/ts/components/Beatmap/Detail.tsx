@@ -78,13 +78,15 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
     setTimeout(() => setCopied(false), 1000)
   }
 
-  const loadMap = () =>
+  const loadMap = (callback?: () => any) =>
     axios
       .get<IBeatmap>(`/maps/detail/${mapKey}`)
       .then(resp => {
         setMap(resp.data)
         setName(resp.data.name)
         setDescription(resp.data.description)
+
+        if (callback) callback()
       })
       .catch(err => setMap(err))
 
@@ -153,17 +155,38 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
     if (!save) return loadMap()
 
     try {
-      await axios.post(`/manage/edit/${map.key}`)
-
-      setEditing(false)
-      return loadMap()
+      await axios.post(`/manage/edit/${map.key}`, { name, description })
+      loadMap(() => setEditing(false))
     } catch (err) {
-      swal.fire({
-        title: 'Edit Failed',
-        type: 'error',
-      })
+      const { response } = err as AxiosError<IRespError>
+      const genericError = () => {
+        swal.fire({
+          title: 'Edit Failed',
+          type: 'error',
+        })
 
-      console.error(err)
+        return console.error(err)
+      }
+
+      if (response === undefined) return genericError()
+      const resp = response.data
+
+      if (
+        resp.identifier === 'ERR_INVALID_FIELDS' &&
+        resp.fields !== undefined
+      ) {
+        if (resp.fields.some(x => x.path === 'name')) {
+          swal.fire({
+            text: 'Beatmap title is invalid!',
+            title: 'Edit Failed',
+            type: 'error',
+          })
+        }
+
+        return
+      }
+
+      return genericError()
     }
   }
 
