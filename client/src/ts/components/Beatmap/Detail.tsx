@@ -57,13 +57,16 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
     setTimeout(() => setCopied(false), 1000)
   }
 
-  useEffect(() => {
+  const loadMap = () =>
     axios
       .get<IBeatmap>(`/maps/detail/${mapKey}`)
       .then(resp => {
         setMap(resp.data)
       })
       .catch(err => setMap(err))
+
+  useEffect(() => {
+    loadMap()
 
     return () => {
       setMap(undefined)
