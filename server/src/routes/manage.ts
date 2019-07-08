@@ -30,7 +30,11 @@ router.post('/edit/:key', userBeatmap, async ctx => {
 
 router.post('/delete/:key', userBeatmap, async ctx => {
   const map: IBeatmapModel = ctx.beatmap
-  return (ctx.status = 501)
+
+  map.deletedAt = new Date()
+  await map.save()
+
+  return (ctx.status = 204)
 })
 
 export { router as manageRouter }
