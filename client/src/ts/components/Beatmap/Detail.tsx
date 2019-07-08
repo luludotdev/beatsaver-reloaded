@@ -41,10 +41,10 @@ interface IPassedProps {
 type IProps = IConnectedProps & IDispatchProps & IPassedProps
 
 const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
-  const [map, setMap] = useState(undefined as IBeatmap | undefined | Error)
+  const [map, setMap] = useState<IBeatmap | undefined | Error>(undefined)
 
-  const [copied, setCopied] = useState(false)
-  const bsrRef = useRef(null as HTMLInputElement | null)
+  const [copied, setCopied] = useState<boolean>(false)
+  const bsrRef = useRef<HTMLInputElement | null>(null)
 
   const copyBSR = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
