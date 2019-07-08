@@ -1,4 +1,5 @@
 import { Middleware } from 'koa'
+import koaBody from 'koa-body'
 import passport from 'koa-passport'
 import Router from 'koa-router'
 import { clearCache } from '../middleware/cache'
@@ -8,7 +9,9 @@ import { parseKey } from '../utils/parseKey'
 
 const router = new Router({
   prefix: '/manage',
-}).use(passport.authenticate('jwt', { session: false }))
+})
+  .use(passport.authenticate('jwt', { session: false }))
+  .use(koaBody({ text: false, urlencoded: false }))
 
 const userBeatmap: Middleware = async (ctx, next) => {
   const key = parseKey(ctx.params.key, true)
@@ -26,7 +29,20 @@ const userBeatmap: Middleware = async (ctx, next) => {
 
 router.post('/edit/:key', userBeatmap, async ctx => {
   const map: IBeatmapModel = ctx.beatmap
-  return (ctx.status = 501)
+  const { name, description } = ctx.request.body || ({} as any)
+
+  map.name = name
+  map.description = description
+  await map.save()
+
+  await Promise.all([
+    clearCache(`key:${map.key}`),
+    clearCache(`hash:${map.hash}`),
+    clearCache('maps'),
+    clearCache(`uploader:${map.uploader}`),
+  ])
+
+  return (ctx.status = 204)
 })
 
 router.post('/delete/:key', userBeatmap, async ctx => {
