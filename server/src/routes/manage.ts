@@ -36,6 +36,8 @@ router.post('/delete/:key', userBeatmap, async ctx => {
   await map.save()
 
   await Promise.all([
+    clearCache(`key:${map.key}`),
+    clearCache(`hash:${map.hash}`),
     clearCache('maps'),
     clearCache(`uploader:${map.uploader}`),
   ])
