@@ -153,7 +153,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
     save: boolean = false
   ) => {
     e.preventDefault()
-    if (!save) loadMap(() => setEditing(false))
+    if (!save) return loadMap(() => setEditing(false))
 
     try {
       await axios.post(`/manage/edit/${map.key}`, { name, description })
