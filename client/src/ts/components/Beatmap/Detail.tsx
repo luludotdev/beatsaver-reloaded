@@ -139,8 +139,8 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
 
         {!isUploader ? null : (
           <div className='buttons top'>
-            <a href={map.downloadURL}>📤 Upload new version</a>
-            <a href={map.downloadURL}>📝 Edit</a>
+            {/* <a href='#'>📤 Upload new version</a> */}
+            {/* <a href='#'>📝 Edit</a> */}
             <a href='/' onClick={e => deleteMap(e)}>
               ❌ Delete
             </a>
