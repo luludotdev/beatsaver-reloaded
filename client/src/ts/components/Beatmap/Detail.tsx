@@ -103,7 +103,19 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, mapKey }) => {
           </Link>
         </h2>
 
-        <div className='box'>
+        {!isUploader ? null : (
+          <div className='buttons top'>
+            <a href={map.downloadURL}>📤 Upload new version</a>
+            <a href={map.downloadURL}>📝 Edit</a>
+            <a href={map.downloadURL}>❌ Delete</a>
+          </div>
+        )}
+
+        <div
+          className={`box has-buttons-bottom ${
+            isUploader ? 'has-buttons-top' : ''
+          }`}
+        >
           <div className='left'>
             <div className='metadata'>
               <Metadata

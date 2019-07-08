@@ -46,16 +46,28 @@
     }
   }
 
+  & h2 {
+    margin-bottom: 18px;
+  }
+
   & .box {
     color: rgb(23, 23, 24);
 
-    margin-top: 18px;
+    margin-top: 0;
     margin-bottom: 0;
 
     display: flex;
     flex-wrap: wrap-reverse;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+
+    &.has-buttons-top {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    &.has-buttons-bottom {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
 
     & .left {
       flex: 1;
@@ -120,6 +132,16 @@
     box-shadow:
     rgba(10, 10, 10, 0.1) 0px 2px 3px,
     rgba(10, 10, 10, 0.1) 0px 0px 0px 1px;
+
+    &.top {
+      border-radius: 6px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+
+      &:not(:last-child) {
+        margin-bottom: 0;
+      }
+    }
 
     & a, button {
       color: $text;
