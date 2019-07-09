@@ -102,6 +102,7 @@ declare interface IBeatmapCharacteristic {
 
 declare interface IParsedDifficulty {
   duration: number
+  length: number
   bombs: number
   notes: number
   obstacles: number
