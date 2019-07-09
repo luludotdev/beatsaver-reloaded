@@ -42,7 +42,12 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
               <Link to={`/uploader/${map.uploader._id}`}>
                 {map.uploader.username}
               </Link>{' '}
-              <span className='uploaded'>{formatDate(map.uploaded)}</span>
+              <span
+                className='uploaded'
+                title={new Date(map.uploaded).toISOString()}
+              >
+                {formatDate(map.uploaded)}
+              </span>
             </h2>
           </div>
 
