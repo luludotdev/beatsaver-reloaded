@@ -10,7 +10,7 @@ const router = new Router({
 
 router.get(
   '/me',
-  rateLimit(1 * 1000, 1),
+  rateLimit(10 * 1000, 50),
   passport.authenticate('jwt', { session: false }),
   async ctx => {
     const user: IUserModel = ctx.state.user

@@ -64,4 +64,4 @@ const ConnectedSearch = connect(
   { replace: replaceFn }
 )(Search)
 
-export default ConnectedSearch
+export { ConnectedSearch as Search }

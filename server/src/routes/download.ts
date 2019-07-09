@@ -1,7 +1,10 @@
 import cors from '@koa/cors'
 import Router from 'koa-router'
+import { DUMP_PATH } from '../constants'
+import { IS_DEV, PORT } from '../env'
 import { rateLimit } from '../middleware/ratelimit'
 import Beatmap from '../mongo/models/Beatmap'
+import { globStats } from '../utils/fs'
 import { parseKey } from '../utils/parseKey'
 
 const router = new Router({
@@ -38,6 +41,25 @@ router.get('/hash/:hash', async ctx => {
   await map.save()
 
   return ctx.redirect(map.directDownload)
+})
+
+router.get('/dump/:type', async ctx => {
+  const type: string = ctx.params.type
+  if (type !== 'maps' && type !== 'users') return (ctx.status = 404)
+
+  const files = await globStats([`${type}.*.json`, `!${type}.temp.json`], {
+    cwd: DUMP_PATH,
+  })
+
+  const [path] = [...files]
+    .sort((a, b) => b.mtimeMs - a.mtimeMs)
+    .map(x => x.path)
+
+  if (!path) return (ctx.status = 503)
+  const cdnPath = `/cdn/dumps/${path}`
+  const absolute = IS_DEV ? `http://localhost:${PORT}${cdnPath}` : cdnPath
+
+  return ctx.redirect(absolute)
 })
 
 export { router as downloadRouter }

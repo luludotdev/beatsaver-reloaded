@@ -23,7 +23,6 @@ RUN apk add --no-cache tini bash git && \
 USER node
 COPY --from=builder --chown=node:node /usr/app/dist/client ./public
 COPY --from=builder --chown=node:node /usr/app/dist/ssr ./build
-RUN ls -lah
 
 ARG VCS_REF
 LABEL org.label-schema.vcs-ref=$VCS_REF \

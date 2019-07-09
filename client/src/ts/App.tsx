@@ -4,11 +4,13 @@ import { Footer } from './components/Footer'
 import Navbar from './components/Navbar'
 import { Routes } from './Routes'
 
+import './utils/scroll'
+
 export const App: FunctionComponent = () => (
   <>
     <Navbar />
 
-    <div className='layout'>
+    <div className='layout' id='layout'>
       <div className='container has-footer side-pad'>
         <Boundary>
           <Routes />

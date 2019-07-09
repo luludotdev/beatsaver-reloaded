@@ -32,6 +32,19 @@ export const login: (
   await checkUser()(dispatch, getState)
 }
 
+export type Register = ThunkFunction<typeof register>
+export const register: (
+  username: string,
+  email: string,
+  password: string
+) => TypedThunk<IUser | null> = (username, email, password) => async (
+  dispatch,
+  getState
+) => {
+  await axios.post('/auth/register', { username, email, password })
+  await checkUser()(dispatch, getState)
+}
+
 export type Logout = ThunkFunction<typeof logout>
 export const logout: () => TypedThunk<null> = () => dispatch => {
   localStorage.removeItem('token')

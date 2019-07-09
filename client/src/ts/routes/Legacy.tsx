@@ -33,4 +33,4 @@ const ConnectedLegacy = connect(
     replace: replaceFn,
   }
 )(Legacy)
-export default ConnectedLegacy
+export { ConnectedLegacy as Legacy }

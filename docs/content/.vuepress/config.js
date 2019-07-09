@@ -25,6 +25,7 @@ module.exports = {
         'search',
         'vote',
         'download',
+        'dump',
         'auth',
         'users',
       ]),

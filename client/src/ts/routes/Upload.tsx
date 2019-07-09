@@ -26,9 +26,24 @@ interface IDispatchProps {
 
 type IProps = IPassedProps & IDispatchProps
 const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
-  if (user === null || (user && user.verified === false)) {
+  if (user === null) {
     replace('/')
     return null
+  } else if (user && user.verified === false) {
+    return (
+      <div className='thin'>
+        <article className='message is-danger'>
+          <div className='message-body'>
+            <p>
+              You must verify your account before you can upload beatmaps. Check
+              your email for a verification URL.
+            </p>
+
+            <p>It might be in spam, check there too.</p>
+          </div>
+        </article>
+      </div>
+    )
   }
 
   const [loading, setLoading] = useState(false)
@@ -81,6 +96,11 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
         return
       }
 
+      if (response.status === 503) {
+        setTitleErr('Uploads have been temporarily disabled. Try again later.')
+        return
+      }
+
       if (response.status === 403) {
         setTitleErr('You must verify your account to upload beatmaps!')
         return
@@ -112,6 +132,9 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
       ) {
         if (resp.fields.some(x => x.path === 'name')) {
           setTitleErr('Title is invalid!')
+        } else {
+          setFileErr('Beatmap is invalid!')
+          showProblems()
         }
 
         return
@@ -276,4 +299,4 @@ const ConnectedUpload = connect(
   mapDispatchToProps
 )(Upload)
 
-export default ConnectedUpload
+export { ConnectedUpload as Upload }

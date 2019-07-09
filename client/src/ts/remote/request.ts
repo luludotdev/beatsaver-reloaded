@@ -77,5 +77,5 @@ const request: (
   }
 }
 
-const dRequest = pDebounce(request, 200)
+const dRequest = pDebounce(request, 300)
 export { dRequest as request }

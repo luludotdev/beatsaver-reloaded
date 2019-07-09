@@ -5,21 +5,24 @@ import Helmet from 'react-helmet'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { IconInput } from '../components/Input'
-import { Login, login as loginFn } from '../store/user'
+import { Register, register as registerFn } from '../store/user'
 
 interface IProps {
-  login: Login
+  register: Register
   push: typeof pushFn
 }
 
-const Login: FunctionComponent<IProps> = ({ login, push }) => {
+const Register: FunctionComponent<IProps> = ({ register, push }) => {
   const [loading, setLoading] = useState(false)
   const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const [usernameErr, setUsernameErr] = useState(undefined as
     | string
     | undefined)
+
+  const [emailErr, setEmailErr] = useState(undefined as string | undefined)
 
   const [passwordErr, setPasswordErr] = useState(undefined as
     | string
@@ -29,7 +32,7 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
     setLoading(true)
 
     try {
-      await login(username, password)
+      await register(username, email, password)
 
       setLoading(false)
       push('/')
@@ -42,20 +45,29 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
         return
       }
 
-      if (response.status === 400) return setUsernameErr('Invalid username!')
-      if (response.status === 401) return setPasswordErr('Incorrect password!')
-      if (response.status === 404) return setUsernameErr('Username not found!')
+      if (response.status === 422) {
+        return setUsernameErr('Username or email already exists!')
+      } else if (
+        response.status === 400 &&
+        response.data.identifier === 'ERR_INVALID_FIELDS'
+      ) {
+        for (const field of response.data.fields) {
+          if (field.path === 'email') setEmailErr('Invalid email address!')
+        }
+
+        return
+      }
     }
   }
 
   return (
     <div className='thin'>
       <Helmet>
-        <title>BeatSaver - Login</title>
+        <title>BeatSaver - Register</title>
       </Helmet>
 
       <h1 className='has-text-centered is-size-3 has-text-weight-semibold'>
-        Login
+        Register
       </h1>
       <br />
 
@@ -65,11 +77,27 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
         onChange={v => {
           setUsername(v)
           setUsernameErr(undefined)
+          setEmailErr(undefined)
           setPasswordErr(undefined)
         }}
         onSubmit={() => submit()}
         iconClass='fas fa-user'
         errorLabel={usernameErr}
+      />
+
+      <IconInput
+        label='Email'
+        value={email}
+        type='email'
+        onChange={v => {
+          setEmail(v)
+          setUsernameErr(undefined)
+          setEmailErr(undefined)
+          setPasswordErr(undefined)
+        }}
+        onSubmit={() => submit()}
+        iconClass='fas fa-user'
+        errorLabel={emailErr}
       />
 
       <IconInput
@@ -79,6 +107,7 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
         onChange={v => {
           setPassword(v)
           setUsernameErr(undefined)
+          setEmailErr(undefined)
           setPasswordErr(undefined)
         }}
         onSubmit={() => submit()}
@@ -88,31 +117,31 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
 
       <button
         className={`button is-fullwidth ${loading ? 'is-loading' : ''}`}
-        disabled={loading || !username || !password}
+        disabled={loading || !username || !email || !password}
         onClick={() => submit()}
       >
-        Login
+        Register
       </button>
 
       <Link
         className='button is-fullwidth'
-        to='/auth/register'
+        to='/auth/login'
         style={{ marginTop: '8px' }}
       >
-        Don&#39;t have an account?
+        Already have an account?
       </Link>
     </div>
   )
 }
 
 const mapDispatchToProps: IProps = {
-  login: loginFn,
   push: pushFn,
+  register: registerFn,
 }
 
-const ConnectedLogin = connect(
+const ConnectedRegister = connect(
   undefined,
   mapDispatchToProps
-)(Login)
+)(Register)
 
-export { ConnectedLogin as Login }
+export { ConnectedRegister as Register }
