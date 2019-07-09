@@ -122,7 +122,7 @@ export const parseBeatmap: (
 
       return {
         duration,
-        length,
+        length: Math.floor(length),
         njs: 0,
 
         bombs,
