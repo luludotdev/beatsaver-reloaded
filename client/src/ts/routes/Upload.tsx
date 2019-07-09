@@ -96,6 +96,11 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
         return
       }
 
+      if (response.status === 503) {
+        setTitleErr('Uploads have been temporarily disabled. Try again later.')
+        return
+      }
+
       if (response.status === 403) {
         setTitleErr('You must verify your account to upload beatmaps!')
         return
