@@ -101,6 +101,61 @@ export const parseBeatmap: (
     hash.update(b)
   }
 
+  const parseCharacteristic: (
+    rank: number,
+    set: Readonly<IBeatmapSet>
+  ) => Promise<IParsedDifficulty | null> = async (rank, set) => {
+    const diff = set._difficultyBeatmaps.find(x => x._difficultyRank === rank)
+    if (!diff) return null
+
+    try {
+      const content = await zip.file(diff._beatmapFilename).async('text')
+      const data: IDifficultyJSON = JSON.parse(content)
+
+      const bombs = data._notes.filter(note => note._type === 3).length
+      const duration = Math.max(...data._notes.map(note => note._time)) || 0
+
+      const length =
+        infoJSON._beatsPerMinute === 0
+          ? 0
+          : (duration / infoJSON._beatsPerMinute) * 60
+
+      return {
+        duration,
+        length: Math.floor(length),
+        njs: 0,
+
+        bombs,
+        notes: data._notes.length - bombs,
+        obstacles: data._obstacles.length,
+      }
+    } catch (err) {
+      return null
+    }
+  }
+
+  const parseSet = async (set: Readonly<IBeatmapSet>) => {
+    const [easy, normal, hard, expert, expertPlus] = await Promise.all(
+      [1, 3, 5, 7, 9].map(x => parseCharacteristic(x, set))
+    )
+
+    return {
+      difficulties: {
+        easy,
+        expert,
+        expertPlus,
+        hard,
+        normal,
+      },
+
+      name: set._beatmapCharacteristicName,
+    }
+  }
+
+  const characteristics = await Promise.all(
+    infoJSON._difficultyBeatmapSets.map(parseSet)
+  )
+
   const sha1 = hash.digest('hex')
   const parsed: IParsedBeatmap = {
     hash: sha1,
@@ -121,9 +176,7 @@ export const parseBeatmap: (
         normal: difficulties.some(x => x._difficultyRank === 3),
       },
 
-      characteristics: infoJSON._difficultyBeatmapSets.map(
-        x => x._beatmapCharacteristicName
-      ),
+      characteristics,
     },
 
     coverExt: `.${coverType.ext}`,

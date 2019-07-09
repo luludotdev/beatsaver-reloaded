@@ -56,11 +56,13 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
           />
 
           <div className='tags'>
-            {parseCharacteristics(map.metadata.characteristics).map((x, i) => (
-              <span key={`${x}:${i}`} className='tag is-dark'>
-                {x}
-              </span>
-            ))}
+            {parseCharacteristics(map.metadata.characteristics).map(
+              ({ name }, i) => (
+                <span key={`${name}:${i}`} className='tag is-dark'>
+                  {name}
+                </span>
+              )
+            )}
           </div>
         </div>
 

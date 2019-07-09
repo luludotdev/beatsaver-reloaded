@@ -37,7 +37,7 @@ export interface IBeatmapLean {
       expertPlus: boolean
     }
 
-    characteristics: string[]
+    characteristics: IBeatmapCharacteristic[]
   }
 
   stats: {
@@ -122,7 +122,7 @@ const schema: Schema = new Schema({
       normal: { type: Boolean, required: true },
     },
 
-    characteristics: { type: [String], default: [] },
+    characteristics: { es_indexed: false, type: [Schema.Types.Mixed] },
   },
 
   stats: {

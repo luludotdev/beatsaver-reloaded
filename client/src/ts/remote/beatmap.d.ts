@@ -27,7 +27,7 @@ declare interface IBeatmap {
       expertPlus: boolean
     }
 
-    characteristics: string[]
+    characteristics: IBeatmapCharacteristic[]
   }
 
   stats: {
@@ -45,6 +45,26 @@ declare interface IBeatmap {
   coverURL: string
 
   hash: string
+}
+
+declare interface IBeatmapCharacteristic {
+  name: string
+  difficulties: {
+    easy: IDifficulty | null
+    normal: IDifficulty | null
+    hard: IDifficulty | null
+    expert: IDifficulty | null
+    expertPlus: IDifficulty | null
+  }
+}
+
+declare interface IDifficulty {
+  duration: number
+  length: number
+  bombs: number
+  notes: number
+  obstacles: number
+  njs: number
 }
 
 declare type IBeatmapResponse = IResponse<IBeatmap>
