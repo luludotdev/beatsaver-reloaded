@@ -8,10 +8,6 @@ const noCache: Middleware = (_, next) => next()
 export const cache = (opts?: CacheOptions) => {
   if (CACHE_DRIVER !== 'redis') return noCache
 
-  setTimeout(() => {
-    clearCache()
-  }, 2000)
-
   const options: CacheOptions = {
     expire: 10 * 60,
 
