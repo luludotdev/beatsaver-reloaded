@@ -8,6 +8,7 @@ import { downloadRouter } from './download'
 import { manageRouter } from './manage'
 import { mapsRouter } from './maps'
 import { searchRouter } from './search'
+import { statsRouter } from './stats'
 import { uploadRouter } from './upload'
 import { usersRouter } from './users'
 import { voteRouter } from './vote'
@@ -19,6 +20,7 @@ export const routes: Router[] = [
   manageRouter,
   mapsRouter,
   searchRouter,
+  statsRouter,
   uploadRouter,
   usersRouter,
   voteRouter,
