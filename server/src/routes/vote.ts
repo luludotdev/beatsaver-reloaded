@@ -3,6 +3,7 @@ import koaBody from 'koa-body'
 import passport from 'koa-passport'
 import Router from 'koa-router'
 import { STEAM_API_KEY } from '../env'
+import { clearCache } from '../middleware/cache'
 import { rateLimit } from '../middleware/ratelimit'
 import Beatmap from '../mongo/models/Beatmap'
 import { IUserModel } from '../mongo/models/User'
@@ -145,9 +146,13 @@ const submitVote = async (ctx: ParameterizedContext, voterUID: string) => {
     map.votes.push({ voterUID, direction })
   }
 
-  await map.save()
-  await map.populate('uploader').execPopulate()
+  await Promise.all([
+    map.save(),
+    clearCache(`stats:key:${map.key}`),
+    clearCache(`stats:hash:${map.hash}`),
+  ])
 
+  await map.populate('uploader').execPopulate()
   return (ctx.body = map)
 }
 
