@@ -145,7 +145,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
           return setFileErr('Beatmap already exists!')
 
         case 'ERR_BEATMAP_INFO_NOT_FOUND':
-          setFileErr('Beatmap does not contain an info.dat file!')
+          setFileErr('Beatmap does not contain an info.dat file. Perhaps you zipped the folder rather than zipping the map files directly?')
           return showProblems()
 
         case 'ERR_BEATMAP_INFO_INVALID':
