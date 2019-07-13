@@ -4,3 +4,5 @@
 # Environment Variables
 *.env
 !example.env
+client/client.iml
+server/server.iml
