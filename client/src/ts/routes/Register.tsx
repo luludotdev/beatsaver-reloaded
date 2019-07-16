@@ -73,6 +73,7 @@ const Register: FunctionComponent<IProps> = ({ register, push }) => {
 
       <IconInput
         label='Username'
+        autoComplete='username'
         value={username}
         onChange={v => {
           setUsername(v)
@@ -102,6 +103,7 @@ const Register: FunctionComponent<IProps> = ({ register, push }) => {
 
       <IconInput
         label='Password'
+        autoComplete='new-password'
         value={password}
         type='password'
         onChange={v => {
