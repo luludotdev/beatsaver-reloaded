@@ -123,7 +123,7 @@ export const parseBeatmap: (
       return {
         duration,
         length: Math.floor(length),
-        njs: 0,
+        njs: diff._noteJumpMovementSpeed,
 
         bombs,
         notes: data._notes.length - bombs,
