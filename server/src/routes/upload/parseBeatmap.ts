@@ -112,7 +112,7 @@ export const parseBeatmap: (
       const content = await zip.file(diff._beatmapFilename).async('text')
       const data: IDifficultyJSON = JSON.parse(content)
 
-      const bombs = data._notes.filter(note => note._type === 3).length
+      const bombs = data._notes.filter(note => note._type === 3).length || 0
       const duration = Math.max(...data._notes.map(note => note._time)) || 0
 
       const length =
@@ -122,8 +122,9 @@ export const parseBeatmap: (
 
       return {
         duration,
-        length: Math.floor(length),
-        njs: diff._noteJumpMovementSpeed,
+        length: Math.floor(length) || 0,
+        njs: diff._noteJumpMovementSpeed || 0,
+        njsOffset: diff._noteJumpStartBeatOffset || 0,
 
         bombs,
         notes: data._notes.length - bombs,
