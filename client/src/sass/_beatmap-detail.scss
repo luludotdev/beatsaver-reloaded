@@ -46,7 +46,13 @@
     }
   }
 
-  & h1 .is-editable {
+  & h1 input {
+    background-color: transparent;
+    font-size: inherit;
+    color: inherit;
+    text-shadow: inherit;
+    width: 100%;
+
     outline: none;
     border: 1px dashed white;
     border-radius: 5px;
@@ -116,8 +122,12 @@
         flex-grow: 1;
         margin-bottom: 12px;
 
-        & .is-editable {
-          padding: 4px 8px;
+        & textarea {
+          font-size: 1rem;
+          resize: none;
+          width: 100%;
+
+          padding: 8px;
           border: 1px dashed currentColor;
           border-radius: 5px;
           outline: none;

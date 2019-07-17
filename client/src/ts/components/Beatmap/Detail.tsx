@@ -2,15 +2,12 @@ import { AxiosError } from 'axios'
 import chunk from 'chunk'
 import { Push, push as pushFn } from 'connected-react-router'
 import React, {
-  ChangeEvent,
   FunctionComponent,
-  KeyboardEvent,
   MouseEvent,
   useEffect,
   useRef,
   useState,
 } from 'react'
-import ContentEditable from 'react-contenteditable'
 import Helmet from 'react-helmet'
 import Linkify from 'react-linkify'
 import nl2br from 'react-nl2br'
@@ -21,7 +18,6 @@ import { IState } from '../../store'
 import { IUser } from '../../store/user'
 import { axios } from '../../utils/axios'
 import { parseCharacteristics } from '../../utils/characteristics'
-import { stripHTML, unstripHTML } from '../../utils/stripHTML'
 import swal from '../../utils/swal'
 import { ExtLink } from '../ExtLink'
 import { Image } from '../Image'
@@ -50,7 +46,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
   const [editing, setEditing] = useState<boolean>(false)
   const [name, setName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
-  const descriptionRef = useRef<ContentEditable | null>(null)
+  const descriptionRef = useRef<HTMLTextAreaElement | null>(null)
   useEffect(() => {
     if (!editing) {
       const sel = document.getSelection()
@@ -59,10 +55,10 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
       return
     }
 
-    if (descriptionRef.current === null) return
-    const div: HTMLDivElement = descriptionRef.current.el.current
+    const { current } = descriptionRef
+    if (current === null) return
 
-    div.focus()
+    current.focus()
     document.execCommand('selectAll', false, undefined)
   }, [editing])
 
@@ -86,7 +82,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
       .then(resp => {
         setMap(resp.data)
         setName(resp.data.name)
-        setDescription(unstripHTML(resp.data.description))
+        setDescription(resp.data.description)
 
         if (callback) callback()
       })
@@ -157,9 +153,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
     if (!save) return loadMap(() => setEditing(false))
 
     try {
-      const desc = stripHTML(description)
-      await axios.post(`/manage/edit/${map.key}`, { name, description: desc })
-
+      await axios.post(`/manage/edit/${map.key}`, { name, description })
       loadMap(() => setEditing(false))
     } catch (err) {
       const { response } = err as AxiosError<IRespError>
@@ -211,16 +205,10 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
       <div className='detail-content'>
         <h1 className='is-size-1'>
           {editing ? (
-            <ContentEditable
-              html={name}
-              disabled={false}
-              className='is-editable'
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setName(e.target.value)
-              }
-              onKeyDown={(e: KeyboardEvent) => {
-                if (e.key === 'Enter') e.preventDefault()
-              }}
+            <input
+              type='text'
+              value={name}
+              onChange={e => setName(e.target.value)}
             />
           ) : (
             map.name
@@ -281,15 +269,13 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
 
             <div className='description'>
               {editing ? (
-                <ContentEditable
-                  html={description}
-                  disabled={false}
+                <textarea
                   ref={descriptionRef}
-                  className='is-editable'
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setDescription(e.target.value)
-                  }
-                />
+                  rows={description.split('\n').length}
+                  onChange={e => setDescription(e.target.value)}
+                >
+                  {description}
+                </textarea>
               ) : map.description ? (
                 <Linkify
                   componentDecorator={(href, text, key) => (
