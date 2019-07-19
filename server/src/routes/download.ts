@@ -10,16 +10,14 @@ import { parseKey } from '../utils/parseKey'
 
 const router = new Router({
   prefix: '/download',
-})
-  .use(
-    rateLimit({
-      duration: 10 * 60 * 1000,
-      max: 10,
-    })
-  )
-  .use(cors())
+}).use(cors())
 
-router.get('/key/:key', async ctx => {
+const limiter = rateLimit({
+  duration: 10 * 60 * 1000,
+  max: 10,
+})
+
+router.get('/key/:key', limiter, async ctx => {
   const key = parseKey(ctx.params.key)
   if (key === false) return (ctx.status = 404)
 
@@ -37,7 +35,7 @@ router.get('/key/:key', async ctx => {
   return ctx.redirect(map.directDownload)
 })
 
-router.get('/hash/:hash', async ctx => {
+router.get('/hash/:hash', limiter, async ctx => {
   const { hash } = ctx.params
 
   const map = await Beatmap.findOne({ hash, deletedAt: null })
@@ -54,7 +52,12 @@ router.get('/hash/:hash', async ctx => {
   return ctx.redirect(map.directDownload)
 })
 
-router.get('/dump/:type', async ctx => {
+const dumpLimit = rateLimit({
+  duration: 1000,
+  max: 5,
+})
+
+router.get('/dump/:type', dumpLimit, async ctx => {
   const type: string = ctx.params.type
   if (type !== 'maps' && type !== 'users') return (ctx.status = 404)
 
