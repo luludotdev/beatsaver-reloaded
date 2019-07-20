@@ -222,7 +222,9 @@ schema.plugin(mongoosastic, {
   ],
   port: ELASTIC_PORT,
 })
-schema.plugin(withoutKeys(['__v', 'votes', 'id', 'coverExt', 'directDownload']))
+schema.plugin(
+  withoutKeys(['__v', 'votes', 'id', 'coverExt', 'directDownload', 'converted'])
+)
 schema.plugin(withVirtuals)
 
 schema.index(
