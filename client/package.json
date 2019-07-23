@@ -54,7 +54,6 @@
     "dateformat": "^3.0.3",
     "history": "^4.9.0",
     "intersection-observer-polyfill": "^0.1.0",
-    "javascript-time-ago": "^2.0.1",
     "ms": "^2.1.2",
     "nodemon": "^1.19.1",
     "p-debounce": "^2.1.0",
