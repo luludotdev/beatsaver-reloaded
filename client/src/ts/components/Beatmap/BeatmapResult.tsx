@@ -12,6 +12,16 @@ interface IProps {
 }
 
 const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
+  const [dateStr, setDateStr] = useState<string>(formatDate(map.uploaded))
+  useEffect(() => {
+    const i = setInterval(() => {
+      const newStr = formatDate(map.uploaded)
+      if (dateStr !== newStr) setDateStr(newStr)
+    }, 1000 * 30)
+
+    return () => clearInterval(i)
+  }, [])
+
   const [inViewRef, inView] = useInView({ rootMargin: '240px' })
   if (!inView) {
     return (
@@ -46,7 +56,7 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
                 className='uploaded'
                 title={new Date(map.uploaded).toISOString()}
               >
-                {formatDate(map.uploaded)}
+                {dateStr}
               </span>
             </h2>
           </div>
