@@ -18,7 +18,7 @@
     "build:dev": "yarn run build --sourceMap",
     "watch": "tsc --watch",
     "dev": "yarn run watch --sourceMap",
-    "dev:run": "nodemon . --ignore cdn",
+    "dev:run": "nodemon . --watch build",
     "modclean": "modclean -r"
   },
   "devDependencies": {
