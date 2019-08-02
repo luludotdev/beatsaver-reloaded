@@ -85,8 +85,15 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
           <div className='stats'>
             <BeatmapStats map={map} hideTime={true} />
           </div>
-
-          <a href={`beatsaver://${map.key}`}>OneClick&trade; Install</a>
+          
+          <ul>
+            <li style='display:inline-block'>
+    	        <a href={map.downloadURL}>Download</a>
+	          </li>
+            <li style='display:inline-block'>
+              <a href={`beatsaver://${map.key}`}>OneClick&trade; Install</a>
+   	        </li>
+          </ul>
         </div>
       </div>
     </div>
