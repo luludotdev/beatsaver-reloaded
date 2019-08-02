@@ -61,14 +61,17 @@ div.beatmap-result {
         text-align: right;
         color: rgb(23, 23, 24);
       }
-
+      
+      & .resultbuttons {
+        margin-right: -3px;
+        margin-bottom: -1.5px;
+      }
+      
       & a, button {
         color: $text;
         padding: 8px 20px;
 
-        margin-right: $content-padding * -1;
-        margin-bottom: $content-padding * -1;
-        border-radius: 0 0 $radius 0;
+        margin-right: -5;
 
         $border: 1px solid rgba(0, 0, 0, .1);
         border-top: $border;
@@ -76,6 +79,10 @@ div.beatmap-result {
 
         background-color: rgba(255, 255, 255, .4);
         transition: background-color 100ms ease;
+        
+        &:last-child {
+          border-radius: 0 0 $radius 0;
+        }
 
         &:hover {
           background-color: rgba(0, 0, 0, .05);
