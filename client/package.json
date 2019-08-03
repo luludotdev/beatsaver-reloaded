@@ -17,7 +17,7 @@
     "build:clean": "yarn run clean && parcel build ./src/index.html",
     "build:prod": "yarn run parcel:build --cache-dir .cache/client -d dist/client ./src/index.html",
     "build:ssr": "yarn run parcel:build --cache-dir .cache/ssr -d dist/ssr --target node ./ssr/index.ts",
-    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
     "check": "tsc --noEmit",
     "test": "yarn run lint && yarn run check"
   },
