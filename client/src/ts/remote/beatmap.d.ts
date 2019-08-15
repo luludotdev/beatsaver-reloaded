@@ -42,6 +42,7 @@ declare interface IBeatmap {
   }
 
   downloadURL: string
+  directDownload: string
   coverURL: string
 
   hash: string

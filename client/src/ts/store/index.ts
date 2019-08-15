@@ -13,11 +13,13 @@ import {
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 
+import { audioReducer, IAudioState } from './audio'
 import { IImagesState, imagesReducer } from './images'
 import { IScrollersState, scrollersReducer } from './scrollers'
 import { IUserState, userReducer } from './user'
 
 export interface IState {
+  audio: IAudioState
   images: IImagesState
   router: RouterState
   scrollers: IScrollersState
@@ -26,6 +28,7 @@ export interface IState {
 
 const createRootReducer = (hist: History) =>
   combineReducers<IState>({
+    audio: audioReducer,
     images: imagesReducer,
     router: connectRouter(hist),
     scrollers: scrollersReducer,
