@@ -1,17 +1,41 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
+import { connect, MapStateToProps } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { IState } from '../../store'
+import {
+  IAudioState,
+  PreviewBeatmap,
+  previewBeatmap as previewBeatmapFn,
+  StopPreview,
+  stopPreview as stopPreviewFn,
+} from '../../store/audio'
 import { parseCharacteristics } from '../../utils/characteristics'
 import { formatDate } from '../../utils/formatDate'
 import { Image } from '../Image'
 import { DiffTags } from './DiffTags'
 import { BeatmapStats } from './Statistics'
 
-interface IProps {
+interface IConnectedProps {
+  preview: IAudioState
+}
+
+interface IDispatchProps {
+  previewBeatmap: PreviewBeatmap
+  stopPreview: StopPreview
+}
+
+interface IPassedProps {
   map: IBeatmap
 }
 
-const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
+type IProps = IConnectedProps & IDispatchProps & IPassedProps
+const BeatmapResult: FunctionComponent<IProps> = ({
+  map,
+  preview,
+  previewBeatmap,
+  stopPreview,
+}) => {
   const [dateStr, setDateStr] = useState<string>(formatDate(map.uploaded))
   useEffect(() => {
     const i = setInterval(() => {
@@ -87,6 +111,33 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
           </div>
 
           <div className='is-button-group'>
+            <a
+              href='/'
+              className={
+                !preview.loading
+                  ? undefined
+                  : preview.key === map.key
+                  ? 'loading disabled'
+                  : 'disabled'
+              }
+              onClick={e => {
+                e.preventDefault()
+
+                if (preview.state === 'playing' && preview.key === map.key) {
+                  stopPreview()
+                } else {
+                  previewBeatmap(map)
+                }
+              }}
+            >
+              {preview.key !== map.key
+                ? 'Preview'
+                : preview.loading
+                ? 'Preview'
+                : preview.error !== null
+                ? 'Playback error!'
+                : 'Stop Preview'}
+            </a>
             <a href={`beatsaver://${map.key}`}>OneClick&trade;</a>
             <a href={map.downloadURL}>Download</a>
           </div>
@@ -96,4 +147,22 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
   )
 }
 
-export { BeatmapResult }
+const mapStateToProps: MapStateToProps<
+  IConnectedProps,
+  IPassedProps,
+  IState
+> = state => ({
+  preview: state.audio,
+})
+
+const mapDispatchToProps: IDispatchProps = {
+  previewBeatmap: previewBeatmapFn,
+  stopPreview: stopPreviewFn,
+}
+
+const ConnectedBeatmapResult = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BeatmapResult)
+
+export { ConnectedBeatmapResult as BeatmapResult }

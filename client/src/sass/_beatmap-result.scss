@@ -70,6 +70,7 @@ div.beatmap-result {
         color: $text;
         padding: 8px 20px;
 
+        position: relative;
         margin-right: -5;
 
         $border: 1px solid rgba(0, 0, 0, .1);
@@ -89,6 +90,32 @@ div.beatmap-result {
 
         &:active {
           background-color: rgba(0, 0, 0, .1);
+        }
+
+        &.loading {
+          color: transparent;
+
+          &::after {
+            content: '';
+            position: absolute;
+            left: calc(50% - (1em / 2));
+            top: calc(50% - (1em / 2));
+
+            display: block;
+            width: 1em;
+            height: 1em;
+
+            border: 2px solid $text;
+            border-radius: 100%;
+            border-right-color: transparent;
+            border-top-color: transparent;
+
+            animation: spinAround .5s infinite linear;
+          }
+        }
+
+        &.disabled {
+          pointer-events: none;
         }
       }
     }
