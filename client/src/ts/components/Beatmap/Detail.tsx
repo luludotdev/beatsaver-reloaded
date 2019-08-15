@@ -15,6 +15,13 @@ import { connect, MapStateToProps } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { NotFound } from '../../routes/NotFound'
 import { IState } from '../../store'
+import {
+  IAudioState,
+  PreviewBeatmap,
+  previewBeatmap as previewBeatmapFn,
+  StopPreview,
+  stopPreview as stopPreviewFn,
+} from '../../store/audio'
 import { IUser } from '../../store/user'
 import { axios } from '../../utils/axios'
 import { parseCharacteristics } from '../../utils/characteristics'
@@ -28,10 +35,13 @@ import { BeatmapStats } from './Statistics'
 
 interface IConnectedProps {
   user: IUser | null | undefined
+  preview: IAudioState
 }
 
 interface IDispatchProps {
   push: Push
+  previewBeatmap: PreviewBeatmap
+  stopPreview: StopPreview
 }
 
 interface IPassedProps {
@@ -40,7 +50,14 @@ interface IPassedProps {
 
 type IProps = IConnectedProps & IDispatchProps & IPassedProps
 
-const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
+const BeatmapDetail: FunctionComponent<IProps> = ({
+  user,
+  push,
+  mapKey,
+  preview,
+  previewBeatmap,
+  stopPreview,
+}) => {
   const [map, setMap] = useState<IBeatmap | undefined | Error>(undefined)
 
   const [editing, setEditing] = useState<boolean>(false)
@@ -319,6 +336,33 @@ const BeatmapDetail: FunctionComponent<IProps> = ({ user, push, mapKey }) => {
         <div className='buttons'>
           <a href={map.downloadURL}>Download</a>
           <a href={`beatsaver://${map.key}`}>OneClick&trade; Install</a>
+          <a
+            href='/'
+            className={
+              !preview.loading
+                ? undefined
+                : preview.key === map.key
+                ? 'loading disabled'
+                : 'loading'
+            }
+            onClick={e => {
+              e.preventDefault()
+
+              if (preview.state === 'playing' && preview.key === map.key) {
+                stopPreview()
+              } else {
+                previewBeatmap(map)
+              }
+            }}
+          >
+            {preview.loading
+              ? '.'
+              : preview.key !== map.key
+              ? 'Preview'
+              : preview.error !== null
+              ? 'Playback error!'
+              : 'Stop Preview'}
+          </a>
           {/* <a href='/'>View on BeastSaber</a> */}
           <a href='/' onClick={e => copyBSR(e)}>
             {copied ? (
@@ -354,11 +398,14 @@ const mapStateToProps: MapStateToProps<
   IPassedProps,
   IState
 > = state => ({
+  preview: state.audio,
   user: state.user.login,
 })
 
 const mapDispatchToProps: IDispatchProps = {
+  previewBeatmap: previewBeatmapFn,
   push: pushFn,
+  stopPreview: stopPreviewFn,
 }
 
 const ConnectedBeatmapDetail = connect(
