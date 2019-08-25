@@ -27,7 +27,7 @@ export const parseBeatmap: (
   const zip = new JSZip()
   await zip.loadAsync(zipBuf)
 
-  const info = zip.file('info.dat')
+  const info = zip.file('info.dat') || zip.file('Info.dat')
   if (info === null) throw ERR_BEATMAP_INFO_NOT_FOUND
 
   let infoDAT = await info.async('text')
