@@ -196,7 +196,9 @@ const inspectFile = async (file: JSZip.JSZipObject) => {
   const baseDir = '/var/temp'
 
   const resolved = posix.join(baseDir, file.name)
-  if (!resolved.includes(baseDir)) throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE
+  if (!resolved.includes(baseDir)) {
+    throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE(file.name)
+  }
 
   const toLower = file.name.toLowerCase()
   if (toLower.includes('autosaves')) {

@@ -101,12 +101,17 @@ export const ERR_BEATMAP_AUDIO_INVALID = new CodedError(
   400
 )
 
-export const ERR_BEATMAP_CONTAINS_ILLEGAL_FILE = new CodedError(
-  'illegal file in zip',
-  0x3000f,
-  'ERR_BEATMAP_CONTAINS_ILLEGAL_FILE',
-  403
-)
+export const ERR_BEATMAP_CONTAINS_ILLEGAL_FILE = (filename: string) => {
+  const err = new CodedError(
+    'illegal file in zip',
+    0x3000f,
+    'ERR_BEATMAP_CONTAINS_ILLEGAL_FILE',
+    403
+  )
+
+  err.ext.filename = filename
+  return err
+}
 
 export const ERR_BEATMAP_CONTAINS_AUTOSAVES = new CodedError(
   'beatmap zip contains autosaves',
