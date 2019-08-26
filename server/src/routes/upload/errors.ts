@@ -100,3 +100,10 @@ export const ERR_BEATMAP_AUDIO_INVALID = new CodedError(
   'ERR_BEATMAP_AUDIO_INVALID',
   400
 )
+
+export const ERR_BEATMAP_CONTAINS_ILLEGAL_FILE = new CodedError(
+  'illegal file in zip',
+  0x3000f,
+  'ERR_BEATMAP_CONTAINS_ILLEGAL_FILE',
+  403
+)

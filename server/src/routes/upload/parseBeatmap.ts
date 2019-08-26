@@ -2,12 +2,13 @@ import { createHash } from 'crypto'
 import fileType from 'file-type'
 import imageSize from 'image-size'
 import JSZip from 'jszip'
-import { parse } from 'path'
+import { parse, posix } from 'path'
 import { validJSON } from '../../utils/json'
 
 import {
   ERR_BEATMAP_AUDIO_INVALID,
   ERR_BEATMAP_AUDIO_NOT_FOUND,
+  ERR_BEATMAP_CONTAINS_ILLEGAL_FILE,
   ERR_BEATMAP_COVER_INVALID,
   ERR_BEATMAP_COVER_NOT_FOUND,
   ERR_BEATMAP_COVER_NOT_SQUARE,
@@ -26,6 +27,9 @@ export const parseBeatmap: (
 }> = async zipBuf => {
   const zip = new JSZip()
   await zip.loadAsync(zipBuf)
+
+  const files = Object.values(zip.files)
+  await Promise.all(files.map(x => inspectFile(x)))
 
   const info = zip.file('info.dat') || zip.file('Info.dat')
   if (info === null) throw ERR_BEATMAP_INFO_NOT_FOUND
@@ -185,4 +189,11 @@ export const parseBeatmap: (
 
   const newZip = await zip.generateAsync({ type: 'nodebuffer' })
   return { parsed, cover, zip: newZip }
+}
+
+const inspectFile = async (file: JSZip.JSZipObject) => {
+  const baseDir = '/var/temp'
+
+  const resolved = posix.join(baseDir, file.name)
+  if (!resolved.includes(baseDir)) throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE
 }
