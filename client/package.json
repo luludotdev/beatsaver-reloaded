@@ -94,6 +94,7 @@
   },
   "dependencies": {
     "bson-ext": "^2.0.3",
+    "@types/react-select": "^3.0.0",
     "debounce-fn": "^3.0.1",
     "dotenv": "^8.0.0",
     "he": "^1.2.0",
@@ -102,6 +103,7 @@
     "koa-send": "^5.0.0",
     "koa-static": "^5.0.0",
     "mongoose": "^5.7.7",
+    "react-select": "^3.0.4",
     "signale": "^1.4.0"
   },
   "browserslist": [

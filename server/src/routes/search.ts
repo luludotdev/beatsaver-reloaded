@@ -42,7 +42,7 @@ const buildQuery = (query: string, fields: IQueryField[]) =>
     })
     .join(' ')
 
-const elasticSearch = async (query: any, page: number = 0) => {
+const elasticSearch = async (query: any, page: number = 0, sort?: object | null) => {
   const searchPromise: <T>() => Promise<ISearchResponse<T>> = () =>
     new Promise((resolve, reject) => {
       Beatmap.esSearch(
@@ -50,6 +50,8 @@ const elasticSearch = async (query: any, page: number = 0) => {
           from: RESULTS_PER_PAGE * page,
           query,
           size: RESULTS_PER_PAGE,
+        }, {
+          sort: sort
         },
         (err, r) => {
           if (err) return reject(err)
@@ -69,8 +71,9 @@ const elasticSearch = async (query: any, page: number = 0) => {
   const prevPage = page - 1 === -1 ? null : page - 1
   const nextPage = page + 1 > lastPage ? null : page + 1
 
-  const IDs = hits.map(({ _id, _score }) => ({ _id, _score }))
-  const maps = await Beatmap.find({ _id: { $in: IDs } }, '-votes')
+  const IDsOnly = hits.map((h) => h._id)
+  const IDs = hits.map(({_id, _score}) => ({_id, _score}))
+  const maps = await Beatmap.find({_id: {$in: IDs}}, '-votes')
   const docs = maps
     .map(map => {
       const result = IDs.find(x => x._id.toString() === map._id.toString())
@@ -78,8 +81,15 @@ const elasticSearch = async (query: any, page: number = 0) => {
 
       return { map, score }
     })
-    .sort((a, b) => b.score - a.score)
-    .map(({ map }) => map)
+    .sort((a, b) => {
+
+      const aPos = IDsOnly.indexOf(a.map._id.toString())
+      const bPos = IDsOnly.indexOf(b.map._id.toString())
+
+      return aPos - bPos
+
+    } )
+    .map(({map}) => map)
 
   await Promise.all(docs.map(d => d.populate('uploader').execPopulate()))
   return { docs, totalDocs, lastPage, prevPage, nextPage }
@@ -116,9 +126,10 @@ router.get(
     const resp = await elasticSearch(
       {
         bool: {
-          must: { query_string: { query } },
+          //must: { query_string: { query } },
+          must: {query_string: {query: q}},
           must_not: {
-            exists: { field: 'deletedAt' },
+            exists: {field: 'deletedAt'},
           },
         },
       },
@@ -139,19 +150,126 @@ router.get(
   async ctx => {
     const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
     const query = ctx.query.q
+    const timeframe: number = +ctx.query.timeframe
+    const sortBy: number = +ctx.query.sortBy
+    let difficulty = ctx.query.difficulty
+
     if (!query) throw ERR_NO_QUERY
 
-    const resp = await elasticSearch(
-      {
-        bool: {
-          must: { query_string: { query } },
-          must_not: {
-            exists: { field: 'deletedAt' },
-          },
+    if (!query) {
+      return
+    }
+
+    let q = {
+      bool: {
+        must: {query_string: {query}},
+        must_not: {
+          exists: {field: 'deletedAt'},
         },
+        filter: [] as Object[],
       },
-      page
-    )
+    };
+
+    let sort: object | null = null
+
+    if (!Array.isArray(difficulty)) {
+      difficulty = difficulty ? [difficulty] : []
+    }
+
+    if (difficulty && difficulty.length > 0) {
+
+      difficulty.forEach((dif: string) => {
+
+        const filter = {
+          term: {
+            ["metadata.difficulties." + dif]: true
+          }
+        };
+
+        q.bool.filter.push(filter)
+
+      })
+
+    }
+
+    // Timeframe == 4 => All time; no filtering is required
+    if (timeframe < 4) {
+
+      const today = new Date()
+      let tf = new Date()
+
+      // For some reason, if I set the date to 1 in new Date(), the day turns into 31 instead of 01
+      switch (timeframe) {
+        // Past 24 hours
+        case 0:
+          tf = new Date(today.getFullYear(), today.getMonth(), today.getDay() - 1)
+          break
+        // Past week
+        case 1:
+          const day = today.getDay()
+          const diff = today.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+          tf = new Date(tf.setDate(diff));
+          break
+        // Past month
+        case 2:
+          tf = new Date(today.getFullYear(), today.getMonth(), 2)
+          break
+        // Past year
+        case 3:
+          tf = new Date(today.getFullYear(), 0, 2)
+          break
+      }
+
+      const filter = {
+        range: {
+          uploaded: {
+            gte: tf.toISOString().slice(0, 10)
+          }
+        }
+      };
+
+      q.bool.filter.push(filter)
+
+    }
+
+    if (sortBy >= 0) {
+
+      switch (sortBy) {
+        case 0:
+          sort = {
+            "stats.downloads": "asc"
+          }
+          break
+        case 1:
+          sort = {
+            "stats.downloads": "desc"
+          }
+          break
+        case 2:
+          sort = {
+            "stats.rating": "asc"
+          }
+          break
+        case 3:
+          sort = {
+            "stats.rating": "desc"
+          }
+          break
+        case 4:
+          sort = {
+            "stats.plays": "asc"
+          }
+          break
+        case 5:
+          sort = {
+            "stats.plays": "desc"
+          }
+          break
+      }
+
+    }
+
+    const resp = await elasticSearch(q, page, sort)
 
     return (ctx.body = resp)
   }

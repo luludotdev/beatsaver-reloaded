@@ -35,6 +35,15 @@ mongoose
       if (!ELASTIC_DISABLED) {
         axios.get(`http://${ELASTIC_HOST}:${ELASTIC_PORT}`)
         signale.info('Connected to Elasticsearch instance!')
+
+        // if beatmaps index doesn't exist; syncronize
+        axios.get(`http://${ELASTIC_HOST}:${ELASTIC_PORT}/beatmaps`).then((response) => {
+        }, (error) => {
+          if (error.response.status == 404) {
+            Beatmap.synchronize();
+          }
+        })
+
       }
     } catch (err) {
       signale.fatal('Failed to connect to Elasticsearch!')

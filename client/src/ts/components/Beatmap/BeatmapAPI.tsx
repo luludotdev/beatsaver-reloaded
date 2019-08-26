@@ -33,7 +33,7 @@ const BeatmapAPI: FunctionComponent<IProps> = ({
   requestNextMaps,
 }) => {
   const request = () =>
-    requestNextMaps(scroller.key, scroller.type, scroller.query)
+    requestNextMaps(scroller.key, scroller.type, scroller.query, scroller.difficulty, scroller.timeframe, scroller.sortBy)
 
   const next = () => {
     if (scroller.maps.length !== 0) request()
@@ -50,12 +50,18 @@ export type SearchType = 'latest' | 'hot' | 'downloads' | 'plays' | 'rating'
 interface ISearchProps {
   type: SearchType
   query?: string
+  difficulty: string[]
+  timeframe: number
+  sortBy: number
 }
 
-export type QueryType = 'text' | 'hash' | 'uploader'
+export type QueryType = 'text' | 'hash' | 'uploader' | 'advanced'
 interface IQueryProps {
   type: QueryType
   query: string
+  difficulty: string[]
+  timeframe: number
+  sortBy: number
 }
 
 export type SearchTypes = SearchType | QueryType
@@ -65,12 +71,18 @@ const mapStateToProps: MapStateToProps<
   IConnectedProps,
   IPassedProps,
   IState
-> = (state, { type, query }) => {
-  const key = query !== undefined ? `${type}?q=${query}` : type
+> = (state, { type, query, difficulty, timeframe, sortBy }) => {
+  if (difficulty === null) {
+    difficulty = [];
+  }
+  const key = query !== undefined ? `${type}?q=${query}&difficulty=${difficulty}&timeframe=${timeframe}&sortBy=${sortBy}` : type
 
   const defaultScroller: IScroller = {
     key,
     query,
+    difficulty,
+    timeframe,
+    sortBy,
     type,
 
     done: false,

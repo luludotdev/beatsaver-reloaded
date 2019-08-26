@@ -125,16 +125,14 @@ const schema: Schema = new Schema({
   },
 
   stats: {
-    downloads: { type: Number, default: 0, index: true, es_indexed: false },
-    plays: { type: Number, default: 0, index: true, es_indexed: false },
+    downloads: { type: Number, default: 0, index: true, es_indexed: true },
+    plays: { type: Number, default: 0, index: true, es_indexed: true},
 
-    downVotes: { type: Number, default: 0, es_indexed: false },
-    upVotes: { type: Number, default: 0, es_indexed: false },
+    downVotes: { type: Number, default: 0, es_indexed: true},
+    upVotes: { type: Number, default: 0, es_indexed: true},
 
-    heat: { type: Number, default: 0, index: true, es_indexed: false },
-    rating: { type: Number, default: 0, index: true, es_indexed: false },
-
-    es_indexed: false,
+    heat: { type: Number, default: 0, index: true, es_indexed: true},
+    rating: { type: Number, default: 0, index: true, es_indexed: true},
   },
 
   votes: {

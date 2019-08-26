@@ -16,6 +16,9 @@ export interface IScroller {
 
   type: QueryType | SearchType
   query: string | undefined
+  difficulty: string[]
+  timeframe: number
+  sortBy: number
 
   error: Error | undefined
   loading: boolean

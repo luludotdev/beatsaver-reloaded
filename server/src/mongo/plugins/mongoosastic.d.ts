@@ -78,11 +78,13 @@ declare module 'mongoose' {
 
     public search<S = any>(
       query: any,
+      opts: any,
       callback: (err: Error | undefined, results: ISearchResponse<S>) => any
     ): void
 
     public esSearch<S = any>(
       query: IFullSearch,
+      opts: any,
       callback: (err: Error | undefined, results: ISearchResponse<S>) => any
     ): void
   }

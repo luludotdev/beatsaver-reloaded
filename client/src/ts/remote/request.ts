@@ -11,14 +11,18 @@ const request: (
   getState: () => IState,
   key: string,
   type: SearchTypes,
-  query: string | undefined
-) => Promise<void> = async (dispatch, getState, key, type, query) => {
-  initializeScroller(key, type, query)(dispatch, getState)
+  query: string | undefined,
+  difficulty: string[],
+  timeframe: number,
+  sortBy: number
+) => Promise<void> = async (dispatch, getState, key, type, query, difficulty, timeframe, sortBy) => {
+  initializeScroller(key, type, query, difficulty, timeframe, sortBy)(dispatch, getState)
   const scroller = getState().scrollers[key]
   if (scroller === undefined) return undefined
 
   const isUser = type === 'uploader'
   const isSearch = type === 'text' || type === 'hash'
+  const isSearchAdvanced = type === 'advanced'
   const page = scroller.lastPage === null ? 0 : scroller.lastPage + 1
 
   if ((isUser || isSearch) && !query) {
@@ -34,6 +38,12 @@ const request: (
     ? `/maps/${type}/${query}/${page}`
     : isSearch
     ? `/search/${type}/${page}?q=${encodeURIComponent(query || '')}`
+    : isSearchAdvanced
+    ? `/search/${type}/${page}
+?q=${encodeURIComponent(query || "*")}
+&${difficulty ? difficulty.map(d => "difficulty=" + d).join('&') : ""}
+${timeframe >= 0 ? "&timeframe=" + timeframe : ""}
+${sortBy >= 0 ? "&sortBy=" + sortBy : ""}`
     : `/maps/${type}/${page}`
 
   dispatch({
