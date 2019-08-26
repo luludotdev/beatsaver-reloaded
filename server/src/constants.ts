@@ -14,3 +14,28 @@ export const FILE_EXT_WHITELIST = [
   '.jpeg',
   '.srt',
 ]
+
+export const FILE_TYPE_BLACKLIST = [
+  'application/gzip',
+  'application/vnd.ms-cab-compressed',
+  'application/wasm',
+  'application/x-7z-compressed',
+  'application/x-apple-diskimage',
+  'application/x-bzip2',
+  'application/x-compress',
+  'application/x-deb',
+  'application/x-google-chrome-extension',
+  'application/x-lzip',
+  'application/x-msdownload',
+  'application/x-msi',
+  'application/x-rar-compressed',
+  'application/x-rpm',
+  'application/x-shockwave-flash',
+  'application/x-sqlite3',
+  'application/x-tar',
+  'application/x-unix-archive',
+  'application/x-xz',
+  'application/x.ms.shortcut',
+  'application/zip',
+  'text/calendar',
+]

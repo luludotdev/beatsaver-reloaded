@@ -3,7 +3,7 @@ import fileType from 'file-type'
 import imageSize from 'image-size'
 import JSZip from 'jszip'
 import { parse, posix } from 'path'
-import { FILE_EXT_WHITELIST } from '../../constants'
+import { FILE_EXT_WHITELIST, FILE_TYPE_BLACKLIST } from '../../constants'
 import { validJSON } from '../../utils/json'
 
 import {
@@ -209,5 +209,14 @@ const inspectFile = async (file: JSZip.JSZipObject) => {
   const { ext } = parse(file.name)
   if (!FILE_EXT_WHITELIST.includes(ext.toLowerCase())) {
     throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE(file.name)
+  }
+
+  if (!file.dir) {
+    const stream = await file.nodeStream()
+    const { fileType: type } = await fileType.stream(stream as any)
+
+    if (type && FILE_TYPE_BLACKLIST.includes(type.mime)) {
+      throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE(file.name)
+    }
   }
 }
