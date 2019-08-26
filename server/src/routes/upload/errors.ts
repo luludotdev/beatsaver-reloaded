@@ -107,3 +107,10 @@ export const ERR_BEATMAP_CONTAINS_ILLEGAL_FILE = new CodedError(
   'ERR_BEATMAP_CONTAINS_ILLEGAL_FILE',
   403
 )
+
+export const ERR_BEATMAP_CONTAINS_AUTOSAVES = new CodedError(
+  'beatmap zip contains autosaves',
+  0x30010,
+  'ERR_BEATMAP_CONTAINS_AUTOSAVES',
+  403
+)

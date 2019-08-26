@@ -8,6 +8,7 @@ import { validJSON } from '../../utils/json'
 import {
   ERR_BEATMAP_AUDIO_INVALID,
   ERR_BEATMAP_AUDIO_NOT_FOUND,
+  ERR_BEATMAP_CONTAINS_AUTOSAVES,
   ERR_BEATMAP_CONTAINS_ILLEGAL_FILE,
   ERR_BEATMAP_COVER_INVALID,
   ERR_BEATMAP_COVER_NOT_FOUND,
@@ -196,4 +197,9 @@ const inspectFile = async (file: JSZip.JSZipObject) => {
 
   const resolved = posix.join(baseDir, file.name)
   if (!resolved.includes(baseDir)) throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE
+
+  const toLower = file.name.toLowerCase()
+  if (toLower.includes('autosaves')) {
+    throw ERR_BEATMAP_CONTAINS_AUTOSAVES
+  }
 }
