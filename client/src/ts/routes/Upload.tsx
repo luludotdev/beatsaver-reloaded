@@ -180,6 +180,17 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
           setFileErr('One or more beatmap difficulty files cannot be found!')
           return showProblems()
 
+        case 'ERR_BEATMAP_CONTAINS_ILLEGAL_FILE':
+          setFileErr('Beatmap zip contains an illegal file!')
+          return showProblems()
+
+        case 'ERR_BEATMAP_CONTAINS_AUTOSAVES':
+          setFileErr('Beatmap zip contains autosaves!')
+          return showProblems()
+
+        case 'ERR_BEATMAP_PARSE_TIMEOUT':
+          return setFileErr('Beatmap could not be parsed!')
+
         default:
           setFileErr('Something went wrong! Try again later.')
       }
