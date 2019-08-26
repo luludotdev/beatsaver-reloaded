@@ -119,3 +119,10 @@ export const ERR_BEATMAP_CONTAINS_AUTOSAVES = new CodedError(
   'ERR_BEATMAP_CONTAINS_AUTOSAVES',
   403
 )
+
+export const ERR_BEATMAP_PARSE_TIMEOUT = new CodedError(
+  'beatmap parse timeout',
+  0x30011,
+  'ERR_BEATMAP_PARSE_TIMEOUT',
+  408
+)
