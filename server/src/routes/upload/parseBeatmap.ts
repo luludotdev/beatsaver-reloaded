@@ -206,12 +206,12 @@ const inspectFile = async (file: JSZip.JSZipObject) => {
     throw ERR_BEATMAP_CONTAINS_AUTOSAVES
   }
 
-  const { ext } = parse(file.name)
-  if (!FILE_EXT_WHITELIST.includes(ext.toLowerCase())) {
-    throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE(file.name)
-  }
-
   if (!file.dir) {
+    const { ext } = parse(file.name)
+    if (ext && !FILE_EXT_WHITELIST.includes(ext.toLowerCase())) {
+      throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE(file.name)
+    }
+
     const stream = await file.nodeStream()
     const { fileType: type } = await fileType.stream(stream as any)
 
