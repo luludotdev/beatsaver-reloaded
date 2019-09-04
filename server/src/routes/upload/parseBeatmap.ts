@@ -212,11 +212,16 @@ const inspectFile = async (file: JSZip.JSZipObject) => {
       throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE(file.name)
     }
 
-    const stream = await file.nodeStream()
-    const { fileType: type } = await fileType.stream(stream as any)
+    try {
+      const stream = await file.nodeStream()
+      const { fileType: type } = await fileType.stream(stream as any)
 
-    if (type && FILE_TYPE_BLACKLIST.includes(type.mime)) {
-      throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE(file.name)
+      if (type && FILE_TYPE_BLACKLIST.includes(type.mime)) {
+        throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE(file.name)
+      }
+    } catch (err) {
+      if (err.name === 'TypeError') return
+      else throw err
     }
   }
 }
