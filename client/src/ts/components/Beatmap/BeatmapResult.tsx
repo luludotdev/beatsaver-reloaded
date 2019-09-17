@@ -11,6 +11,7 @@ import {
   stopPreview as stopPreviewFn,
 } from '../../store/audio'
 import { parseCharacteristics } from '../../utils/characteristics'
+import { downloadBeatmap, DownloadError } from '../../utils/download'
 import { formatDate } from '../../utils/formatDate'
 import { Image } from '../Image'
 import { DiffTags } from './DiffTags'
@@ -139,7 +140,17 @@ const BeatmapResult: FunctionComponent<IProps> = ({
                 : 'Stop Preview'}
             </a>
             <a href={`beatsaver://${map.key}`}>OneClick&trade;</a>
-            <a href={map.downloadURL}>Download</a>
+            <a
+              href='/'
+              onClick={e => {
+                e.preventDefault()
+                downloadBeatmap(map).catch((err: DownloadError) => {
+                  alert(`Download Failed with code ${err.code}!`)
+                })
+              }}
+            >
+              Download
+            </a>
           </div>
         </div>
       </div>

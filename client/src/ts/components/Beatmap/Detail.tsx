@@ -25,6 +25,7 @@ import {
 import { IUser } from '../../store/user'
 import { axios } from '../../utils/axios'
 import { parseCharacteristics } from '../../utils/characteristics'
+import { downloadBeatmap, DownloadError } from '../../utils/download'
 import swal from '../../utils/swal'
 import { ExtLink } from '../ExtLink'
 import { Image } from '../Image'
@@ -334,7 +335,17 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
         </div>
 
         <div className='buttons'>
-          <a href={map.downloadURL}>Download</a>
+          <a
+            href='/'
+            onClick={e => {
+              e.preventDefault()
+              downloadBeatmap(map).catch((err: DownloadError) => {
+                alert(`Download Failed with code ${err.code}!`)
+              })
+            }}
+          >
+            Download
+          </a>
           <a href={`beatsaver://${map.key}`}>OneClick&trade; Install</a>
           <a
             href='/'

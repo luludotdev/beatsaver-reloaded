@@ -75,6 +75,7 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "rimraf": "^3.0.0",
+    "sanitize-filename": "^1.6.3",
     "sass": "^1.22.9",
     "sweetalert2": "^8.15.3",
     "sweetalert2-react-content": "^1.1.0",
