@@ -2,6 +2,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { connect, MapStateToProps } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { downloadBeatmap, DownloadError } from '../../remote/download'
 import { IState } from '../../store'
 import {
   IAudioState,
@@ -11,7 +12,6 @@ import {
   stopPreview as stopPreviewFn,
 } from '../../store/audio'
 import { parseCharacteristics } from '../../utils/characteristics'
-import { downloadBeatmap, DownloadError } from '../../utils/download'
 import { formatDate } from '../../utils/formatDate'
 import { Image } from '../Image'
 import { DiffTags } from './DiffTags'
