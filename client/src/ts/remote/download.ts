@@ -1,3 +1,4 @@
+import { saveAs } from 'file-saver'
 import sanitize from 'sanitize-filename'
 
 export class DownloadError extends Error {
@@ -15,19 +16,13 @@ export const downloadBeatmap = async (
 ) => {
   const downloadURL = direct ? map.directDownload : map.downloadURL
   const resp = await fetch(downloadURL)
+
   if (!resp.ok) throw new DownloadError('download failed', resp.status)
-
   const blob = await resp.blob()
-  const blobURL = URL.createObjectURL(blob)
 
-  const a = document.createElement('a')
-  a.style.display = 'none'
-  a.href = blobURL
-  a.download = sanitize(
-    `${map.key} (${map.metadata.songName} - ${map.metadata.levelAuthorName}).zip`
-  )
+  const songName = sanitize(map.metadata.songName)
+  const authorName = sanitize(map.metadata.levelAuthorName)
+  const filename = `${map.key} (${songName} - ${authorName}).zip`
 
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(blobURL)
+  saveAs(blob, filename)
 }
