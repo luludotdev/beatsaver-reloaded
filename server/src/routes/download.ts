@@ -2,6 +2,7 @@ import cors from '@koa/cors'
 import Router from 'koa-router'
 import { DUMP_PATH } from '../constants'
 import { IS_DEV, PORT } from '../env'
+import { clearCache } from '../middleware/cache'
 import { rateLimit } from '../middleware/ratelimit'
 import Beatmap from '../mongo/models/Beatmap'
 import { globStats } from '../utils/fs'
@@ -9,16 +10,14 @@ import { parseKey } from '../utils/parseKey'
 
 const router = new Router({
   prefix: '/download',
-})
-  .use(
-    rateLimit({
-      duration: 10 * 60 * 1000,
-      max: 10,
-    })
-  )
-  .use(cors())
+}).use(cors())
 
-router.get('/key/:key', async ctx => {
+const limiter = rateLimit({
+  duration: 10 * 60 * 1000,
+  max: 10,
+})
+
+router.get('/key/:key', limiter, async ctx => {
   const key = parseKey(ctx.params.key)
   if (key === false) return (ctx.status = 404)
 
@@ -26,24 +25,39 @@ router.get('/key/:key', async ctx => {
   if (!map) return (ctx.status = 404)
 
   map.stats.downloads += 1
-  await map.save()
+
+  await Promise.all([
+    map.save(),
+    clearCache(`stats:key:${map.key}`),
+    clearCache(`stats:hash:${map.hash}`),
+  ])
 
   return ctx.redirect(map.directDownload)
 })
 
-router.get('/hash/:hash', async ctx => {
+router.get('/hash/:hash', limiter, async ctx => {
   const { hash } = ctx.params
 
   const map = await Beatmap.findOne({ hash, deletedAt: null })
   if (!map) return (ctx.status = 404)
 
   map.stats.downloads += 1
-  await map.save()
+
+  await Promise.all([
+    map.save(),
+    clearCache(`stats:key:${map.key}`),
+    clearCache(`stats:hash:${map.hash}`),
+  ])
 
   return ctx.redirect(map.directDownload)
 })
 
-router.get('/dump/:type', async ctx => {
+const dumpLimit = rateLimit({
+  duration: 1000,
+  max: 5,
+})
+
+router.get('/dump/:type', dumpLimit, async ctx => {
   const type: string = ctx.params.type
   if (type !== 'maps' && type !== 'users') return (ctx.status = 404)
 

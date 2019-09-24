@@ -61,6 +61,7 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
 
       <IconInput
         label='Username'
+        autoComplete='username'
         value={username}
         onChange={v => {
           setUsername(v)
@@ -74,6 +75,7 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
 
       <IconInput
         label='Password'
+        autoComplete='current-password'
         value={password}
         type='password'
         onChange={v => {

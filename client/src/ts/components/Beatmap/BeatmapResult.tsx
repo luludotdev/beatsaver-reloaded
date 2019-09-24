@@ -1,17 +1,52 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
+import { connect, MapStateToProps } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { downloadBeatmap, DownloadError } from '../../remote/download'
+import { IState } from '../../store'
+import {
+  IAudioState,
+  PreviewBeatmap,
+  previewBeatmap as previewBeatmapFn,
+  StopPreview,
+  stopPreview as stopPreviewFn,
+} from '../../store/audio'
 import { parseCharacteristics } from '../../utils/characteristics'
 import { formatDate } from '../../utils/formatDate'
 import { Image } from '../Image'
 import { DiffTags } from './DiffTags'
 import { BeatmapStats } from './Statistics'
 
-interface IProps {
+interface IConnectedProps {
+  preview: IAudioState
+}
+
+interface IDispatchProps {
+  previewBeatmap: PreviewBeatmap
+  stopPreview: StopPreview
+}
+
+interface IPassedProps {
   map: IBeatmap
 }
 
-const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
+type IProps = IConnectedProps & IDispatchProps & IPassedProps
+const BeatmapResult: FunctionComponent<IProps> = ({
+  map,
+  preview,
+  previewBeatmap,
+  stopPreview,
+}) => {
+  const [dateStr, setDateStr] = useState<string>(formatDate(map.uploaded))
+  useEffect(() => {
+    const i = setInterval(() => {
+      const newStr = formatDate(map.uploaded)
+      if (dateStr !== newStr) setDateStr(newStr)
+    }, 1000 * 30)
+
+    return () => clearInterval(i)
+  }, [])
+
   const [inViewRef, inView] = useInView({ rootMargin: '240px' })
   if (!inView) {
     return (
@@ -42,7 +77,12 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
               <Link to={`/uploader/${map.uploader._id}`}>
                 {map.uploader.username}
               </Link>{' '}
-              <span className='uploaded'>{formatDate(map.uploaded)}</span>
+              <span
+                className='uploaded'
+                title={new Date(map.uploaded).toISOString()}
+              >
+                {dateStr}
+              </span>
             </h2>
           </div>
 
@@ -56,11 +96,13 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
           />
 
           <div className='tags'>
-            {parseCharacteristics(map.metadata.characteristics).map((x, i) => (
-              <span key={`${x}:${i}`} className='tag is-dark'>
-                {x}
-              </span>
-            ))}
+            {parseCharacteristics(map.metadata.characteristics).map(
+              ({ name }, i) => (
+                <span key={`${name}:${i}`} className='tag is-dark'>
+                  {name}
+                </span>
+              )
+            )}
           </div>
         </div>
 
@@ -69,11 +111,69 @@ const BeatmapResult: FunctionComponent<IProps> = ({ map }) => {
             <BeatmapStats map={map} hideTime={true} />
           </div>
 
-          <a href={map.downloadURL}>Download</a>
+          <div className='is-button-group'>
+            <a
+              href='/'
+              className={
+                !preview.loading
+                  ? undefined
+                  : preview.key === map.key
+                  ? 'loading disabled'
+                  : 'disabled'
+              }
+              onClick={e => {
+                e.preventDefault()
+
+                if (preview.state === 'playing' && preview.key === map.key) {
+                  stopPreview()
+                } else {
+                  previewBeatmap(map)
+                }
+              }}
+            >
+              {preview.key !== map.key
+                ? 'Preview'
+                : preview.loading
+                ? 'Preview'
+                : preview.error !== null
+                ? 'Playback error!'
+                : 'Stop Preview'}
+            </a>
+            <a href={`beatsaver://${map.key}`}>OneClick&trade;</a>
+            <a
+              href='/'
+              onClick={e => {
+                e.preventDefault()
+                downloadBeatmap(map).catch((err: DownloadError) => {
+                  alert(`Download Failed with code ${err.code}!`)
+                })
+              }}
+            >
+              Download
+            </a>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export { BeatmapResult }
+const mapStateToProps: MapStateToProps<
+  IConnectedProps,
+  IPassedProps,
+  IState
+> = state => ({
+  preview: state.audio,
+})
+
+const mapDispatchToProps: IDispatchProps = {
+  previewBeatmap: previewBeatmapFn,
+  stopPreview: stopPreviewFn,
+}
+
+const ConnectedBeatmapResult = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BeatmapResult)
+
+export { ConnectedBeatmapResult as BeatmapResult }

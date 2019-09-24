@@ -8,7 +8,7 @@ interface IProps {
   autoFocus?: boolean
   disabled?: boolean
   readOnly?: boolean
-  autoComplete?: 'on' | 'off'
+  autoComplete?: 'on' | 'off' | 'username' | 'current-password' | 'new-password'
   autoCapitalize?: 'on' | 'off'
 
   label?: string

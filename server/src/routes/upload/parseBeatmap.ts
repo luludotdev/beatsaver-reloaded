@@ -2,12 +2,15 @@ import { createHash } from 'crypto'
 import fileType from 'file-type'
 import imageSize from 'image-size'
 import JSZip from 'jszip'
-import { parse } from 'path'
+import { parse, posix } from 'path'
+import { FILE_EXT_WHITELIST, FILE_TYPE_BLACKLIST } from '../../constants'
 import { validJSON } from '../../utils/json'
 
 import {
   ERR_BEATMAP_AUDIO_INVALID,
   ERR_BEATMAP_AUDIO_NOT_FOUND,
+  ERR_BEATMAP_CONTAINS_AUTOSAVES,
+  ERR_BEATMAP_CONTAINS_ILLEGAL_FILE,
   ERR_BEATMAP_COVER_INVALID,
   ERR_BEATMAP_COVER_NOT_FOUND,
   ERR_BEATMAP_COVER_NOT_SQUARE,
@@ -27,7 +30,10 @@ export const parseBeatmap: (
   const zip = new JSZip()
   await zip.loadAsync(zipBuf)
 
-  const info = zip.file('info.dat')
+  const files = Object.values(zip.files)
+  await Promise.all(files.map(x => inspectFile(x)))
+
+  const info = zip.file('info.dat') || zip.file('Info.dat')
   if (info === null) throw ERR_BEATMAP_INFO_NOT_FOUND
 
   let infoDAT = await info.async('text')
@@ -101,6 +107,62 @@ export const parseBeatmap: (
     hash.update(b)
   }
 
+  const parseCharacteristic: (
+    rank: number,
+    set: Readonly<IBeatmapSet>
+  ) => Promise<IParsedDifficulty | null> = async (rank, set) => {
+    const diff = set._difficultyBeatmaps.find(x => x._difficultyRank === rank)
+    if (!diff) return null
+
+    try {
+      const content = await zip.file(diff._beatmapFilename).async('text')
+      const data: IDifficultyJSON = JSON.parse(content)
+
+      const bombs = data._notes.filter(note => note._type === 3).length || 0
+      const duration = Math.max(...data._notes.map(note => note._time)) || 0
+
+      const length =
+        infoJSON._beatsPerMinute === 0
+          ? 0
+          : (duration / infoJSON._beatsPerMinute) * 60
+
+      return {
+        duration,
+        length: Math.floor(length) || 0,
+        njs: diff._noteJumpMovementSpeed || 0,
+        njsOffset: diff._noteJumpStartBeatOffset || 0,
+
+        bombs,
+        notes: data._notes.length - bombs,
+        obstacles: data._obstacles.length,
+      }
+    } catch (err) {
+      return null
+    }
+  }
+
+  const parseSet = async (set: Readonly<IBeatmapSet>) => {
+    const [easy, normal, hard, expert, expertPlus] = await Promise.all(
+      [1, 3, 5, 7, 9].map(x => parseCharacteristic(x, set))
+    )
+
+    return {
+      difficulties: {
+        easy,
+        expert,
+        expertPlus,
+        hard,
+        normal,
+      },
+
+      name: set._beatmapCharacteristicName,
+    }
+  }
+
+  const characteristics = await Promise.all(
+    infoJSON._difficultyBeatmapSets.map(parseSet)
+  )
+
   const sha1 = hash.digest('hex')
   const parsed: IParsedBeatmap = {
     hash: sha1,
@@ -121,9 +183,7 @@ export const parseBeatmap: (
         normal: difficulties.some(x => x._difficultyRank === 3),
       },
 
-      characteristics: infoJSON._difficultyBeatmapSets.map(
-        x => x._beatmapCharacteristicName
-      ),
+      characteristics,
     },
 
     coverExt: `.${coverType.ext}`,
@@ -131,4 +191,37 @@ export const parseBeatmap: (
 
   const newZip = await zip.generateAsync({ type: 'nodebuffer' })
   return { parsed, cover, zip: newZip }
+}
+
+const inspectFile = async (file: JSZip.JSZipObject) => {
+  const baseDir = '/var/temp'
+
+  const resolved = posix.join(baseDir, file.name)
+  if (!resolved.includes(baseDir)) {
+    throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE(file.name)
+  }
+
+  const toLower = file.name.toLowerCase()
+  if (toLower.includes('autosaves')) {
+    throw ERR_BEATMAP_CONTAINS_AUTOSAVES
+  }
+
+  if (!file.dir) {
+    const { ext } = parse(file.name)
+    if (ext && !FILE_EXT_WHITELIST.includes(ext.toLowerCase())) {
+      throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE(file.name)
+    }
+
+    try {
+      const stream = await file.nodeStream()
+      const { fileType: type } = await fileType.stream(stream as any)
+
+      if (type && FILE_TYPE_BLACKLIST.includes(type.mime)) {
+        throw ERR_BEATMAP_CONTAINS_ILLEGAL_FILE(file.name)
+      }
+    } catch (err) {
+      if (err.name === 'TypeError') return
+      else throw err
+    }
+  }
 }

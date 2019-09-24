@@ -96,6 +96,11 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
         return
       }
 
+      if (response.status === 503) {
+        setTitleErr('Uploads have been temporarily disabled. Try again later.')
+        return
+      }
+
       if (response.status === 403) {
         setTitleErr('You must verify your account to upload beatmaps!')
         return
@@ -174,6 +179,17 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
         case 'ERR_BEATMAP_DIFF_NOT_FOUND':
           setFileErr('One or more beatmap difficulty files cannot be found!')
           return showProblems()
+
+        case 'ERR_BEATMAP_CONTAINS_ILLEGAL_FILE':
+          setFileErr('Beatmap zip contains an illegal file!')
+          return showProblems()
+
+        case 'ERR_BEATMAP_CONTAINS_AUTOSAVES':
+          setFileErr('Beatmap zip contains autosaves!')
+          return showProblems()
+
+        case 'ERR_BEATMAP_PARSE_TIMEOUT':
+          return setFileErr('Beatmap could not be parsed!')
 
         default:
           setFileErr('Something went wrong! Try again later.')

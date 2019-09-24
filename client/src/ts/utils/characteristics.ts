@@ -1,11 +1,13 @@
-export const parseCharacteristics = (input: string[]) => {
-  const chars = input.length === 0 ? ['Standard'] : input
-
-  return chars.map(characteristic =>
-    characteristic
+export const parseCharacteristics: (
+  chars: IBeatmapCharacteristic[]
+) => IBeatmapCharacteristic[] = chars => {
+  return chars.map(({ name, ...rest }) => {
+    const newName = name
       .replace(/([A-Z])/g, ' $1')
       .replace(/^./, str => str.toUpperCase())
       .trim()
       .replace(/(  )/g, ' ')
-  )
+
+    return { name: newName, ...rest }
+  })
 }

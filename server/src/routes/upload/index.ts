@@ -1,3 +1,4 @@
+import pTimeout from '@lolpants/ptimeout'
 import fileType from 'file-type'
 import multer, { File, MulterIncomingMessage } from 'koa-multer'
 import passport from 'koa-passport'
@@ -15,6 +16,7 @@ import { parseBeatmap } from './parseBeatmap'
 
 import {
   ERR_BEATMAP_NOT_ZIP,
+  ERR_BEATMAP_PARSE_TIMEOUT,
   ERR_BEATMAP_SAVE_FAILURE,
   ERR_DUPLICATE_BEATMAP,
   ERR_NO_BEATMAP,
@@ -55,8 +57,10 @@ router.post(
       throw ERR_BEATMAP_NOT_ZIP
     }
 
-    const { parsed: beatmap, cover, zip } = await parseBeatmap(
-      beatmapFile.buffer
+    const { parsed: beatmap, cover, zip } = await pTimeout(
+      () => parseBeatmap(beatmapFile.buffer),
+      1000 * 10,
+      ERR_BEATMAP_PARSE_TIMEOUT
     )
 
     const [latest] = await Beatmap.find()

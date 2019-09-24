@@ -100,3 +100,29 @@ export const ERR_BEATMAP_AUDIO_INVALID = new CodedError(
   'ERR_BEATMAP_AUDIO_INVALID',
   400
 )
+
+export const ERR_BEATMAP_CONTAINS_ILLEGAL_FILE = (filename: string) => {
+  const err = new CodedError(
+    'illegal file in zip',
+    0x3000f,
+    'ERR_BEATMAP_CONTAINS_ILLEGAL_FILE',
+    400
+  )
+
+  err.ext.filename = filename
+  return err
+}
+
+export const ERR_BEATMAP_CONTAINS_AUTOSAVES = new CodedError(
+  'beatmap zip contains autosaves',
+  0x30010,
+  'ERR_BEATMAP_CONTAINS_AUTOSAVES',
+  400
+)
+
+export const ERR_BEATMAP_PARSE_TIMEOUT = new CodedError(
+  'beatmap parse timeout',
+  0x30011,
+  'ERR_BEATMAP_PARSE_TIMEOUT',
+  408
+)
