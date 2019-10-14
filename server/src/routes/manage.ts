@@ -21,7 +21,9 @@ const userBeatmap: Middleware = async (ctx, next) => {
   if (!map) return (ctx.status = 404)
 
   const user: IUserModel = ctx.state.user
-  if (`${map.uploader}` !== `${user.id}`) return (ctx.status = 403)
+  if (`${map.uploader}` !== `${user.id}` && user.admin === false) {
+    return (ctx.status = 403)
+  }
 
   ctx.beatmap = map
   return next()
