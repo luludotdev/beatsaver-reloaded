@@ -189,7 +189,11 @@ export const parseBeatmap: (
     coverExt: `.${coverType.ext}`,
   }
 
-  const newZip = await zip.generateAsync({ type: 'nodebuffer' })
+  const newZip = await zip.generateAsync({
+    compression: 'DEFLATE',
+    type: 'nodebuffer',
+  })
+
   return { parsed, cover, zip: newZip }
 }
 
