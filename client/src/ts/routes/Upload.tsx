@@ -133,7 +133,11 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
         if (resp.fields.some(x => x.path === 'name')) {
           setTitleErr('Title is invalid!')
         } else {
-          setFileErr('Beatmap is invalid!')
+          setFileErr(
+            `Beatmap is invalid! Cause: ${resp.fields
+              .map(x => x.path)
+              .join('\n')}`
+          )
           showProblems()
         }
 
