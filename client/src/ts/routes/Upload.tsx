@@ -136,7 +136,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
           setFileErr(
             `Beatmap is invalid! Cause: ${resp.fields
               .map(x => x.path)
-              .join('\n')}`
+              .join(', ')}`
           )
           showProblems()
         }
