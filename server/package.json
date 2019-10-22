@@ -14,9 +14,9 @@
     "check": "yarn run build --noEmit",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "prebuild": "rimraf build",
-    "build": "tsc",
+    "build": "ttsc",
     "build:dev": "yarn run build --sourceMap",
-    "watch": "tsc --watch",
+    "watch": "ttsc --watch",
     "dev": "yarn run watch --sourceMap",
     "dev:run": "nodemon . --watch build",
     "modclean": "modclean -r"
