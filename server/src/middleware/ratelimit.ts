@@ -3,7 +3,7 @@ import koaRateLimit, {
   HeaderNameOptions,
   MiddlewareOptions,
 } from 'koa-ratelimit'
-import { rateLimitDB } from '../redis'
+import { rateLimitDB } from '~redis'
 
 interface IOptions {
   /**

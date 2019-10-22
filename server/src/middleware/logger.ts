@@ -1,5 +1,5 @@
 import { Middleware } from 'koa'
-import signale from '../utils/signale'
+import signale from '~utils/signale'
 
 export const logger: Middleware = async (ctx, next) => {
   await next()

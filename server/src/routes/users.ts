@@ -1,8 +1,8 @@
 import cors from '@koa/cors'
 import passport from 'koa-passport'
 import Router from 'koa-router'
-import { rateLimit } from '../middleware/ratelimit'
-import User, { IRedactedUser, IUserModel } from '../mongo/models/User'
+import { rateLimit } from '~middleware'
+import { IRedactedUser, IUserModel, User } from '~mongo/models'
 
 const router = new Router({
   prefix: '/users',

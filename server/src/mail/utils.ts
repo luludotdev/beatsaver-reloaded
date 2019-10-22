@@ -1,4 +1,4 @@
-import { IUserModel } from '../mongo/models/User'
+import { IUserModel } from '~mongo/models'
 
 export const formatRecipient = (user: IUserModel) =>
   `${user.username} <${user.email}>`

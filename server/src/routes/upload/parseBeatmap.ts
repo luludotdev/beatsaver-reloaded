@@ -3,8 +3,8 @@ import fileType from 'file-type'
 import imageSize from 'image-size'
 import JSZip from 'jszip'
 import { parse, posix } from 'path'
-import { FILE_EXT_WHITELIST, FILE_TYPE_BLACKLIST } from '../../constants'
-import { validJSON } from '../../utils/json'
+import { FILE_EXT_WHITELIST, FILE_TYPE_BLACKLIST } from '~constants'
+import { validJSON } from '~utils/json'
 
 import {
   ERR_BEATMAP_AUDIO_INVALID,

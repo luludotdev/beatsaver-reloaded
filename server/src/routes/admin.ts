@@ -1,8 +1,7 @@
 import passport from 'koa-passport'
 import Router from 'koa-router'
-import Beatmap from '../mongo/models/Beatmap'
-import { IUserModel } from '../mongo/models/User'
-import signale from '../utils/signale'
+import { Beatmap, IUserModel } from '~mongo/models'
+import signale from '~utils/signale'
 
 const router = new Router({
   prefix: '/admin',

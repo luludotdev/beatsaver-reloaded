@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose'
-import withoutKeys from '../plugins/withoutKeys'
+import { withoutKeys } from '~mongo/plugins'
 
 export interface IRedactedUser {
   username: string
@@ -59,6 +59,5 @@ schema.plugin(
   )
 )
 
-const User = mongoose.model<IUserModel>('user', schema)
-export default User
+export const User = mongoose.model<IUserModel>('user', schema)
 export { schema as userSchema }

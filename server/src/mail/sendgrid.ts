@@ -1,5 +1,5 @@
 import mail from '@sendgrid/mail'
-import { MAIL_FROM, SENDGRID_KEY } from '../env'
+import { MAIL_FROM, SENDGRID_KEY } from '~environment'
 
 mail.setApiKey(SENDGRID_KEY)
 

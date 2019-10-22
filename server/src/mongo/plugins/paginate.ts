@@ -1,6 +1,6 @@
 import { Document, PaginateModel, PaginateOptions } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
-import { RESULTS_PER_PAGE } from '../../env'
+import { RESULTS_PER_PAGE } from '~environment'
 
 const pOptions: PaginateOptions = {
   limit: RESULTS_PER_PAGE,

@@ -1,4 +1,3 @@
-import withoutKeys from './withoutKeys'
+import { withoutKeys } from './withoutKeys'
 
-const withoutVersionKey = withoutKeys(['__v'])
-export default withoutVersionKey
+export const withoutVersionKey = withoutKeys(['__v'])

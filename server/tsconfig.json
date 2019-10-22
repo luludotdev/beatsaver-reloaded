@@ -14,7 +14,17 @@
     "outDir": "./build",
     "rootDir": "./src",
     "baseUrl": ".",
-    "paths": {},
+    "paths": {
+      "~mail": ["./src/mail"],
+      "~middleware": ["./src/middleware"],
+      "~mongo/*": ["./src/mongo/*"],
+      "~redis": ["./src/redis"],
+      "~routes": ["./src/routes"],
+      "~strategies": ["./src/strategies"],
+      "~utils/*": ["./src/utils/*"],
+      "~constants": ["./src/constants"],
+      "~environment": ["./src/env"]
+    },
     "plugins": [{ "transform": "typescript-transform-paths" }]
   },
   "include": [

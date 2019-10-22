@@ -1,4 +1,4 @@
-import { MAIL_DRIVER } from '../env'
+import { MAIL_DRIVER } from '~environment'
 
 const mailDriver: () => MailerFunction = () => {
   if (MAIL_DRIVER === 'sendgrid') return require('./sendgrid').default
@@ -6,3 +6,4 @@ const mailDriver: () => MailerFunction = () => {
 }
 
 export default mailDriver
+export * from './utils'

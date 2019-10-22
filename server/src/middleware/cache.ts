@@ -1,7 +1,12 @@
 import { Middleware } from 'koa'
 import redisCache, { CacheOptions } from 'koa-redis-cache'
-import { CACHE_DRIVER, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } from '../env'
-import { CACHE_DB, cacheDB } from '../redis'
+import {
+  CACHE_DRIVER,
+  REDIS_HOST,
+  REDIS_PASSWORD,
+  REDIS_PORT,
+} from '~environment'
+import { CACHE_DB, cacheDB } from '~redis'
 
 const noCache: Middleware = (_, next) => next()
 

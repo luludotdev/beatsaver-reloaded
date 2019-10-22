@@ -1,6 +1,6 @@
 import Router from 'koa-router'
-import { IS_DEV } from '../env'
-import signale from '../utils/signale'
+import { IS_DEV } from '~environment'
+import signale from '~utils/signale'
 import { adminRouter } from './admin'
 import { authRouter } from './auth'
 import { cdnRouter } from './cdn'

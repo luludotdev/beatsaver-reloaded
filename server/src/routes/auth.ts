@@ -3,11 +3,10 @@ import koaBody from 'koa-body'
 import passport from 'koa-passport'
 import Router from 'koa-router'
 import uuid from 'uuid/v4'
-import { BCRYPT_ROUNDS, IS_DEV } from '../env'
-import mailDriver from '../mail'
-import { sendTo } from '../mail/utils'
-import User, { IUserModel } from '../mongo/models/User'
-import { issueToken } from '../strategies/jwt'
+import { BCRYPT_ROUNDS, IS_DEV } from '~environment'
+import mailDriver, { sendTo } from '~mail'
+import { IUserModel, User } from '~mongo/models'
+import { issueToken } from '~strategies'
 
 const sendMail = mailDriver()
 const router = new Router({

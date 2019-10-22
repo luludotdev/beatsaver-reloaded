@@ -1,6 +1,6 @@
 import Router from 'koa-router'
 import { Serve as serve } from 'static-koa-router'
-import { CDN_PATH } from '../constants'
+import { CDN_PATH } from '~constants'
 
 const router = new Router({
   prefix: '/cdn',

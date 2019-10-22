@@ -1,8 +1,8 @@
 import { compare } from 'bcrypt'
 import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
-import User from '../mongo/models/User'
-import CodedError from '../utils/CodedError'
+import { User } from '~mongo/models'
+import CodedError from '~utils/CodedError'
 
 const ERR_INVALID_USERNAME = new CodedError(
   'invalid username',

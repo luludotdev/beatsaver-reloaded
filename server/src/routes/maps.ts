@@ -1,10 +1,9 @@
 import cors from '@koa/cors'
 import Router from 'koa-router'
-import { cache } from '../middleware/cache'
-import { rateLimit } from '../middleware/ratelimit'
-import Beatmap from '../mongo/models/Beatmap'
-import { paginate } from '../mongo/plugins/paginate'
-import { parseKey } from '../utils/parseKey'
+import { cache, rateLimit } from '~middleware'
+import { Beatmap } from '~mongo/models'
+import { paginate } from '~mongo/plugins'
+import { parseKey } from '~utils/parseKey'
 
 const router = new Router({
   prefix: '/maps',

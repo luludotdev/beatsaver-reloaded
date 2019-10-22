@@ -1,10 +1,9 @@
 import mongoosastic from 'mongoosastic'
 import mongoose, { Document, PaginateModel, Schema, Types } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
-import { BEATSAVER_EPOCH } from '../../constants'
-import { ELASTIC_HOST, ELASTIC_PORT, IS_DEV, PORT } from '../../env'
-import withoutKeys from '../plugins/withoutKeys'
-import withVirtuals from '../plugins/withVirtuals'
+import { BEATSAVER_EPOCH } from '~constants'
+import { ELASTIC_HOST, ELASTIC_PORT, IS_DEV, PORT } from '~environment'
+import { withoutKeys, withVirtuals } from '~mongo/plugins'
 import { IUserModel, userSchema } from './User'
 
 export interface IVoteLean {
@@ -245,8 +244,7 @@ schema.index(
   }
 )
 
-const Beatmap = mongoose.model<IBeatmapModel>(
+export const Beatmap = mongoose.model<IBeatmapModel>(
   'beatmap',
   schema
 ) as PaginateModel<IBeatmapModel>
-export default Beatmap

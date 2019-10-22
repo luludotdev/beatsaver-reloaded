@@ -1,4 +1,4 @@
-import { IS_DEV } from '../env'
+import { IS_DEV } from '~environment'
 
 export default class CodedError extends Error {
   public code: number

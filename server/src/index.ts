@@ -6,13 +6,13 @@ import {
   IS_DEV,
   MONGO_URL,
   PORT,
-} from './env'
+} from '~environment'
+import { awaitCacheDB, awaitRateLimitDB } from '~redis'
+import '~strategies'
+import axios from '~utils/axios'
+import signale, { panic } from '~utils/signale'
 import { app } from './koa'
-import { awaitCacheDB, awaitRateLimitDB } from './redis'
-import './strategies'
 import './tasks'
-import axios from './utils/axios'
-import signale, { panic } from './utils/signale'
 
 if (IS_DEV) signale.warn('Running in development environment!')
 mongoose.set('useCreateIndex', true)

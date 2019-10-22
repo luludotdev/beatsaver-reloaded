@@ -1,6 +1,6 @@
 import Redis from 'ioredis'
-import { REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } from '../env'
-import signale from '../utils/signale'
+import { REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } from '~environment'
+import signale from '~utils/signale'
 import { CACHE_DB, RATE_LIMIT_DB } from './constants'
 
 export const rateLimitDB = new Redis({

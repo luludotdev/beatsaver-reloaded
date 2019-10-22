@@ -1,10 +1,10 @@
 import cors from '@koa/cors'
 import Router from 'koa-router'
 import { ISearchResponse } from 'mongoose'
-import { ELASTIC_DISABLED, RESULTS_PER_PAGE } from '../env'
-import { rateLimit } from '../middleware/ratelimit'
-import Beatmap from '../mongo/models/Beatmap'
-import CodedError from '../utils/CodedError'
+import { ELASTIC_DISABLED, RESULTS_PER_PAGE } from '~environment'
+import { rateLimit } from '~middleware'
+import { Beatmap } from '~mongo/models'
+import CodedError from '~utils/CodedError'
 
 const router = new Router({
   prefix: '/search',

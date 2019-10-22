@@ -2,10 +2,9 @@ import { Middleware } from 'koa'
 import koaBody from 'koa-body'
 import passport from 'koa-passport'
 import Router from 'koa-router'
-import { clearCache } from '../middleware/cache'
-import Beatmap, { IBeatmapModel } from '../mongo/models/Beatmap'
-import { IUserModel } from '../mongo/models/User'
-import { parseKey } from '../utils/parseKey'
+import { clearCache } from '~middleware'
+import { Beatmap, IBeatmapModel, IUserModel } from '~mongo/models'
+import { parseKey } from '~utils/parseKey'
 
 const router = new Router({
   prefix: '/manage',

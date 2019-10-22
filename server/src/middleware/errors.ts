@@ -1,7 +1,7 @@
 import { Middleware } from 'koa'
 import { MongoError } from 'mongodb'
-import CodedError from '../utils/CodedError'
-import signale from '../utils/signale'
+import CodedError from '~utils/CodedError'
+import signale from '~utils/signale'
 
 export const errorHandler: Middleware = async (ctx, next) => {
   try {

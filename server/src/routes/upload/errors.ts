@@ -1,4 +1,4 @@
-import CodedError from '../../utils/CodedError'
+import CodedError from '~utils/CodedError'
 
 export const ERR_NO_BEATMAP = new CodedError(
   'no beatmap uploaded',

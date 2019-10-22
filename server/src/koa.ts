@@ -2,12 +2,9 @@ import cors from '@koa/cors'
 import Koa from 'koa'
 import helmet from 'koa-helmet'
 import Router from 'koa-router'
-import { IS_DEV } from './env'
-import { logger } from './middleware'
-import { cacheHeaders } from './middleware/cache'
-import { errorHandler } from './middleware/errors'
-import { realIP } from './middleware/realIP'
-import { routes } from './routes'
+import { IS_DEV } from '~environment'
+import { cacheHeaders, errorHandler, logger, realIP } from '~middleware'
+import { routes } from '~routes'
 
 export const app = new Koa()
 const router = new Router()

@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken'
 import passport from 'passport'
 import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt'
-import { JWT_SECRET } from '../env'
-import User, { IUserModel } from '../mongo/models/User'
+import { JWT_SECRET } from '~environment'
+import { IUserModel, User } from '~mongo/models'
 
 export interface IAuthToken {
   _id: string

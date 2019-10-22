@@ -1,12 +1,11 @@
 import cors from '@koa/cors'
 import Router from 'koa-router'
-import { DUMP_PATH } from '../constants'
-import { IS_DEV, PORT } from '../env'
-import { clearCache } from '../middleware/cache'
-import { rateLimit } from '../middleware/ratelimit'
-import Beatmap from '../mongo/models/Beatmap'
-import { globStats } from '../utils/fs'
-import { parseKey } from '../utils/parseKey'
+import { DUMP_PATH } from '~constants'
+import { IS_DEV, PORT } from '~environment'
+import { clearCache, rateLimit } from '~middleware'
+import { Beatmap } from '~mongo/models'
+import { globStats } from '~utils/fs'
+import { parseKey } from '~utils/parseKey'
 
 const router = new Router({
   prefix: '/download',

@@ -1,5 +1,5 @@
-import { MAIL_FROM } from '../env'
-import signale from '../utils/signale'
+import { MAIL_FROM } from '~environment'
+import signale from '~utils/signale'
 
 const logDriver: MailerFunction = async (to, subject, body) => {
   const lines = [

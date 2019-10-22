@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import signale, { panic } from './utils/signale'
+import signale, { panic } from '~utils/signale'
 
 dotenv.config()
 const { NODE_ENV } = process.env
