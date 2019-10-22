@@ -5,6 +5,7 @@
     "tslint-plugin-prettier",
     "tslint-config-prettier"
   ],
+  "rulesDirectory": ["node_modules/tslint-microsoft-contrib"],
   "rules": {
     "max-line-length": {
       "options": [120]
@@ -21,7 +22,8 @@
     "curly": [true, "ignore-same-line"],
     "no-invalid-this": true,
     "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case", "allow-leading-underscore"],
-    "prettier": true
+    "prettier": true,
+    "no-suspicious-comment": true
   },
   "jsRules": {
     "max-line-length": {

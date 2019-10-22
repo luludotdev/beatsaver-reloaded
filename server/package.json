@@ -51,8 +51,11 @@
     "prettier": "^1.18.2",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
+    "tslint-microsoft-contrib": "^6.2.0",
     "tslint-plugin-prettier": "^2.0.1",
-    "typescript": "^3.5.3"
+    "ttypescript": "^1.5.7",
+    "typescript": "^3.6.4",
+    "typescript-transform-paths": "^1.1.11"
   },
   "dependencies": {
     "@koa/cors": "^3.0.0",
