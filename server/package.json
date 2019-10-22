@@ -61,6 +61,7 @@
     "@koa/cors": "^3.0.0",
     "@lolpants/ptimeout": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",
+    "ajv": "^6.10.2",
     "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
     "chunk": "^0.0.2",
