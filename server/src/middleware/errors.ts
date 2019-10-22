@@ -2,6 +2,7 @@ import { Middleware } from 'koa'
 import { MongoError } from 'mongodb'
 import CodedError from '~utils/CodedError'
 import signale from '~utils/signale'
+import { SchemaValidationError } from '../routes/upload/parseValidationError'
 
 export const errorHandler: Middleware = async (ctx, next) => {
   try {
@@ -30,6 +31,19 @@ export const errorHandler: Middleware = async (ctx, next) => {
       }
 
       throw err
+    } else if (err instanceof SchemaValidationError) {
+      const body = {
+        ...err,
+        code: 0x00004,
+        identifier: 'ERR_SCHEMA_VALIDATION_FAILED',
+        message: err.message,
+
+        name: undefined,
+        validationError: undefined,
+      }
+
+      ctx.status = 400
+      return (ctx.body = body)
     } else if (err.code === 'LIMIT_FILE_SIZE') {
       const body = {
         code: 0x00003,

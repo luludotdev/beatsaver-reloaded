@@ -57,6 +57,14 @@ export const ERR_BEATMAP_DIFF_NOT_FOUND = (filename: string) =>
     400
   )
 
+export const ERR_BEATMAP_DIFF_INVALID = (filename: string) =>
+  new CodedError(
+    `${filename} is invalid`,
+    0x30012,
+    'ERR_BEATMAP_DIFF_INVALID',
+    400
+  )
+
 export const ERR_BEATMAP_COVER_NOT_FOUND = (filename: string) =>
   new CodedError(
     `${filename} not found`,
