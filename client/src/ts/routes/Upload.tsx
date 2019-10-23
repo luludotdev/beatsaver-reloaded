@@ -137,7 +137,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
           width: '44em',
         })
 
-        return
+        return setFileErr('Beatmap is invalid!')
       } else if (
         resp.identifier === 'ERR_INVALID_FIELDS' &&
         resp.fields !== undefined
