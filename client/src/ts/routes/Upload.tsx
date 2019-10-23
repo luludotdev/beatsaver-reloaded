@@ -133,6 +133,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
           showCancelButton: false,
           title: 'Invalid Beatmap',
           type: 'error',
+          width: '44em',
         })
 
         return
@@ -325,8 +326,8 @@ const ValidationSwalContent: FunctionComponent<IValidationProps> = ({
       </b>
     </p>
 
-    <p>
-      Field <code>{path}</code> {message}
+    <p style={{ fontSize: '0.9em' }}>
+      Field <code>{path}</code> {message}.
     </p>
   </div>
 )
