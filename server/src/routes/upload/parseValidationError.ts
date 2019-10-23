@@ -1,4 +1,4 @@
-import { ErrorObject, ValidateFunction } from 'ajv'
+import { AdditionalPropertiesParams, ErrorObject, ValidateFunction } from 'ajv'
 
 export class SchemaValidationError extends Error {
   public readonly filename: string
@@ -26,6 +26,8 @@ export const parseValidationError = (
   switch (error.keyword) {
     case 'pattern':
       parsePattern(filename, error)
+    case 'additionalProperties':
+      parseAdditionalProps(filename, error)
     default:
       parseDefaultError(filename, error)
   }
@@ -64,4 +66,15 @@ const parsePattern: ParseError = (filename, error) => {
   }
 
   parseDefaultError(filename, error)
+}
+
+const parseAdditionalProps: ParseError = (filename, error) => {
+  const params = error.params as AdditionalPropertiesParams
+  const property = params.additionalProperty
+
+  throw new SchemaValidationError(
+    filename,
+    error,
+    `should NOT have additional property: \`${property}\``
+  )
 }
