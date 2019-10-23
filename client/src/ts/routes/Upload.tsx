@@ -8,6 +8,7 @@ import {
 import ms from 'ms'
 import React, { FunctionComponent, useRef, useState } from 'react'
 import { connect, MapStateToProps } from 'react-redux'
+import stringReplace from 'react-string-replace'
 import { FileInput } from '../components/FileInput'
 import { Input, TextareaInput } from '../components/Input'
 import { IState } from '../store'
@@ -318,25 +319,31 @@ const ValidationSwalContent: FunctionComponent<IValidationProps> = ({
   filename,
   path,
   message,
-}) => (
-  <div className='swal-validation-content'>
-    <p>
-      <b>
-        Error in <code>{filename}</code>
-      </b>
-    </p>
+}) => {
+  const parsed = stringReplace(message, /`(.+)`/g, match => (
+    <code>{match}</code>
+  ))
 
-    <p style={{ fontSize: '0.9em' }}>
-      {path === null ? (
-        <>Root {message}.</>
-      ) : (
-        <>
-          Field <code>{path}</code> {message}.
-        </>
-      )}
-    </p>
-  </div>
-)
+  return (
+    <div className='swal-validation-content'>
+      <p>
+        <b>
+          Error in <code>{filename}</code>
+        </b>
+      </p>
+
+      <p style={{ fontSize: '0.9em' }}>
+        {path === null ? (
+          <>Root {parsed}.</>
+        ) : (
+          <>
+            Field <code>{path}</code> {parsed}.
+          </>
+        )}
+      </p>
+    </div>
+  )
+}
 
 const mapStateToProps: MapStateToProps<IProps, {}, IState> = state => ({
   user: state.user.login,
