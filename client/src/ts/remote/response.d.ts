@@ -7,9 +7,13 @@ declare interface IResponse<T extends object> {
   nextPage: number | null
 }
 
-declare interface IRespError {
+interface IRespError {
   code: number
   identifier: string
+}
+
+declare interface IFieldsError extends IRespError {
+  identifier: 'ERR_INVALID_FIELDS'
 
   fields?: Array<{
     kind: string

@@ -90,7 +90,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
       push(`/beatmap/${resp.data.key}`)
     } catch (err) {
       setLoading(false)
-      const { response } = err as AxiosError<IRespError>
+      const { response } = err as AxiosError<IFieldsError>
       if (response === undefined) {
         setFileErr('Something went wrong! Try again later.')
         return
@@ -144,7 +144,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
         return
       }
 
-      switch (resp.identifier) {
+      switch (resp.identifier as string) {
         case 'ERR_DUPLICATE_BEATMAP':
           return setFileErr('Beatmap already exists!')
 
