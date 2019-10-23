@@ -310,7 +310,7 @@ const SwalContent: FunctionComponent = () => (
 
 interface IValidationProps {
   filename: string
-  path: string
+  path: string | null
   message: string
 }
 
@@ -327,7 +327,13 @@ const ValidationSwalContent: FunctionComponent<IValidationProps> = ({
     </p>
 
     <p style={{ fontSize: '0.9em' }}>
-      Field <code>{path}</code> {message}.
+      {path === null ? (
+        <>Root {message}.</>
+      ) : (
+        <>
+          Field <code>{path}</code> {message}.
+        </>
+      )}
     </p>
   </div>
 )

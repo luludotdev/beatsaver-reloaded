@@ -25,6 +25,6 @@ declare interface IValidationError extends IRespError {
   identifier: 'ERR_SCHEMA_VALIDATION_FAILED'
 
   filename: string
-  path: string
+  path: string | null
   message: string
 }

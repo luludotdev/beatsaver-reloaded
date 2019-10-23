@@ -2,7 +2,7 @@ import { ErrorObject, ValidateFunction } from 'ajv'
 
 export class SchemaValidationError extends Error {
   public readonly filename: string
-  public readonly path: string
+  public readonly path: string | null
   public readonly validationError: ErrorObject
 
   constructor(filename: string, error: ErrorObject, message: string) {
@@ -10,7 +10,7 @@ export class SchemaValidationError extends Error {
 
     this.name = 'SchemaValidationError'
     this.filename = filename
-    this.path = error.dataPath
+    this.path = error.dataPath === '' ? null : error.dataPath
     this.validationError = error
   }
 }
