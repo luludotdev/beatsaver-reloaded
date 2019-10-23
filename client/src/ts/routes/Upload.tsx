@@ -70,6 +70,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
       showCancelButton: true,
       title: 'Upload Agreement',
       type: 'warning',
+      width: '38em',
     })
 
     if (agreement.value !== true) {
@@ -287,7 +288,7 @@ const SwalContent: FunctionComponent = () => (
       beatmap, including but not limited to:
     </p>
 
-    <ul>
+    <ul style={{ textAlign: 'left' }}>
       <li>Music distribution rights</li>
       <li>Rights to the beatmap data (notes and lighting)</li>
       <li>
