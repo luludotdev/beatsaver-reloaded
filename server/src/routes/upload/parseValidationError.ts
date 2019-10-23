@@ -24,6 +24,8 @@ export const parseValidationError = (
 
   const [error] = errors
   switch (error.keyword) {
+    case 'pattern':
+      parsePattern(filename, error)
     default:
       parseDefaultError(filename, error)
   }
@@ -34,6 +36,32 @@ const parseDefaultError: ParseError = (filename, error) => {
   throw new SchemaValidationError(
     filename,
     error,
-    error.message || 'Unknown validation error.'
+    error.message || 'has an unknown validation error'
   )
+}
+
+const parsePattern: ParseError = (filename, error) => {
+  if (error.message === undefined) {
+    throw new SchemaValidationError(filename, error, 'is invalid')
+  }
+
+  // Version Validation
+  if (error.message.includes('^(0|[2-9]\\d*)')) {
+    throw new SchemaValidationError(filename, error, 'is invalid')
+  }
+
+  if (error.message.includes('^(.+)$')) {
+    throw new SchemaValidationError(filename, error, 'cannot be blank')
+  }
+
+  // File Regex
+  if (error.message.includes('com[1-9]')) {
+    throw new SchemaValidationError(
+      filename,
+      error,
+      'contains illegal filename characters'
+    )
+  }
+
+  parseDefaultError(filename, error)
 }
