@@ -51,7 +51,7 @@ export const parseBeatmap: (
   const validateInfo = await schemas.compile(SCHEMA_INFO)
   const infoValid = validateInfo(infoJSON)
   if (infoValid === false) {
-    parseValidationError('info.dat', validateInfo.errors)
+    parseValidationError(info.name, validateInfo.errors)
   }
 
   const coverEntry = zip.file(infoJSON._coverImageFilename)
