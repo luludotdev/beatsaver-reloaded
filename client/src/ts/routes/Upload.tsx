@@ -90,7 +90,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
       push(`/beatmap/${resp.data.key}`)
     } catch (err) {
       setLoading(false)
-      const { response } = err as AxiosError<IFieldsError>
+      const { response } = err as AxiosError<IFieldsError | IValidationError>
       if (response === undefined) {
         setFileErr('Something went wrong! Try again later.')
         return
@@ -126,7 +126,16 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
 
       const resp = response.data
 
-      if (
+      if (resp.identifier === 'ERR_SCHEMA_VALIDATION_FAILED') {
+        swal.fire({
+          html: <ValidationSwalContent {...resp} />,
+          showCancelButton: false,
+          title: 'Invalid Beatmap',
+          type: 'error',
+        })
+
+        return
+      } else if (
         resp.identifier === 'ERR_INVALID_FIELDS' &&
         resp.fields !== undefined
       ) {
@@ -293,6 +302,26 @@ const SwalContent: FunctionComponent = () => (
     <p>
       By clicking accept, you agree to grant BeatSaver rights to publish and
       distribute this beatmap and everything contained within the zip.
+    </p>
+  </div>
+)
+
+interface IValidationProps {
+  filename: string
+  path: string
+  message: string
+}
+
+const ValidationSwalContent: FunctionComponent<IValidationProps> = ({
+  filename,
+  path,
+  message,
+}) => (
+  <div className='swal-validation-content'>
+    <p>
+      <b>
+        Error in <code>{filename}</code>
+      </b>
     </p>
   </div>
 )

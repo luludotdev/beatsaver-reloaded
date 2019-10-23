@@ -20,3 +20,11 @@ declare interface IFieldsError extends IRespError {
     path: string
   }>
 }
+
+declare interface IValidationError extends IRespError {
+  identifier: 'ERR_SCHEMA_VALIDATION_FAILED'
+
+  filename: string
+  path: string
+  message: string
+}
