@@ -1,5 +1,6 @@
 import Ajv, { ValidateFunction } from 'ajv'
 import axios from './axios'
+import signale from './signale'
 
 let loaded = false
 const ajv = new Ajv()
@@ -22,8 +23,12 @@ const initialSync: () => Promise<void> = async () => {
 }
 
 export const sync: () => Promise<void> = async () => {
+  signale.start('Syncing schemas...')
+
   const keys = [...cache.keys()]
   await Promise.all(keys.map(x => loadSchema(x)))
+
+  signale.complete('Schema sync complete!')
 }
 
 export const compile: (
