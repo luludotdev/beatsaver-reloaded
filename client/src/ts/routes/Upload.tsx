@@ -323,6 +323,10 @@ const ValidationSwalContent: FunctionComponent<IValidationProps> = ({
         Error in <code>{filename}</code>
       </b>
     </p>
+
+    <p>
+      Field <code>{path}</code> {message}
+    </p>
   </div>
 )
 
