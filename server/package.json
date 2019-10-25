@@ -11,14 +11,14 @@
   },
   "scripts": {
     "test": "yarn run check && yarn run lint",
-    "check": "yarn run build --noEmit",
+    "check": "yarn run compile --noEmit",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "prebuild": "rimraf build",
-    "build": "ttsc",
-    "build:dev": "yarn run build --sourceMap",
-    "watch": "ttsc --watch",
-    "dev": "yarn run watch --sourceMap",
-    "dev:run": "nodemon . --watch build",
+    "compile": "ttsc",
+    "clean": "rimraf build",
+    "prebuild": "yarn run clean",
+    "build": "yarn run compile",
+    "dev": "yarn run build --watch",
+    "dev:run": "nodemon --inspect . --watch build",
     "modclean": "modclean -r"
   },
   "devDependencies": {
@@ -91,6 +91,7 @@
     "read-pkg-up": "^6.0.0",
     "rimraf": "^3.0.0",
     "signale": "^1.4.0",
+    "source-map-support": "^0.5.13",
     "static-koa-router": "^1.0.3",
     "tslib": "^1.10.0",
     "uuid": "^3.3.2"

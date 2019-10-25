@@ -1,3 +1,5 @@
+import 'source-map-support/register'
+
 import mongoose from 'mongoose'
 import {
   ELASTIC_DISABLED,

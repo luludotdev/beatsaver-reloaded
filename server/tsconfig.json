@@ -12,6 +12,7 @@
     "removeComments": true,
     "downlevelIteration": true,
     "importHelpers": true,
+    "sourceMap": true,
     "outDir": "./build",
     "rootDir": "./src",
     "baseUrl": ".",
