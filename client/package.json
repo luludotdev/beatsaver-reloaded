@@ -39,7 +39,7 @@
     "@types/koa-router": "^7.0.42",
     "@types/koa-send": "^4.1.2",
     "@types/koa-static": "^4.0.1",
-    "@types/mongoose": "^5.5.12",
+    "@types/mongoose": "^5.5.23",
     "@types/ms": "^0.7.30",
     "@types/parcel-env": "^0.0.0",
     "@types/react": "^16.9.1",
@@ -95,7 +95,7 @@
     "koa-router": "^7.4.0",
     "koa-send": "^5.0.0",
     "koa-static": "^5.0.0",
-    "mongoose": "^5.6.9",
+    "mongoose": "^5.7.7",
     "signale": "^1.4.0"
   },
   "browserslist": [
