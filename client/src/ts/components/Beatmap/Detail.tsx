@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios'
 import chunk from 'chunk'
+import clsx from 'clsx'
 import { Push, push as pushFn } from 'connected-react-router'
 import React, {
   FunctionComponent,
@@ -269,9 +270,11 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
         )}
 
         <div
-          className={`box has-buttons-bottom ${
-            isUploader ? 'has-buttons-top' : ''
-          }`}
+          className={clsx(
+            'box',
+            'has-buttons-bottom',
+            isUploader && 'has-buttons-top'
+          )}
         >
           <div className='left'>
             <div className='metadata'>
@@ -349,13 +352,10 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
           <a href={`beatsaver://${map.key}`}>OneClick&trade; Install</a>
           <a
             href='/'
-            className={
-              !preview.loading
-                ? undefined
-                : preview.key === map.key
-                ? 'loading disabled'
-                : 'loading'
-            }
+            className={clsx(
+              preview.loading && preview.key === map.key && 'loading',
+              preview.loading && 'disabled'
+            )}
             onClick={e => {
               e.preventDefault()
 

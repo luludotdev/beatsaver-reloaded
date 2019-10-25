@@ -52,6 +52,7 @@
     "autoprefixer": "^9.6.1",
     "axios": "^0.19.0",
     "chunk": "^0.0.2",
+    "clsx": "^1.0.4",
     "connected-react-router": "^6.5.2",
     "dateformat": "^3.0.3",
     "history": "^4.9.0",

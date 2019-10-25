@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { connect, MapStateToProps } from 'react-redux'
@@ -114,13 +115,10 @@ const BeatmapResult: FunctionComponent<IProps> = ({
           <div className='is-button-group'>
             <a
               href='/'
-              className={
-                !preview.loading
-                  ? undefined
-                  : preview.key === map.key
-                  ? 'loading disabled'
-                  : 'disabled'
-              }
+              className={clsx(
+                preview.loading && preview.key === map.key && 'loading',
+                preview.loading && 'disabled'
+              )}
               onClick={e => {
                 e.preventDefault()
 

@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios'
+import clsx from 'clsx'
 import {
   Push,
   push as pushFn,
@@ -261,7 +262,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
       </details>
 
       <button
-        className={`button is-fullwidth ${loading ? 'is-loading' : ''}`}
+        className={clsx('button', 'is-fullwidth', loading && 'is-loading')}
         disabled={loading}
         onClick={() => submit()}
       >

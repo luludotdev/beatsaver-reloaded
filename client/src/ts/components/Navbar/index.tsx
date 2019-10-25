@@ -7,6 +7,7 @@ import { NavbarDivider } from './NavbarDivider'
 import { NavbarDropdown, NavbarDropdownDivider } from './NavbarDropdown'
 import { NavbarClickableItem, NavbarItem, NavbarItemExt } from './NavbarItem'
 
+import clsx from 'clsx'
 import Logo from '../../../images/beat_saver_logo_white.png'
 
 interface IProps {
@@ -41,7 +42,7 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout, push }) => {
           <a
             role='button'
             onClick={e => toggle(e)}
-            className={`navbar-burger${active ? ' is-active' : ''}`}
+            className={clsx('navbar-burger', active && 'is-active')}
             aria-label='menu'
             aria-expanded={active.valueOf()}
           >
@@ -51,7 +52,7 @@ const Navbar: FunctionComponent<IProps> = ({ user, logout, push }) => {
           </a>
         </div>
 
-        <div className={`navbar-menu${active ? ' is-active' : ''}`}>
+        <div className={clsx('navbar-menu', active && 'is-active')}>
           <div className='navbar-start'>
             <NavbarItem setActive={setActive} to='/browse/hot'>
               Hot

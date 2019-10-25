@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios'
+import clsx from 'clsx'
 import { push as pushFn } from 'connected-react-router'
 import React, { FunctionComponent, useState } from 'react'
 import Helmet from 'react-helmet'
@@ -89,7 +90,7 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
       />
 
       <button
-        className={`button is-fullwidth ${loading ? 'is-loading' : ''}`}
+        className={clsx('button', 'is-fullwidth', loading && 'is-loading')}
         disabled={loading || !username || !password}
         onClick={() => submit()}
       >

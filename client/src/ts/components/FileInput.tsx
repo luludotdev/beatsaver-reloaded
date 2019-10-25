@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import React, { ChangeEvent, FunctionComponent } from 'react'
 
 interface IProps {
@@ -29,7 +30,7 @@ export const FileInput: FunctionComponent<IProps> = ({
   return (
     <div className='field'>
       <label
-        className={`label ${errorLabel ? 'has-text-danger' : ''}`}
+        className={clsx('label', errorLabel && 'has-text-danger')}
         data-error={errorLabel ? `${label ? ' - ' : ''}${errorLabel}` : null}
       >
         {label}
