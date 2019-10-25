@@ -1,0 +1,26 @@
+name: Documentation CI
+on:
+  push:
+    paths:
+    - 'docs/*'
+    - 'docs/**/*'
+    - '.github/workflows/docs.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build Docker image
+      run: |
+        DOCKER_REPO=`echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'`;
+        DOCKER_TAG=`git rev-parse --short HEAD`;
+        docker build . --file Dockerfile --build-arg VCS_REF="$DOCKER_TAG" --tag "docker.pkg.github.com/$DOCKER_REPO/docs:$DOCKER_TAG"
+      working-directory: ./docs
+    - name: Login to Docker Registry
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com --username lolpants --password-stdin
+    - name: Push to Docker Registry
+      run: |
+        DOCKER_REPO=`echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'`;
+        docker push "docker.pkg.github.com/$DOCKER_REPO/docs"
+      if: github.ref == 'refs/heads/master'
