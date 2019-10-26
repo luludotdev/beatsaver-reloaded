@@ -61,7 +61,7 @@ const parsePattern: ParseError = (filename, error) => {
     throw new SchemaValidationError(
       filename,
       error,
-      'contains illegal filename characters'
+      'contains an invalid filename'
     )
   }
 
