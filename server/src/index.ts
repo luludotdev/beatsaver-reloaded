@@ -17,9 +17,13 @@ import { app } from './koa'
 import './tasks'
 
 if (IS_DEV) signale.warn('Running in development environment!')
-mongoose.set('useCreateIndex', true)
+
 mongoose
-  .connect(MONGO_URL, { useNewUrlParser: true })
+  .connect(MONGO_URL, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     signale.info(`Connected to MongoDB ${IS_DEV ? 'Instance' : 'Cluster'}`)
     return Promise.all([awaitCacheDB(), awaitRateLimitDB()])

@@ -37,9 +37,12 @@ app.use(
 router.get('/beatmap/:key', middleware)
 router.get('*', async ctx => send(ctx, htmlPath, { root: '/', maxAge: -1 }))
 
-mongoose.set('useCreateIndex', true)
 mongoose
-  .connect(MONGO_URL, { useNewUrlParser: true })
+  .connect(MONGO_URL, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     app
       .use(router.routes())
