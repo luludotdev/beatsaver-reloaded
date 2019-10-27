@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import Helmet from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps } from 'react-router-dom'
 import { BeatmapList } from '../components/Beatmap'
 import { Loader } from '../components/Loader'
 import { TextPage } from '../components/TextPage'

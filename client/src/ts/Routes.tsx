@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react'
-import { Route, Switch } from 'react-router'
+import { Route, Switch } from 'react-router-dom'
 
 import { Beatmap } from './routes/Beatmap'
 import { Downloads, Hot, Latest, Plays, Rating } from './routes/Browse'

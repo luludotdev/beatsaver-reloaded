@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react'
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps } from 'react-router-dom'
 import { BeatmapDetail } from '../components/Beatmap'
 
 interface IParams {

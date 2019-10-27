@@ -1,7 +1,7 @@
 import { replace as replaceFn } from 'connected-react-router'
 import { FunctionComponent } from 'react'
 import { connect } from 'react-redux'
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps } from 'react-router-dom'
 
 interface IProps {
   replace: typeof replaceFn
