@@ -134,7 +134,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
           showCancelButton: false,
           title: 'Invalid Beatmap',
           type: 'error',
-          width: '44em',
+          width: '45em',
         })
 
         return setFileErr('Beatmap is invalid!')
