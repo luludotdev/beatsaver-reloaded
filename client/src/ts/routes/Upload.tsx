@@ -9,6 +9,7 @@ import {
 import ms from 'ms'
 import React, { FunctionComponent, useRef, useState } from 'react'
 import { connect, MapStateToProps } from 'react-redux'
+import stringReplace from 'react-string-replace'
 import { FileInput } from '../components/FileInput'
 import { Input, TextareaInput } from '../components/Input'
 import { IState } from '../store'
@@ -71,6 +72,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
       showCancelButton: true,
       title: 'Upload Agreement',
       type: 'warning',
+      width: '38em',
     })
 
     if (agreement.value !== true) {
@@ -91,7 +93,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
       push(`/beatmap/${resp.data.key}`)
     } catch (err) {
       setLoading(false)
-      const { response } = err as AxiosError<IRespError>
+      const { response } = err as AxiosError<IFieldsError | IValidationError>
       if (response === undefined) {
         setFileErr('Something went wrong! Try again later.')
         return
@@ -127,7 +129,17 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
 
       const resp = response.data
 
-      if (
+      if (resp.identifier === 'ERR_SCHEMA_VALIDATION_FAILED') {
+        swal.fire({
+          html: <ValidationSwalContent {...resp} />,
+          showCancelButton: false,
+          title: 'Invalid Beatmap',
+          type: 'error',
+          width: '45em',
+        })
+
+        return setFileErr('Beatmap is invalid!')
+      } else if (
         resp.identifier === 'ERR_INVALID_FIELDS' &&
         resp.fields !== undefined
       ) {
@@ -145,7 +157,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
         return
       }
 
-      switch (resp.identifier) {
+      switch (resp.identifier as string) {
         case 'ERR_DUPLICATE_BEATMAP':
           return setFileErr('Beatmap already exists!')
 
@@ -279,7 +291,7 @@ const SwalContent: FunctionComponent = () => (
       beatmap, including but not limited to:
     </p>
 
-    <ul>
+    <ul style={{ textAlign: 'left' }}>
       <li>Music distribution rights</li>
       <li>Rights to the beatmap data (notes and lighting)</li>
       <li>
@@ -297,6 +309,42 @@ const SwalContent: FunctionComponent = () => (
     </p>
   </div>
 )
+
+interface IValidationProps {
+  filename: string
+  path: string | null
+  message: string
+}
+
+const ValidationSwalContent: FunctionComponent<IValidationProps> = ({
+  filename,
+  path,
+  message,
+}) => {
+  const parsed = stringReplace(message, /`(.+)`/g, match => (
+    <code>{match}</code>
+  ))
+
+  return (
+    <div className='swal-validation-content'>
+      <p>
+        <b>
+          Error in <code>{filename}</code>
+        </b>
+      </p>
+
+      <p style={{ fontSize: '0.9em' }}>
+        {path === null ? (
+          <>Root {parsed}.</>
+        ) : (
+          <>
+            Field <code>{path}</code> {parsed}.
+          </>
+        )}
+      </p>
+    </div>
+  )
+}
 
 const mapStateToProps: MapStateToProps<IProps, {}, IState> = state => ({
   user: state.user.login,

@@ -1,3 +1,7 @@
 .mono {
   font-family: 'Fira Code', 'Fira Mono', monospace;
 }
+
+.swal-validation-content p:not(:last-child) {
+  margin-bottom: 14px;
+}

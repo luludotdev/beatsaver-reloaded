@@ -39,3 +39,9 @@ export const FILE_TYPE_BLACKLIST = [
   'application/zip',
   'text/calendar',
 ]
+
+const SCHEMA_BASE_URI =
+  'https://raw.githubusercontent.com/lolPants/beatmap-schemas/master/schemas'
+
+export const SCHEMA_INFO = `${SCHEMA_BASE_URI}/info.schema.json`
+export const SCHEMA_DIFFICULTY = `${SCHEMA_BASE_URI}/difficulty.schema.json`

@@ -1,1 +1,2 @@
 import './dumps'
+import './syncSchemas'

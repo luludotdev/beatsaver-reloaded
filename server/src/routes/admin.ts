@@ -1,6 +1,7 @@
 import passport from 'koa-passport'
 import Router from 'koa-router'
 import { Beatmap, IUserModel } from '~mongo/models'
+import * as schemas from '~utils/schemas'
 import signale from '~utils/signale'
 
 const router = new Router({
@@ -61,6 +62,11 @@ router.post('/elastic-sync/:force?', async ctx => {
   ctx.status = 204
 
   elasticSync(force)
+})
+
+router.post('/sync-schemas', async ctx => {
+  await schemas.sync()
+  return (ctx.status = 204)
 })
 
 export { router as adminRouter }

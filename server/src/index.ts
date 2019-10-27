@@ -1,6 +1,7 @@
 import 'source-map-support/register'
 
 import mongoose from 'mongoose'
+import { SCHEMA_DIFFICULTY, SCHEMA_INFO } from '~constants'
 import {
   ELASTIC_DISABLED,
   ELASTIC_HOST,
@@ -12,6 +13,7 @@ import {
 import { awaitCacheDB, awaitRateLimitDB } from '~redis'
 import '~strategies'
 import axios from '~utils/axios'
+import * as schemas from '~utils/schemas'
 import signale, { panic } from '~utils/signale'
 import { app } from './koa'
 import './tasks'
@@ -39,6 +41,12 @@ mongoose
       process.exit(1)
     }
   })
+  .then(() =>
+    Promise.all([
+      schemas.register(SCHEMA_INFO),
+      schemas.register(SCHEMA_DIFFICULTY),
+    ])
+  )
   .then(() => {
     app.listen(PORT).on('listening', () => {
       signale.start(`Listening over HTTP on port ${PORT}`)

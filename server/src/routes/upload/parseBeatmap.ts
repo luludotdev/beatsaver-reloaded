@@ -3,8 +3,15 @@ import fileType from 'file-type'
 import imageSize from 'image-size'
 import JSZip from 'jszip'
 import { parse, posix } from 'path'
-import { FILE_EXT_WHITELIST, FILE_TYPE_BLACKLIST } from '~constants'
+import {
+  FILE_EXT_WHITELIST,
+  FILE_TYPE_BLACKLIST,
+  SCHEMA_DIFFICULTY,
+  SCHEMA_INFO,
+} from '~constants'
 import { validJSON } from '~utils/json'
+import * as schemas from '~utils/schemas'
+import { parseValidationError } from './parseValidationError'
 
 import {
   ERR_BEATMAP_AUDIO_INVALID,
@@ -15,6 +22,7 @@ import {
   ERR_BEATMAP_COVER_NOT_FOUND,
   ERR_BEATMAP_COVER_NOT_SQUARE,
   ERR_BEATMAP_COVER_TOO_SMOL,
+  ERR_BEATMAP_DIFF_INVALID,
   ERR_BEATMAP_DIFF_NOT_FOUND,
   ERR_BEATMAP_INFO_INVALID,
   ERR_BEATMAP_INFO_NOT_FOUND,
@@ -39,6 +47,12 @@ export const parseBeatmap: (
   let infoDAT = await info.async('text')
   if (!validJSON(infoDAT)) throw ERR_BEATMAP_INFO_INVALID
   const infoJSON: IBeatmapInfo = JSON.parse(infoDAT)
+
+  const validateInfo = await schemas.compile(SCHEMA_INFO)
+  const infoValid = validateInfo(infoJSON)
+  if (infoValid === false) {
+    parseValidationError(info.name, validateInfo.errors)
+  }
 
   const coverEntry = zip.file(infoJSON._coverImageFilename)
   if (coverEntry === null) {
@@ -96,6 +110,23 @@ export const parseBeatmap: (
       throw ERR_BEATMAP_DIFF_NOT_FOUND(diff._beatmapFilename)
     }
   }
+
+  await Promise.all(
+    difficulties.map(async diff => {
+      const diffEntry = zip.file(diff._beatmapFilename)
+      const diffDAT = await diffEntry.async('text')
+      if (!validJSON(diffDAT)) {
+        throw ERR_BEATMAP_DIFF_INVALID(diff._beatmapFilename)
+      }
+
+      const diffJSON: any = JSON.parse(diffDAT)
+      const validateDiff = await schemas.compile(SCHEMA_DIFFICULTY)
+      const diffValid = validateDiff(diffJSON)
+      if (diffValid === false) {
+        parseValidationError(diff._beatmapFilename, validateDiff.errors)
+      }
+    })
+  )
 
   const diffBuffers = await Promise.all(
     difficulties.map(x => zip.file(x._beatmapFilename).async('nodebuffer'))

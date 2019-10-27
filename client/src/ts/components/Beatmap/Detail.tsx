@@ -175,7 +175,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
       await axios.post(`/manage/edit/${map.key}`, { name, description })
       loadMap(() => setEditing(false))
     } catch (err) {
-      const { response } = err as AxiosError<IRespError>
+      const { response } = err as AxiosError<IFieldsError>
       const genericError = () => {
         swal.fire({
           title: 'Edit Failed',
