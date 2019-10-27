@@ -13,13 +13,15 @@ const intervals: readonly IInterval[] = [
   { label: 'day', seconds: 60 * 60 * 24 },
   { label: 'hour', seconds: 60 * 60 },
   { label: 'minute', seconds: 60 },
-  { label: 'second', seconds: 0 },
+  { label: 'second', seconds: 1 },
 ]
 
 const timeSince = (date: Date | string) => {
   const d = new Date(date)
 
   const seconds = Math.floor((Date.now() - d.getTime()) / 1000)
+  if (seconds === 0) return 'Just now'
+
   const interval = intervals.find(i => i.seconds < seconds)
   if (interval === undefined) return d.toISOString()
 
