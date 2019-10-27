@@ -24,7 +24,7 @@ import {
   StopPreview,
   stopPreview as stopPreviewFn,
 } from '../../store/audio'
-import { IUser, userReducer } from '../../store/user'
+import { IUser } from '../../store/user'
 import { axios } from '../../utils/axios'
 import { parseCharacteristics } from '../../utils/characteristics'
 import swal from '../../utils/swal'

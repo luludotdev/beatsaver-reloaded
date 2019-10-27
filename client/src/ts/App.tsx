@@ -1,4 +1,4 @@
-import React, { FunctionComponent, Suspense } from 'react'
+import React, { FunctionComponent } from 'react'
 import { Boundary } from './components/Boundary'
 import { Footer } from './components/Footer'
 import Navbar from './components/Navbar'
