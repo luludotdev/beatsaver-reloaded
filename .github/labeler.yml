@@ -1,0 +1,12 @@
+client:
+  - client/**/*
+
+server:
+  - server/**/*
+
+docs:
+  - docs/**/*
+
+dependencies:
+  - client/yarn.lock
+  - server/yarn.lock

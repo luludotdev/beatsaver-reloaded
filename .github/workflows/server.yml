@@ -1,0 +1,47 @@
+name: Server CI
+on:
+  push:
+    paths:
+    - 'server/*'
+    - 'server/**/*'
+    - '.github/workflows/server.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Install and test
+      run: |
+        yarn install --frozen-lockfile
+        yarn test
+      working-directory: ./server
+    - name: Annotate TSLint
+      if: failure()
+      uses: mooyoul/tslint-actions@v1.1.1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        pattern: 'server/src/**/*.ts'
+        config: 'server/tslint.json'
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build Docker image
+      run: |
+        DOCKER_REPO=`echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'`;
+        DOCKER_TAG=`git rev-parse --short HEAD`;
+        docker build . --file Dockerfile --build-arg VCS_REF="$DOCKER_TAG" --tag "docker.pkg.github.com/$DOCKER_REPO/server:$DOCKER_TAG"
+      working-directory: ./server
+    - name: Login to Docker Registry
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com --username lolpants --password-stdin
+    - name: Push to Docker Registry
+      run: |
+        DOCKER_REPO=`echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'`;
+        docker push "docker.pkg.github.com/$DOCKER_REPO/server"
+      if: github.ref == 'refs/heads/master'
