@@ -1,6 +1,7 @@
 import passport from 'koa-passport'
 import Router from 'koa-router'
 import { Beatmap, IUserModel } from '~mongo/models'
+import { cacheDB, rateLimitDB } from '~redis'
 import * as schemas from '~utils/schemas'
 import signale from '~utils/signale'
 
@@ -66,6 +67,16 @@ router.post('/elastic-sync/:force?', async ctx => {
 
 router.post('/sync-schemas', async ctx => {
   await schemas.sync()
+  return (ctx.status = 204)
+})
+
+router.post('/flush-cache', async ctx => {
+  await cacheDB.flushdb()
+  return (ctx.status = 204)
+})
+
+router.post('/reset-rate-limits', async ctx => {
+  await rateLimitDB.flushdb()
   return (ctx.status = 204)
 })
 
