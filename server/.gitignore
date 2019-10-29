@@ -38,3 +38,6 @@ build
 # CDN Folder
 cdn
 dumps
+
+# Legal Templates
+legal
