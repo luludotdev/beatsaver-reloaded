@@ -5,6 +5,7 @@ import { Beatmap } from './routes/Beatmap'
 import { Downloads, Hot, Latest, Plays, Rating } from './routes/Browse'
 import { Index } from './routes/Index'
 import { Legacy } from './routes/Legacy'
+import { License } from './routes/License'
 import { Login } from './routes/Login'
 import { NotFound } from './routes/NotFound'
 import { Register } from './routes/Register'
@@ -28,6 +29,8 @@ export const Routes: FunctionComponent = () => (
     <Route path='/auth/login' component={Login} />
     <Route path='/auth/register' component={Register} />
     <Route path='/user/upload' component={Upload} />
+
+    <Route path='/legal/license' component={License} />
 
     <Route exact path='/' component={Index} />
     <Route component={NotFound} />

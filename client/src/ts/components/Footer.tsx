@@ -17,6 +17,9 @@ export const Footer: FunctionComponent = () => (
             GitHub
           </ExtLink>
         </li>
+        <li>
+          <Link to='/legal/license'>License</Link>
+        </li>
       </ul>
     </div>
   </footer>
