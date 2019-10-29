@@ -16,9 +16,9 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 
 COPY package.json yarn.lock ./
-RUN apk add --no-cache tini bash git && \
+RUN apk add --no-cache tini bash git openssh make gcc g++ python && \
   yarn install --frozen-lockfile --production && \
-  apk del bash git
+  apk del bash git openssh make gcc g++ python
 
 USER node
 COPY --from=builder --chown=node:node /usr/app/dist/client ./public
