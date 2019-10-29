@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { Route, Switch } from 'react-router-dom'
 
+import { DMCAPage, PrivacyPage } from './components/LegalPage'
 import { Beatmap } from './routes/Beatmap'
 import { Downloads, Hot, Latest, Plays, Rating } from './routes/Browse'
 import { Index } from './routes/Index'
@@ -30,6 +31,8 @@ export const Routes: FunctionComponent = () => (
     <Route path='/auth/register' component={Register} />
     <Route path='/user/upload' component={Upload} />
 
+    <Route path='/legal/dmca' component={DMCAPage} />
+    <Route path='/legal/privacy' component={PrivacyPage} />
     <Route path='/legal/license' component={License} />
 
     <Route exact path='/' component={Index} />
