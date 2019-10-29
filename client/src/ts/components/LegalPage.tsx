@@ -11,13 +11,21 @@ interface IProps {
 }
 
 type LoadState = 'loading' | 'loaded' | 'errored' | 'not-implemented'
+const notImplemented = '@@loadState/NOT_IMPLEMENTED'
 
 export const LegalPage: FunctionComponent<IProps> = ({ title, url }) => {
   const stored = sessionStorage.getItem(`legal:${url}`)
 
-  const [content, setContent] = useState<string>(stored || '')
+  const [content, setContent] = useState<string>(
+    stored === null || stored === null ? '' : stored
+  )
+
   const [state, setState] = useState<LoadState>(
-    stored === null ? 'loading' : 'loaded'
+    stored === null
+      ? 'loading'
+      : stored === notImplemented
+      ? 'not-implemented'
+      : 'loaded'
   )
 
   useEffect(() => {
@@ -34,8 +42,12 @@ export const LegalPage: FunctionComponent<IProps> = ({ title, url }) => {
         const err = e as AxiosError
         const resp = err.response
 
-        if (resp && resp.status === 501) setState('not-implemented')
-        else setState('errored')
+        if (resp && resp.status === 501) {
+          sessionStorage.setItem(`legal:${url}`, notImplemented)
+          setState('not-implemented')
+        } else {
+          setState('errored')
+        }
       })
   }, [title, url])
 
