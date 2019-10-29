@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios'
+import Markdown from 'markdown-to-jsx'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { NotFound } from '../routes/NotFound'
 import { axios } from '../utils/axios'
@@ -61,7 +62,13 @@ export const LegalPage: FunctionComponent<IProps> = ({ title, url }) => {
     )
   }
 
-  return <TextPage title={title}>{/* TODO */}</TextPage>
+  return (
+    <TextPage title={title}>
+      <div className='content'>
+        <Markdown>{content}</Markdown>
+      </div>
+    </TextPage>
+  )
 }
 
 export const DMCAPage = () => <LegalPage title='DMCA' url='dmca' />
