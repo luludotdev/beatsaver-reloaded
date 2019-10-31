@@ -88,7 +88,7 @@ router.get('/rating/:page?', routeLimiter('/rating'), mapCache, async ctx => {
 })
 
 const detailRL = rateLimit({
-  duration: 10 * 60 * 1000,
+  duration: 5 * 1000,
   max: 50,
 })
 
