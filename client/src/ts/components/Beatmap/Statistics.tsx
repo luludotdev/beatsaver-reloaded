@@ -2,17 +2,33 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import { formatDate } from '../../utils/formatDate'
 import { Statistic } from './Statistic'
 
-interface IProps {
-  map: IBeatmap
+interface IStatsProps {
+  map: IMapStats
+  uploaded: IBeatmap['uploaded']
+}
 
+interface IFullProps {
+  map: IBeatmap
+  uploaded?: undefined
+}
+
+interface ICommonProps {
   hideTime?: boolean
 }
 
-export const BeatmapStats: FunctionComponent<IProps> = ({ map, hideTime }) => {
-  const [dateStr, setDateStr] = useState<string>(formatDate(map.uploaded))
+type IProps = (IStatsProps | IFullProps) & ICommonProps
+export const BeatmapStats: FunctionComponent<IProps> = ({
+  map,
+  uploaded: uploadedRaw,
+  hideTime,
+}) => {
+  const uploaded = isFullMap(map) ? map.uploaded : uploadedRaw
+  if (uploaded === undefined) throw new Error('Uploaded cannot be null!')
+
+  const [dateStr, setDateStr] = useState<string>(formatDate(uploaded))
   useEffect(() => {
     const i = setInterval(() => {
-      const newStr = formatDate(map.uploaded)
+      const newStr = formatDate(uploaded)
       if (dateStr !== newStr) setDateStr(newStr)
     }, 1000 * 30)
 
@@ -27,8 +43,8 @@ export const BeatmapStats: FunctionComponent<IProps> = ({ map, hideTime }) => {
         <Statistic
           type='text'
           emoji='🕔'
-          text={formatDate(map.uploaded)}
-          hover={new Date(map.uploaded).toISOString()}
+          text={formatDate(uploaded)}
+          hover={new Date(uploaded).toISOString()}
         />
       )}
 
@@ -63,4 +79,9 @@ export const BeatmapStats: FunctionComponent<IProps> = ({ map, hideTime }) => {
       />
     </ul>
   )
+}
+
+// @ts-ignore
+const isFullMap: (map: IMapStats | IBeatmap) => map is IBeatmap = map => {
+  return (map as IBeatmap).downloadURL !== undefined
 }

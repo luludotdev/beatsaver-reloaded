@@ -78,6 +78,11 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
     }
   )
 
+  const { data: stats, error: statsError } = useSWR<IMapStats, AxiosError>(
+    `/stats/key/${mapKey}`,
+    axiosSWR
+  )
+
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null)
   useEffect(() => {
     if (!editing) {
@@ -108,8 +113,8 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
     setTimeout(() => setCopied(false), 1000)
   }
 
-  if (mapError) {
-    const error = mapError as AxiosError
+  if (mapError || statsError) {
+    const error = (mapError || statsError) as AxiosError
     if (error.response && error.response.status === 404) {
       return <NotFound />
     }
@@ -122,7 +127,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
     )
   }
 
-  if (!map) return <Loader />
+  if (!map || !stats) return <Loader />
   const isUploader = user && (user._id === map.uploader._id || user.admin)
 
   const deleteMap = async (e: MouseEvent<HTMLAnchorElement>) => {
@@ -331,7 +336,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
           </div>
 
           <div className='right'>
-            <BeatmapStats map={map} />
+            <BeatmapStats map={stats} uploaded={map.uploaded} />
           </div>
         </div>
 
