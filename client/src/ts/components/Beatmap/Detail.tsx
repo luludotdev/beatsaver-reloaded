@@ -14,6 +14,7 @@ import Linkify from 'react-linkify'
 import nl2br from 'react-nl2br'
 import { connect, MapStateToProps } from 'react-redux'
 import { Link } from 'react-router-dom'
+import useSWR, { mutate, trigger } from 'swr'
 import { downloadBeatmap, DownloadError } from '../../remote/download'
 import { NotFound } from '../../routes/NotFound'
 import { IState } from '../../store'
@@ -25,7 +26,7 @@ import {
   stopPreview as stopPreviewFn,
 } from '../../store/audio'
 import { IUser } from '../../store/user'
-import { axios } from '../../utils/axios'
+import { axios, axiosSWR } from '../../utils/axios'
 import { parseCharacteristics } from '../../utils/characteristics'
 import swal from '../../utils/swal'
 import { ExtLink } from '../ExtLink'
@@ -60,11 +61,23 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
   previewBeatmap,
   stopPreview,
 }) => {
-  const [map, setMap] = useState<IBeatmap | undefined | Error>(undefined)
-
   const [editing, setEditing] = useState<boolean>(false)
   const [name, setName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
+
+  const { data: map, error: mapError } = useSWR<IBeatmap, AxiosError>(
+    `/maps/detail/${mapKey}`,
+    axiosSWR,
+    {
+      onSuccess: (resp: IBeatmap) => {
+        if (editing === false) {
+          setName(resp.name)
+          setDescription(resp.description)
+        }
+      },
+    }
+  )
+
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null)
   useEffect(() => {
     if (!editing) {
@@ -95,29 +108,8 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
     setTimeout(() => setCopied(false), 1000)
   }
 
-  const loadMap = (callback?: () => any) =>
-    axios
-      .get<IBeatmap>(`/maps/detail/${mapKey}`)
-      .then(resp => {
-        setMap(resp.data)
-        setName(resp.data.name)
-        setDescription(resp.data.description)
-
-        if (callback) callback()
-      })
-      .catch(err => setMap(err))
-
-  useEffect(() => {
-    loadMap()
-
-    return () => {
-      setMap(undefined)
-    }
-  }, [mapKey])
-
-  if (map === undefined) return <Loader />
-  if (map instanceof Error) {
-    const error = map as AxiosError
+  if (mapError) {
+    const error = mapError as AxiosError
     if (error.response && error.response.status === 404) {
       return <NotFound />
     }
@@ -130,6 +122,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
     )
   }
 
+  if (!map) return <Loader />
   const isUploader = user && (user._id === map.uploader._id || user.admin)
 
   const deleteMap = async (e: MouseEvent<HTMLAnchorElement>) => {
@@ -169,11 +162,16 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
     save: boolean = false
   ) => {
     e.preventDefault()
-    if (!save) return loadMap(() => setEditing(false))
+    if (!save) {
+      setEditing(false)
+      return trigger(`/maps/detail/${mapKey}`)
+    }
 
     try {
       await axios.post(`/manage/edit/${map.key}`, { name, description })
-      loadMap(() => setEditing(false))
+
+      setEditing(false)
+      return mutate(`/maps/detail/${mapKey}`, { ...map, name, description })
     } catch (err) {
       const { response } = err as AxiosError<IFieldsError>
       const genericError = () => {
