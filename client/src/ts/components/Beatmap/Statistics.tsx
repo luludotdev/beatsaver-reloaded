@@ -27,7 +27,7 @@ export const BeatmapStats: FunctionComponent<IProps> = ({ map, hideTime }) => {
         <Statistic
           type='text'
           emoji='🕔'
-          text={formatDate(map.uploaded)}
+          text={dateStr}
           hover={new Date(map.uploaded).toISOString()}
         />
       )}
