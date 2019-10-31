@@ -5,6 +5,11 @@ export const axios: AxiosInstance = Axios.create({
   baseURL: IS_DEV ? 'http://localhost:3000' : '/api',
 })
 
+export const axiosSWR = async (key: string) => {
+  const resp = await axios.get(key)
+  return resp.data
+}
+
 axios.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token')

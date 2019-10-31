@@ -30,22 +30,24 @@ declare interface IBeatmap {
     characteristics: IBeatmapCharacteristic[]
   }
 
-  stats: {
-    downloads: number
-    plays: number
-
-    upVotes: number
-    downVotes: number
-
-    rating: number
-    heat: number
-  }
+  stats: IStats
 
   downloadURL: string
   directDownload: string
   coverURL: string
 
   hash: string
+}
+
+declare interface IStats {
+  downloads: number
+  plays: number
+
+  upVotes: number
+  downVotes: number
+
+  rating: number
+  heat: number
 }
 
 declare interface IBeatmapCharacteristic {
@@ -66,6 +68,14 @@ declare interface IDifficulty {
   notes: number
   obstacles: number
   njs: number
+}
+
+declare interface IMapStats {
+  _id: IBeatmap['_id']
+  key: IBeatmap['key']
+  hash: IBeatmap['hash']
+
+  stats: IStats
 }
 
 declare type IBeatmapResponse = IResponse<IBeatmap>
