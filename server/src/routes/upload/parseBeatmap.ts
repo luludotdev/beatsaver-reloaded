@@ -43,6 +43,7 @@ export const parseBeatmap: (
 
   const info = zip.file('info.dat') || zip.file('Info.dat')
   if (info === null) throw ERR_BEATMAP_INFO_NOT_FOUND
+  const infoDATName = info.name
 
   let infoDAT = await info.async('text')
   if (!validJSON(infoDAT)) throw ERR_BEATMAP_INFO_INVALID
@@ -96,8 +97,8 @@ export const parseBeatmap: (
     infoJSON._songFilename = `${name}.egg`
     infoDAT = `${JSON.stringify(infoJSON, null, 2)}\n`
 
-    zip.remove('info.dat')
-    zip.file('info.dat', infoDAT)
+    zip.remove(infoDATName)
+    zip.file(infoDATName, infoDAT)
   }
 
   const difficulties = ([] as IDifficultyBeatmap[]).concat(
