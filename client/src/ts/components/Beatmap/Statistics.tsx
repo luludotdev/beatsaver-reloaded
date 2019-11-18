@@ -5,11 +5,13 @@ import { Statistic } from './Statistic'
 interface IStatsProps {
   map: IMapStats
   uploaded: IBeatmap['uploaded']
+  songDuration: IBeatmap['metadata']['songDuration']
 }
 
 interface IFullProps {
   map: IBeatmap
   uploaded?: undefined
+  songDuration?: undefined
 }
 
 interface ICommonProps {
@@ -21,9 +23,11 @@ export const BeatmapStats: FunctionComponent<IProps> = ({
   map,
   uploaded: uploadedRaw,
   hideTime,
+  songDuration: songDurationRaw,
 }) => {
   const uploaded = isFullMap(map) ? map.uploaded : uploadedRaw
   if (uploaded === undefined) throw new Error('Uploaded cannot be null!')
+  const songDuration = isFullMap(map) ? map.metadata.songDuration : songDurationRaw
 
   const [dateStr, setDateStr] = useState<string>(formatDate(uploaded))
   useEffect(() => {
@@ -77,6 +81,15 @@ export const BeatmapStats: FunctionComponent<IProps> = ({
         percentage={true}
         hover='Beatmap Rating'
       />
+
+      {!songDuration || songDuration <= 0 ? null : (
+        <Statistic
+          type='text'
+          emoji='⏱'
+          text={convertSecondsToTime(songDuration)}
+          hover='Song Duration'
+        />
+      )}
     </ul>
   )
 }
@@ -84,4 +97,19 @@ export const BeatmapStats: FunctionComponent<IProps> = ({
 // @ts-ignore
 const isFullMap: (map: IMapStats | IBeatmap) => map is IBeatmap = map => {
   return (map as IBeatmap).downloadURL !== undefined
+}
+
+const convertSecondsToTime: (duration: number) => string = duration => {
+  const hours = Math.trunc(duration / 3600)
+  const minutes = Math.trunc((duration % 3600) / 60)
+  const seconds = Math.trunc(duration % 60)
+
+  let formattedDuration = ''
+  if (hours > 0) {
+    formattedDuration += (hours < 10 ? '0' : '') + hours + ':'
+  }
+  formattedDuration += (minutes < 10 ? '0' : '') + minutes + ':'
+  formattedDuration += (seconds < 10 ? '0' : '') + seconds
+
+  return formattedDuration
 }

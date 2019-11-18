@@ -336,7 +336,11 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
           </div>
 
           <div className='right'>
-            <BeatmapStats map={stats} uploaded={map.uploaded} />
+            <BeatmapStats
+              map={stats}
+              uploaded={map.uploaded}
+              songDuration={map.metadata.songDuration}
+            />
           </div>
         </div>
 
