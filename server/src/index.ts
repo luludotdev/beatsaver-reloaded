@@ -17,6 +17,7 @@ import * as schemas from '~utils/schemas'
 import signale, { panic } from '~utils/signale'
 import { app } from './koa'
 import './tasks'
+import {Beatmap} from "~mongo/models";
 
 if (IS_DEV) signale.warn('Running in development environment!')
 
