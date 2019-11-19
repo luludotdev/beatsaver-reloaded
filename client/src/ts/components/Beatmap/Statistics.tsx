@@ -27,7 +27,10 @@ export const BeatmapStats: FunctionComponent<IProps> = ({
 }) => {
   const uploaded = isFullMap(map) ? map.uploaded : uploadedRaw
   if (uploaded === undefined) throw new Error('Uploaded cannot be null!')
-  const songDuration = isFullMap(map) ? map.metadata.songDuration : songDurationRaw
+
+  const songDuration = isFullMap(map)
+    ? map.metadata.songDuration
+    : songDurationRaw
 
   const [dateStr, setDateStr] = useState<string>(formatDate(uploaded))
   useEffect(() => {
