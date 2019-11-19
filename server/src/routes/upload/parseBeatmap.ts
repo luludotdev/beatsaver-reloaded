@@ -1,4 +1,8 @@
 import { createHash } from 'crypto'
+import { promises as fs } from 'fs'
+
+import execa from 'execa'
+import ffprobe from 'ffprobe-static'
 import fileType from 'file-type'
 import imageSize from 'image-size'
 import JSZip from 'jszip'
@@ -86,6 +90,11 @@ export const parseBeatmap: (
   ) {
     throw ERR_BEATMAP_AUDIO_INVALID
   }
+
+  const songDuration = await getDurationInSeconds(
+    `${infoJSON._songAuthorName}-${infoJSON._songName}`,
+    audio
+  )
 
   const { name, ext } = parse(infoJSON._songFilename)
   if (ext === '.ogg') {
@@ -202,6 +211,7 @@ export const parseBeatmap: (
     metadata: {
       levelAuthorName: infoJSON._levelAuthorName,
       songAuthorName: infoJSON._songAuthorName,
+      songDuration,
       songName: infoJSON._songName,
       songSubName: infoJSON._songSubName,
 
@@ -260,4 +270,41 @@ const inspectFile = async (file: JSZip.JSZipObject) => {
       else throw err
     }
   }
+}
+
+const getDurationInSeconds = async (
+  sourceFilename: string = 'tempUpload.ogg',
+  audioBuffer: Buffer
+): Promise<number> => {
+  const args = [
+    '-v',
+    'error',
+    '-select_streams',
+    'a:0',
+    '-show_entries',
+    'stream=duration',
+    '-of',
+    'default=noprint_wrappers=1:nokey=1',
+  ]
+
+  // Intermediate file is necessary since an ogg file can't be piped to ffprobe via stdin
+  //   https://stackoverflow.com/questions/3713148/cant-stream-ogg-from-ffmpeg-through-stdout
+  const intermediateFilename = `./${sourceFilename}`
+  let songDuration = 0
+  try {
+    fs.writeFile(intermediateFilename, audioBuffer)
+    const { stdout } = await execa(ffprobe.path, [
+      ...args,
+      intermediateFilename,
+    ])
+    songDuration = parseInt(stdout, 10)
+    // tslint:disable-next-line: no-empty
+  } catch (e) {
+  } finally {
+    try {
+      fs.unlink(intermediateFilename)
+      // tslint:disable-next-line: no-empty
+    } catch (e) {}
+  }
+  return isNaN(songDuration) ? 0 : songDuration
 }
