@@ -104,7 +104,7 @@ const schema: Schema = new Schema({
       required: true,
       type: String,
     },
-    songDuration: { type: Number, default: 0 },
+    songDuration: { type: Number, default: 0, min: 0 },
     songName: {
       es_indexed: true,
       maxlength: 255,

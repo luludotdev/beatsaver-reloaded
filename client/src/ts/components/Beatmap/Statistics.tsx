@@ -107,12 +107,9 @@ const convertSecondsToTime: (duration: number) => string = duration => {
   const minutes = Math.trunc((duration % 3600) / 60)
   const seconds = Math.trunc(duration % 60)
 
-  let formattedDuration = ''
-  if (hours > 0) {
-    formattedDuration += (hours < 10 ? '0' : '') + hours + ':'
-  }
-  formattedDuration += (minutes < 10 ? '0' : '') + minutes + ':'
-  formattedDuration += (seconds < 10 ? '0' : '') + seconds
+  const HH = hours.toString().padStart(2, '0')
+  const MM = minutes.toString().padStart(2, '0')
+  const SS = seconds.toString().padStart(2, '0')
 
-  return formattedDuration
+  return hours > 0 ? `${HH}:${MM}:${SS}` : `${MM}:${SS}`
 }
