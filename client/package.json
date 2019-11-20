@@ -65,7 +65,7 @@
     "nodemon": "^1.19.1",
     "p-debounce": "^2.1.0",
     "parcel-bundler": "^1.12.3",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
     "query-string": "^6.8.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -90,7 +90,7 @@
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
-    "typescript": "^3.5.3"
+    "typescript": "^3.7.2"
   },
   "dependencies": {
     "bson-ext": "^2.0.3",

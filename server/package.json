@@ -50,13 +50,13 @@
     "@types/tmp": "^0.1.0",
     "@types/uuid": "^3.4.5",
     "nodemon": "^1.19.1",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-microsoft-contrib": "^6.2.0",
     "tslint-plugin-prettier": "^2.0.1",
     "ttypescript": "^1.5.7",
-    "typescript": "^3.6.4",
+    "typescript": "^3.7.2",
     "typescript-transform-paths": "^1.1.11"
   },
   "dependencies": {
