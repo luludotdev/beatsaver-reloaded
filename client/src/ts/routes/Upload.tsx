@@ -205,6 +205,9 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
           setFileErr('Beatmap zip contains autosaves!')
           return showProblems()
 
+        case 'ERR_BEATMAP_AUDIO_READ_FAILURE':
+          return setFileErr('Beatmap audio could not be parsed!')
+
         case 'ERR_BEATMAP_PARSE_TIMEOUT':
           return setFileErr('Beatmap could not be parsed!')
 
@@ -358,9 +361,6 @@ const mapDispatchToProps: IDispatchProps = {
   replace: replaceFn,
 }
 
-const ConnectedUpload = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Upload)
+const ConnectedUpload = connect(mapStateToProps, mapDispatchToProps)(Upload)
 
 export { ConnectedUpload as Upload }
