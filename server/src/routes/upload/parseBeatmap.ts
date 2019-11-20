@@ -284,8 +284,6 @@ const getAudioDuration = async (
     'default=noprint_wrappers=1:nokey=1',
   ]
 
-  // Intermediate file is necessary since an ogg file can't be piped to ffprobe via stdin
-  //   https://stackoverflow.com/questions/3713148/cant-stream-ogg-from-ffmpeg-through-stdout
   try {
     const duration = await withFile(
       async ({ path, fd }) => {
