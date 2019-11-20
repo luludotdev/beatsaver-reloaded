@@ -5,13 +5,13 @@ import { Statistic } from './Statistic'
 interface IStatsProps {
   map: IMapStats
   uploaded: IBeatmap['uploaded']
-  songDuration: IBeatmap['metadata']['songDuration']
+  duration: IBeatmap['metadata']['duration']
 }
 
 interface IFullProps {
   map: IBeatmap
   uploaded?: undefined
-  songDuration?: undefined
+  duration?: undefined
 }
 
 interface ICommonProps {
@@ -23,14 +23,11 @@ export const BeatmapStats: FunctionComponent<IProps> = ({
   map,
   uploaded: uploadedRaw,
   hideTime,
-  songDuration: songDurationRaw,
+  duration: durationRaw,
 }) => {
   const uploaded = isFullMap(map) ? map.uploaded : uploadedRaw
   if (uploaded === undefined) throw new Error('Uploaded cannot be null!')
-
-  const songDuration = isFullMap(map)
-    ? map.metadata.songDuration
-    : songDurationRaw
+  const duration = isFullMap(map) ? map.metadata.duration : durationRaw
 
   const [dateStr, setDateStr] = useState<string>(formatDate(uploaded))
   useEffect(() => {
@@ -85,14 +82,14 @@ export const BeatmapStats: FunctionComponent<IProps> = ({
         hover='Beatmap Rating'
       />
 
-      {!songDuration || songDuration <= 0 ? null : (
+      {duration && duration > 0 ? (
         <Statistic
           type='text'
           emoji='⏱'
-          text={convertSecondsToTime(songDuration)}
-          hover='Song Duration'
+          text={convertSecondsToTime(duration)}
+          hover='Beatmap Duration'
         />
-      )}
+      ) : null}
     </ul>
   )
 }

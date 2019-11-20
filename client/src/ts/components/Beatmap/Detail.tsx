@@ -339,7 +339,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
             <BeatmapStats
               map={stats}
               uploaded={map.uploaded}
-              songDuration={map.metadata.songDuration}
+              duration={map.metadata.duration}
             />
           </div>
         </div>

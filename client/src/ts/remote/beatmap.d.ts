@@ -15,10 +15,10 @@ declare interface IBeatmap {
     songName: string
     songSubName: string
     songAuthorName: string
-    songDuration: number
     levelAuthorName: string
 
     bpm: number
+    duration?: number
 
     difficulties: {
       easy: boolean

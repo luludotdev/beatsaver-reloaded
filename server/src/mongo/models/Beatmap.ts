@@ -24,9 +24,9 @@ export interface IBeatmapLean {
     songName: string
     songSubName: string
     songAuthorName: string
-    songDuration: number
     levelAuthorName: string
 
+    duration: number
     bpm: number
 
     difficulties: {
@@ -92,6 +92,7 @@ const schema: Schema = new Schema({
   },
 
   metadata: {
+    duration: { type: Number, default: 0, min: 0 },
     levelAuthorName: {
       es_indexed: true,
       maxlength: 255,
@@ -104,7 +105,6 @@ const schema: Schema = new Schema({
       required: true,
       type: String,
     },
-    songDuration: { type: Number, default: 0, min: 0 },
     songName: {
       es_indexed: true,
       maxlength: 255,

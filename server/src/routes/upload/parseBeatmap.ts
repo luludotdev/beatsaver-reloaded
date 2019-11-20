@@ -202,18 +202,18 @@ export const parseBeatmap: (
   )
 
   const sha1 = hash.digest('hex')
-  const songDuration = await getDurationInSeconds(sha1, audio)
+  const duration = await getDurationInSeconds(sha1, audio)
   const parsed: IParsedBeatmap = {
     hash: sha1,
 
     metadata: {
       levelAuthorName: infoJSON._levelAuthorName,
       songAuthorName: infoJSON._songAuthorName,
-      songDuration,
       songName: infoJSON._songName,
       songSubName: infoJSON._songSubName,
 
       bpm: infoJSON._beatsPerMinute,
+      duration,
 
       difficulties: {
         easy: difficulties.some(x => x._difficultyRank === 1),
@@ -287,17 +287,17 @@ const getDurationInSeconds = async (
 
   // Intermediate file is necessary since an ogg file can't be piped to ffprobe via stdin
   //   https://stackoverflow.com/questions/3713148/cant-stream-ogg-from-ffmpeg-through-stdout
-  let songDuration = 0
+  let duration = 0
   try {
     await withFile(
       async ({ path, fd }) => {
         await write(fd, audioBuffer)
         const { stdout } = await execa(ffprobe.path, [...args, path])
-        songDuration = parseInt(stdout, 10)
+        duration = parseInt(stdout, 10)
       },
       { prefix: `beatsaver-${hash}-`, postfix: '.egg' }
     )
     // tslint:disable-next-line: no-empty
   } catch (e) {}
-  return isNaN(songDuration) || songDuration <= 0 ? 0 : songDuration
+  return isNaN(duration) || duration <= 0 ? 0 : duration
 }
