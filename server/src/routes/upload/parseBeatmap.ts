@@ -157,7 +157,7 @@ export const parseBeatmap: (
       const data: IDifficultyJSON = JSON.parse(content)
 
       const bombs = data._notes.filter(note => note._type === 3).length || 0
-      const duration = Math.max(...data._notes.map(note => note._time)) || 0
+      const charDuration = Math.max(...data._notes.map(note => note._time)) || 0
 
       const length =
         infoJSON._beatsPerMinute === 0
@@ -165,7 +165,7 @@ export const parseBeatmap: (
           : (duration / infoJSON._beatsPerMinute) * 60
 
       return {
-        duration,
+        duration: charDuration,
         length: Math.floor(length) || 0,
         njs: diff._noteJumpMovementSpeed || 0,
         njsOffset: diff._noteJumpStartBeatOffset || 0,
