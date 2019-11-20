@@ -1,5 +1,4 @@
 import { createHash } from 'crypto'
-
 import execa from 'execa'
 import ffprobe from 'ffprobe-static'
 import fileType from 'file-type'
@@ -7,7 +6,6 @@ import imageSize from 'image-size'
 import JSZip from 'jszip'
 import { parse, posix } from 'path'
 import { withFile } from 'tmp-promise'
-
 import {
   FILE_EXT_WHITELIST,
   FILE_TYPE_BLACKLIST,
@@ -22,6 +20,7 @@ import { parseValidationError } from './parseValidationError'
 import {
   ERR_BEATMAP_AUDIO_INVALID,
   ERR_BEATMAP_AUDIO_NOT_FOUND,
+  ERR_BEATMAP_AUDIO_READ_FAILURE,
   ERR_BEATMAP_CONTAINS_AUTOSAVES,
   ERR_BEATMAP_CONTAINS_ILLEGAL_FILE,
   ERR_BEATMAP_COVER_INVALID,
@@ -202,7 +201,7 @@ export const parseBeatmap: (
   )
 
   const sha1 = hash.digest('hex')
-  const duration = await getDurationInSeconds(sha1, audio)
+  const duration = await getAudioDuration(sha1, audio)
   const parsed: IParsedBeatmap = {
     hash: sha1,
 
@@ -270,9 +269,9 @@ const inspectFile = async (file: JSZip.JSZipObject) => {
   }
 }
 
-const getDurationInSeconds = async (
+const getAudioDuration = async (
   hash: string,
-  audioBuffer: Buffer
+  audio: Buffer
 ): Promise<number> => {
   const args = [
     '-v',
@@ -287,17 +286,21 @@ const getDurationInSeconds = async (
 
   // Intermediate file is necessary since an ogg file can't be piped to ffprobe via stdin
   //   https://stackoverflow.com/questions/3713148/cant-stream-ogg-from-ffmpeg-through-stdout
-  let duration = 0
   try {
-    await withFile(
+    const duration = await withFile(
       async ({ path, fd }) => {
-        await write(fd, audioBuffer)
+        await write(fd, audio)
         const { stdout } = await execa(ffprobe.path, [...args, path])
-        duration = parseInt(stdout, 10)
+        const parsed = parseInt(stdout, 10)
+
+        if (Number.isNaN(parsed)) return -1
+        else return parsed
       },
       { prefix: `beatsaver-${hash}-`, postfix: '.egg' }
     )
-    // tslint:disable-next-line: no-empty
-  } catch (e) {}
-  return isNaN(duration) || duration <= 0 ? 0 : duration
+
+    return duration
+  } catch (err) {
+    throw ERR_BEATMAP_AUDIO_READ_FAILURE
+  }
 }
