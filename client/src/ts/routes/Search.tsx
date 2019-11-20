@@ -59,9 +59,5 @@ const mapStateToProps: MapStateToProps<IProps, {}, IState> = state => ({
   replace: replaceFn,
 })
 
-const ConnectedSearch = connect(
-  mapStateToProps,
-  { replace: replaceFn }
-)(Search)
-
+const ConnectedSearch = connect(mapStateToProps, { replace: replaceFn })(Search)
 export { ConnectedSearch as Search }

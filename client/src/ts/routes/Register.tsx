@@ -19,15 +19,9 @@ const Register: FunctionComponent<IProps> = ({ register, push }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const [usernameErr, setUsernameErr] = useState(undefined as
-    | string
-    | undefined)
-
-  const [emailErr, setEmailErr] = useState(undefined as string | undefined)
-
-  const [passwordErr, setPasswordErr] = useState(undefined as
-    | string
-    | undefined)
+  const [usernameErr, setUsernameErr] = useState<string | undefined>(undefined)
+  const [emailErr, setEmailErr] = useState<string | undefined>(undefined)
+  const [passwordErr, setPasswordErr] = useState<string | undefined>(undefined)
 
   const submit = async () => {
     setLoading(true)
@@ -142,9 +136,5 @@ const mapDispatchToProps: IProps = {
   register: registerFn,
 }
 
-const ConnectedRegister = connect(
-  undefined,
-  mapDispatchToProps
-)(Register)
-
+const ConnectedRegister = connect(undefined, mapDispatchToProps)(Register)
 export { ConnectedRegister as Register }

@@ -27,10 +27,8 @@ const Legacy: FunctionComponent<IProps & RouteComponentProps<IParams>> = ({
   return null
 }
 
-const ConnectedLegacy = connect(
-  null,
-  {
-    replace: replaceFn,
-  }
-)(Legacy)
+const ConnectedLegacy = connect(null, {
+  replace: replaceFn,
+})(Legacy)
+
 export { ConnectedLegacy as Legacy }

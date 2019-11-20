@@ -42,7 +42,7 @@ const writeDump: <D, DocType extends Document, QueryHelpers = {}>(
     new Promise(resolve => zip.on('close', () => resolve())),
   ])
 
-  const shortHash = sha1.substr(0, 6)
+  const shortHash = (sha1 as string).substr(0, 6)
   await rename(filePath, join(DUMP_PATH, `${name}.${shortHash}.json`))
   await rename(gzPath, join(DUMP_PATH, `${name}.${shortHash}.json.gz`))
 

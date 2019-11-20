@@ -89,9 +89,5 @@ const dispatchProps: IFunctionProps = {
   requestNextMaps: requestNextMapsFn,
 }
 
-const ConnectedBeatmapAPI = connect(
-  mapStateToProps,
-  dispatchProps
-)(BeatmapAPI)
-
+const ConnectedBeatmapAPI = connect(mapStateToProps, dispatchProps)(BeatmapAPI)
 export { ConnectedBeatmapAPI as BeatmapAPI }

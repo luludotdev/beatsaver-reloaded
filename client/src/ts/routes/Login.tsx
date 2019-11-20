@@ -18,13 +18,8 @@ const Login: FunctionComponent<IProps> = ({ login, push }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const [usernameErr, setUsernameErr] = useState(undefined as
-    | string
-    | undefined)
-
-  const [passwordErr, setPasswordErr] = useState(undefined as
-    | string
-    | undefined)
+  const [usernameErr, setUsernameErr] = useState<string | undefined>(undefined)
+  const [passwordErr, setPasswordErr] = useState<string | undefined>(undefined)
 
   const submit = async () => {
     setLoading(true)
@@ -113,9 +108,5 @@ const mapDispatchToProps: IProps = {
   push: pushFn,
 }
 
-const ConnectedLogin = connect(
-  undefined,
-  mapDispatchToProps
-)(Login)
-
+const ConnectedLogin = connect(undefined, mapDispatchToProps)(Login)
 export { ConnectedLogin as Login }

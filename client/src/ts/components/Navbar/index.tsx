@@ -143,12 +143,9 @@ const mapStateToProps: MapStateToProps<IProps, {}, IState> = state => ({
   push: pushFn,
 })
 
-const ConnectedNavbar = connect(
-  mapStateToProps,
-  {
-    logout: logoutFn,
-    push: pushFn,
-  }
-)(Navbar)
+const ConnectedNavbar = connect(mapStateToProps, {
+  logout: logoutFn,
+  push: pushFn,
+})(Navbar)
 
 export default ConnectedNavbar

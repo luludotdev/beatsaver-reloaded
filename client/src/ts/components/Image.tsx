@@ -47,8 +47,5 @@ const mapDispatchToProps: IDispatchProps = {
   loadImage: loadImageFn,
 }
 
-const ConnectedImage = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Image)
+const ConnectedImage = connect(mapStateToProps, mapDispatchToProps)(Image)
 export { ConnectedImage as Image }

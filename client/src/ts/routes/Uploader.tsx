@@ -16,10 +16,7 @@ export const Uploader: FunctionComponent<RouteComponentProps<IParams>> = ({
   match,
 }) => {
   const userID = match.params.id
-  const [user, setUser] = useState(undefined as
-    | IUserResponse
-    | undefined
-    | Error)
+  const [user, setUser] = useState<IUserResponse | undefined | Error>(undefined)
 
   useEffect(() => {
     axios
