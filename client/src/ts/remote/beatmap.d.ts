@@ -18,6 +18,7 @@ declare interface IBeatmap {
     levelAuthorName: string
 
     bpm: number
+    duration?: number
 
     difficulties: {
       easy: boolean

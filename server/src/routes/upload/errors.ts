@@ -109,6 +109,13 @@ export const ERR_BEATMAP_AUDIO_INVALID = new CodedError(
   400
 )
 
+export const ERR_BEATMAP_AUDIO_READ_FAILURE = new CodedError(
+  'failed to read beatmap audio',
+  0x30013,
+  'ERR_BEATMAP_AUDIO_READ_FAILURE',
+  500
+)
+
 export const ERR_BEATMAP_CONTAINS_ILLEGAL_FILE = (filename: string) => {
   const err = new CodedError(
     'illegal file in zip',

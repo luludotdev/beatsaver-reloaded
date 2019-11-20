@@ -73,6 +73,7 @@ declare interface IParsedBeatmap {
     songAuthorName: string
     levelAuthorName: string
 
+    duration: number
     bpm: number
 
     difficulties: {

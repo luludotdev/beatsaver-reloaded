@@ -1,5 +1,5 @@
 $margin: 14px;
-$image-size: 180px;
+$image-size: 190px;
 
 div.beatmap-result {
   $hide-cover: 750px;
@@ -63,12 +63,12 @@ div.beatmap-result {
       }
 
       & .is-button-group {
-        margin: -1px -8px;
+        margin: -3px -8px;
       }
 
       & a, button {
         color: $text;
-        padding: 8px 20px;
+        padding: 6px 18px;
 
         position: relative;
         margin-right: -5;
@@ -136,7 +136,12 @@ div.beatmap-result {
           line-height: 1em;
         }
 
+        & h1 {
+          font-size: 1.8rem;
+        }
+
         & h2 {
+          font-size: 1.15rem;
           margin-top: 6px;
 
           & > span.uploaded {
@@ -147,11 +152,11 @@ div.beatmap-result {
 
         @media screen and (max-width: $hide-cover) {
           & h1 {
-            font-size: 1.8rem !important;
+            font-size: 1.6rem;
           }
 
           & h2 {
-            font-size: 1.05rem !important;
+            font-size: 1rem !important;
           }
         }
       }

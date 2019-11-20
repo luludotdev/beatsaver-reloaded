@@ -13,6 +13,7 @@ export { rimrafPromise as rimraf }
 
 export const access = promisify(fs.access)
 export const readFile = promisify(fs.readFile)
+export const write = promisify(fs.write)
 export const writeFile = promisify(fs.writeFile)
 export const stat = promisify(fs.stat)
 export const rename = promisify(fs.rename)

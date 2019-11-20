@@ -25,6 +25,7 @@
     "@types/bcrypt": "^3.0.0",
     "@types/chunk": "^0.0.0",
     "@types/dotenv": "^6.1.1",
+    "@types/ffprobe-static": "^2.0.0",
     "@types/image-size": "^0.7.0",
     "@types/ioredis": "^4.0.14",
     "@types/jszip": "^3.1.6",
@@ -46,6 +47,7 @@
     "@types/passport-local": "^1.0.33",
     "@types/rimraf": "^2.0.2",
     "@types/signale": "^1.2.1",
+    "@types/tmp": "^0.1.0",
     "@types/uuid": "^3.4.5",
     "nodemon": "^1.19.1",
     "prettier": "^1.18.2",
@@ -67,6 +69,8 @@
     "bson-ext": "^2.0.3",
     "chunk": "^0.0.2",
     "dotenv": "^8.0.0",
+    "execa": "^3.3.0",
+    "ffprobe-static": "^3.0.0",
     "file-type": "^12.1.0",
     "globby": "^10.0.1",
     "image-size": "^0.7.4",
@@ -95,6 +99,7 @@
     "signale": "^1.4.0",
     "source-map-support": "^0.5.13",
     "static-koa-router": "^1.0.3",
+    "tmp-promise": "^2.0.2",
     "tslib": "^1.10.0",
     "uuid": "^3.3.2"
   }

@@ -70,10 +70,10 @@ const BeatmapResult: FunctionComponent<IProps> = ({
       <div className='beatmap-content'>
         <div className='outer'>
           <div className='details'>
-            <h1 className='is-size-3 has-text-weight-light'>
+            <h1 className='has-text-weight-light'>
               <Link to={`/beatmap/${map.key}`}>{map.name}</Link>
             </h1>
-            <h2 className='is-size-5 has-text-weight-normal'>
+            <h2 className='has-text-weight-normal'>
               Uploaded by{' '}
               <Link to={`/uploader/${map.uploader._id}`}>
                 {map.uploader.username}

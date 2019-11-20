@@ -1,14 +1,18 @@
 import { createHash } from 'crypto'
+import execa from 'execa'
+import ffprobe from 'ffprobe-static'
 import fileType from 'file-type'
 import imageSize from 'image-size'
 import JSZip from 'jszip'
 import { parse, posix } from 'path'
+import { withFile } from 'tmp-promise'
 import {
   FILE_EXT_WHITELIST,
   FILE_TYPE_BLACKLIST,
   SCHEMA_DIFFICULTY,
   SCHEMA_INFO,
 } from '~constants'
+import { write } from '~utils/fs'
 import { validJSON } from '~utils/json'
 import * as schemas from '~utils/schemas'
 import { parseValidationError } from './parseValidationError'
@@ -16,6 +20,7 @@ import { parseValidationError } from './parseValidationError'
 import {
   ERR_BEATMAP_AUDIO_INVALID,
   ERR_BEATMAP_AUDIO_NOT_FOUND,
+  ERR_BEATMAP_AUDIO_READ_FAILURE,
   ERR_BEATMAP_CONTAINS_AUTOSAVES,
   ERR_BEATMAP_CONTAINS_ILLEGAL_FILE,
   ERR_BEATMAP_COVER_INVALID,
@@ -151,7 +156,7 @@ export const parseBeatmap: (
       const data: IDifficultyJSON = JSON.parse(content)
 
       const bombs = data._notes.filter(note => note._type === 3).length || 0
-      const duration = Math.max(...data._notes.map(note => note._time)) || 0
+      const charDuration = Math.max(...data._notes.map(note => note._time)) || 0
 
       const length =
         infoJSON._beatsPerMinute === 0
@@ -159,7 +164,7 @@ export const parseBeatmap: (
           : (duration / infoJSON._beatsPerMinute) * 60
 
       return {
-        duration,
+        duration: charDuration,
         length: Math.floor(length) || 0,
         njs: diff._noteJumpMovementSpeed || 0,
         njsOffset: diff._noteJumpStartBeatOffset || 0,
@@ -196,6 +201,7 @@ export const parseBeatmap: (
   )
 
   const sha1 = hash.digest('hex')
+  const duration = await getAudioDuration(sha1, audio)
   const parsed: IParsedBeatmap = {
     hash: sha1,
 
@@ -206,6 +212,7 @@ export const parseBeatmap: (
       songSubName: infoJSON._songSubName,
 
       bpm: infoJSON._beatsPerMinute,
+      duration,
 
       difficulties: {
         easy: difficulties.some(x => x._difficultyRank === 1),
@@ -259,5 +266,39 @@ const inspectFile = async (file: JSZip.JSZipObject) => {
       if (err.name === 'TypeError') return
       else throw err
     }
+  }
+}
+
+const getAudioDuration = async (
+  hash: string,
+  audio: Buffer
+): Promise<number> => {
+  const args = [
+    '-v',
+    'error',
+    '-select_streams',
+    'a:0',
+    '-show_entries',
+    'stream=duration',
+    '-of',
+    'default=noprint_wrappers=1:nokey=1',
+  ]
+
+  try {
+    const duration = await withFile(
+      async ({ path, fd }) => {
+        await write(fd, audio)
+        const { stdout } = await execa(ffprobe.path, [...args, path])
+        const parsed = parseInt(stdout, 10)
+
+        if (Number.isNaN(parsed)) return -1
+        else return parsed
+      },
+      { prefix: `beatsaver-${hash}-`, postfix: '.egg' }
+    )
+
+    return duration
+  } catch (err) {
+    throw ERR_BEATMAP_AUDIO_READ_FAILURE
   }
 }
