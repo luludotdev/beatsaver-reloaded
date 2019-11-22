@@ -15,7 +15,7 @@
     "parcel:build": "yarn run clean:ssr && parcel build --no-source-maps",
     "build": "parcel build --cache-dir .cache/client -d dist/client ./src/index.html",
     "build:clean": "yarn run clean && parcel build ./src/index.html",
-    "build:prod": "yarn run parcel:build --cache-dir .cache/client -d dist/client --experimental-scope-hoisting ./src/index.html",
+    "build:prod": "yarn run parcel:build --cache-dir .cache/client -d dist/client ./src/index.html",
     "build:ssr": "yarn run parcel:build --cache-dir .cache/ssr -d dist/ssr --target node ./ssr/index.ts",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
     "check": "tsc --noEmit",
