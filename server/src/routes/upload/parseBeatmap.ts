@@ -161,7 +161,7 @@ export const parseBeatmap: (
       const length =
         infoJSON._beatsPerMinute === 0
           ? 0
-          : (duration / infoJSON._beatsPerMinute) * 60
+          : (charDuration / infoJSON._beatsPerMinute) * 60
 
       return {
         duration: charDuration,
