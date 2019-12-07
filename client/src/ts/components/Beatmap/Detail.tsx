@@ -136,11 +136,11 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
 
     const result = await swal.fire({
       confirmButtonColor: '#bf2a42',
+      icon: 'warning',
       reverseButtons: true,
       showCancelButton: true,
       text: 'Are you sure? This cannot be undone!',
       title: 'Delete Beatmap',
-      type: 'warning',
     })
 
     if (!result.value) return
@@ -149,8 +149,8 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
       return push('/')
     } catch (err) {
       swal.fire({
+        icon: 'error',
         title: 'Delete Failed',
-        type: 'error',
       })
 
       console.error(err)
@@ -181,8 +181,8 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
       const { response } = err as AxiosError<IFieldsError>
       const genericError = () => {
         swal.fire({
+          icon: 'error',
           title: 'Edit Failed',
-          type: 'error',
         })
 
         return console.error(err)
@@ -197,9 +197,9 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
       ) {
         if (resp.fields.some(x => x.path === 'name')) {
           swal.fire({
+            icon: 'error',
             text: 'Beatmap title is invalid!',
             title: 'Edit Failed',
-            type: 'error',
           })
         }
 

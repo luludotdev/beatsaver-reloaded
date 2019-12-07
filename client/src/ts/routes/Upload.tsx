@@ -68,10 +68,10 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
     const agreement = await swal.fire({
       confirmButtonText: 'Accept',
       html: <SwalContent />,
+      icon: 'warning',
       reverseButtons: true,
       showCancelButton: true,
       title: 'Upload Agreement',
-      type: 'warning',
       width: '38em',
     })
 
@@ -132,9 +132,9 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
       if (resp.identifier === 'ERR_SCHEMA_VALIDATION_FAILED') {
         swal.fire({
           html: <ValidationSwalContent {...resp} />,
+          icon: 'error',
           showCancelButton: false,
           title: 'Invalid Beatmap',
-          type: 'error',
           width: '45em',
         })
 
