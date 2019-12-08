@@ -6,12 +6,27 @@
   "license": "ISC",
   "private": true,
   "scripts": {
+    "lint": "eslint . --ext js,md,vue",
     "dev": "vuepress dev content",
     "build": "vuepress build content",
-    "test": "echo docs don\\'t have tests! && exit 0"
+    "build:prod": "cross-env NODE_ENV=production yarn run build"
   },
   "devDependencies": {
-    "vuepress": "0.14.11",
-    "vuepress-theme-yuu": "^1.1.0"
+    "@vuepress/plugin-last-updated": "^1.2.0",
+    "@vuepress/plugin-medium-zoom": "^1.2.0",
+    "@vuepress/plugin-nprogress": "^1.2.0",
+    "@vuepress/plugin-search": "^1.2.0",
+    "babel-eslint": "^10.0.3",
+    "cross-env": "^6.0.3",
+    "dateformat": "^3.0.3",
+    "eslint": "^5.6.0",
+    "eslint-config-sora": "^2.1.0",
+    "eslint-plugin-markdown": "^1.0.1",
+    "eslint-plugin-vue": "^5.2.2",
+    "markdown-it-footnote": "^3.0.2",
+    "markdown-it-mark": "^3.0.0",
+    "vuepress": "^1.2.0",
+    "vuepress-plugin-container": "^2.1.2",
+    "vuepress-theme-yuu": "^2.2.1"
   }
 }

@@ -1,4 +1,4 @@
-FROM node:10-alpine AS builder
+FROM node:12-alpine AS builder
 WORKDIR /usr/app
 
 COPY package.json yarn.lock ./
@@ -6,7 +6,7 @@ RUN apk add --no-cache bash git openssh
 RUN yarn install --frozen-lockfile
 
 COPY . .
-RUN yarn build
+RUN yarn run build:prod
 
 FROM nginx:alpine
 
