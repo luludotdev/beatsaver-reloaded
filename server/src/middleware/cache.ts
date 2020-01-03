@@ -10,6 +10,21 @@ import { CACHE_DB, cacheDB } from '~redis'
 
 const noCache: Middleware = (_, next) => next()
 
+export async function getCache(key: string) {
+  const stat = await cacheDB.get(key)
+  return stat
+}
+
+export async function setCache(key: string, map: string, expire: number) {
+  const result = await cacheDB.set(key, map, 'EX', expire)
+  return result
+}
+
+export async function delCache(key: string) {
+  const result = await cacheDB.del(key)
+  return result
+}
+
 export const cache = (opts?: CacheOptions) => {
   if (CACHE_DRIVER !== 'redis') return noCache
 

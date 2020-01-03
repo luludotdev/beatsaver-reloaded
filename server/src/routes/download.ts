@@ -2,7 +2,7 @@ import cors from '@koa/cors'
 import Router from 'koa-router'
 import { DUMP_PATH } from '~constants'
 import { IS_DEV, PORT } from '~environment'
-import { clearCache, rateLimit } from '~middleware'
+import { delCache, rateLimit } from '~middleware'
 import { Beatmap } from '~mongo/models'
 import { globStats } from '~utils/fs'
 import { parseKey } from '~utils/parseKey'
@@ -27,8 +27,8 @@ router.get('/key/:key', limiter, async ctx => {
 
   await Promise.all([
     map.save(),
-    clearCache(`stats:key:${map.key}`),
-    clearCache(`stats:hash:${map.hash}`),
+    delCache(`stats:key:${map.key}`),
+    delCache(`stats:hash:${map.hash}`),
   ])
 
   return ctx.redirect(map.directDownload)
@@ -44,8 +44,8 @@ router.get('/hash/:hash', limiter, async ctx => {
 
   await Promise.all([
     map.save(),
-    clearCache(`stats:key:${map.key}`),
-    clearCache(`stats:hash:${map.hash}`),
+    delCache(`stats:key:${map.key}`),
+    delCache(`stats:hash:${map.hash}`),
   ])
 
   return ctx.redirect(map.directDownload)
