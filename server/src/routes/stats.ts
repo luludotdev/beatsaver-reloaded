@@ -36,7 +36,7 @@ router.get('/key/:key', async ctx => {
   ctx.set('Content-Type', 'application/json; charset=utf-8')
   const cache = await getCache(`stats:key:${ctx.params.key}`)
 
-  if (cache !== undefined) {
+  if (cache) {
     ctx.set('X-Koa-Redis-Cache', 'true')
     return (ctx.body = cache)
   }
@@ -59,7 +59,7 @@ router.get('/by-hash/:hash', async ctx => {
   ctx.set('Content-Type', 'application/json; charset=utf-8')
   const cache = await getCache(`stats:hash:${ctx.params.hash}`)
 
-  if (cache !== undefined) {
+  if (cache) {
     ctx.set('X-Koa-Redis-Cache', 'true')
     return (ctx.body = cache)
   }
