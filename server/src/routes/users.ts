@@ -34,9 +34,9 @@ router.get(
 router.get(
   '/find/:id',
   rateLimit({
-    duration: 2 * 1000,
+    duration: 20 * 1000,
     id: ctx => `/users/find:${ctx.realIP}`,
-    max: 1,
+    max: 10,
   }),
   async ctx => {
     try {
