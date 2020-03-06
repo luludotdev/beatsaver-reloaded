@@ -381,7 +381,6 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
               ? 'Playback error!'
               : 'Stop Preview'}
           </a>
-          {/* <a href='/'>View on BeastSaber</a> */}
           <a href='/' onClick={e => copyBSR(e)}>
             {copied ? (
               'Copied!'
@@ -404,6 +403,10 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
               </>
             )}
           </a>
+          <a href={`https://bsaber.com/songs/${map.key}`}>
+            <p>View on BeastSaber</p>
+          </a>
+
           {/* <a href='/'>Preview</a> */}
         </div>
       </div>
