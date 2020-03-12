@@ -213,7 +213,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
   const bsaberBool = true
   const bsaberLink = (
     <ExtLink href={`https://bsaber.com/songs/${map.key}`}>
-      <p>View on BeastSaber</p>
+      View on BeastSaber
     </ExtLink>
   )
 
