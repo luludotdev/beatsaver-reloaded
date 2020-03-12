@@ -210,6 +210,13 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
     }
   }
 
+  const bsaberBool = true
+  const bsaberLink = (
+    <ExtLink href={`https://bsaber.com/songs/${map.key}`}>
+      <p>View on BeastSaber</p>
+    </ExtLink>
+  )
+
   return (
     <>
       <Helmet>
@@ -403,9 +410,7 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
               </>
             )}
           </a>
-          <ExtLink href={`https://bsaber.com/songs/${map.key}`}>
-            <p>View on BeastSaber</p>
-          </ExtLink>
+          {bsaberBool ? bsaberLink : ''}
 
           {/* <a href='/'>Preview</a> */}
         </div>
