@@ -403,9 +403,9 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
               </>
             )}
           </a>
-          <a href={`https://bsaber.com/songs/${map.key}`}>
+          <ExtLink href={`https://bsaber.com/songs/${map.key}`}>
             <p>View on BeastSaber</p>
-          </a>
+          </ExtLink>
 
           {/* <a href='/'>Preview</a> */}
         </div>
