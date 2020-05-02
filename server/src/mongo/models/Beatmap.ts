@@ -19,6 +19,7 @@ export interface IBeatmapLean {
   uploader: IUserModel['_id']
   uploaded: Date
   deletedAt: Date | null
+  deletedBy: IUserModel['_id'] | null
 
   metadata: {
     songName: string
@@ -82,6 +83,12 @@ const schema: Schema = new Schema({
   },
 
   deletedAt: { type: Date, default: null, index: true, es_indexed: true },
+  deletedBy: {
+    es_indexed: true,
+    es_schema: userSchema,
+    ref: 'user',
+    type: Schema.Types.ObjectId,
+  },
   uploaded: { type: Date, default: Date.now, index: true, es_indexed: true },
   uploader: {
     es_indexed: true,

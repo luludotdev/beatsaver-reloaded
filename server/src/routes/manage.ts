@@ -50,6 +50,7 @@ router.post('/delete/:key', userBeatmap, async ctx => {
   const map: IBeatmapModel = ctx.beatmap
 
   map.deletedAt = new Date()
+  map.deletedBy = ctx.state.user.id
   await map.save()
 
   await Promise.all([
