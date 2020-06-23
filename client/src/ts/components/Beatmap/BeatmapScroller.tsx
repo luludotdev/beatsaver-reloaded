@@ -10,6 +10,7 @@ import { BeatmapResult } from './BeatmapResult'
 
 interface IProps {
   scroller: IScroller
+  showAutos?: boolean
 
   finite: boolean | undefined
   fallback?: JSX.Element
@@ -17,6 +18,7 @@ interface IProps {
 }
 
 export const BeatmapScroller: FunctionComponent<IProps> = ({
+  showAutos,
   scroller: { maps, loading, done, error, type },
 
   finite,
@@ -60,7 +62,9 @@ export const BeatmapScroller: FunctionComponent<IProps> = ({
 
       {maps.length === 0
         ? fallback || null
-        : maps.map(m => <BeatmapResult key={m._id} map={m} />)}
+        : maps
+            .filter(m => (showAutos ? true : m.metadata.automapper === null))
+            .map(m => <BeatmapResult key={m._id} map={m} />)}
 
       {!loading || done ? null : <Loader />}
 

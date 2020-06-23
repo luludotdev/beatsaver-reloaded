@@ -31,10 +31,12 @@ const request: (
   }
 
   const url = isUser
-    ? `/maps/${type}/${query}/${page}`
+    ? `/maps/${type}/${query}/${page}?automapper=1`
     : isSearch
-    ? `/search/${type}/${page}?q=${encodeURIComponent(query || '')}`
-    : `/maps/${type}/${page}`
+    ? `/search/${type}/${page}?q=${encodeURIComponent(
+        query || ''
+      )}&?automapper=1`
+    : `/maps/${type}/${page}?automapper=1`
 
   dispatch({
     payload: { key, value: true },

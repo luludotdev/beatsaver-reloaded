@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import { canUseDom } from '../../utils/dom'
 import { IBeatmapSearch } from './BeatmapAPI'
 import { BeatmapAPI } from './BeatmapAPI'
@@ -9,10 +9,27 @@ export const BeatmapList: FunctionComponent<IBeatmapSearch> = props => {
     ? navigator.userAgent.toLowerCase().includes('firefox')
     : false
 
+  const [showAutos, setShowAutos] = useState<boolean>(false)
+
   return (
-    <BeatmapAPI
-      {...props}
-      render={api => <BeatmapScroller {...api} finite={isFirefox} />}
-    />
+    <>
+      <div className='box'>
+        <label className='checkbox'>
+          <input
+            type='checkbox'
+            checked={showAutos}
+            onChange={() => setShowAutos(!showAutos)}
+          />
+          &nbsp;Show auto-generated beatmaps
+        </label>
+      </div>
+
+      <BeatmapAPI
+        {...props}
+        render={api => (
+          <BeatmapScroller {...api} showAutos={showAutos} finite={isFirefox} />
+        )}
+      />
+    </>
   )
 }

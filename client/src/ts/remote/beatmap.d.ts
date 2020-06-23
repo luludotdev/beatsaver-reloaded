@@ -28,6 +28,7 @@ declare interface IBeatmap {
       expertPlus: boolean
     }
 
+    automapper: string | null
     characteristics: IBeatmapCharacteristic[]
   }
 
