@@ -1,15 +1,31 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent } from 'react'
+import { connect, MapStateToProps } from 'react-redux'
+import { IState } from '../../store'
+import {
+  ToggleShowAutos,
+  toggleShowAutos as toggleShowAutosFn,
+} from '../../store/prefs'
 import { canUseDom } from '../../utils/dom'
 import { IBeatmapSearch } from './BeatmapAPI'
 import { BeatmapAPI } from './BeatmapAPI'
 import { BeatmapScroller } from './BeatmapScroller'
 
-export const BeatmapList: FunctionComponent<IBeatmapSearch> = props => {
+interface IMappedProps {
+  showAutos: boolean
+}
+
+interface IDispatchProps {
+  toggleShowAutos: ToggleShowAutos
+}
+
+type IProps = IBeatmapSearch & IMappedProps & IDispatchProps
+
+const BeatmapList: FunctionComponent<IProps> = props => {
+  const { showAutos, toggleShowAutos } = props
+
   const isFirefox = canUseDom()
     ? navigator.userAgent.toLowerCase().includes('firefox')
     : false
-
-  const [showAutos, setShowAutos] = useState<boolean>(false)
 
   return (
     <>
@@ -17,8 +33,8 @@ export const BeatmapList: FunctionComponent<IBeatmapSearch> = props => {
         <label className='checkbox'>
           <input
             type='checkbox'
-            checked={showAutos}
-            onChange={() => setShowAutos(!showAutos)}
+            checked={props.showAutos}
+            onChange={() => toggleShowAutos()}
           />
           &nbsp;Show auto-generated beatmaps
         </label>
@@ -33,3 +49,18 @@ export const BeatmapList: FunctionComponent<IBeatmapSearch> = props => {
     </>
   )
 }
+
+const mapStateToProps: MapStateToProps<IMappedProps, {}, IState> = state => ({
+  showAutos: state.prefs.showAutos,
+})
+
+const mapDispatchToProps: IDispatchProps = {
+  toggleShowAutos: toggleShowAutosFn,
+}
+
+const ConnectedBeatmapList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BeatmapList)
+
+export { ConnectedBeatmapList as BeatmapList }
