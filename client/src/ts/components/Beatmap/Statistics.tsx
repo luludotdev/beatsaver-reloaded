@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { formatDate } from '../../utils/formatDate'
+import { automapperName } from '../../utils/strings'
 import { Statistic } from './Statistic'
 
 interface IProps {
@@ -36,6 +37,21 @@ export const BeatmapStats: FunctionComponent<IProps> = ({
           hover={new Date(map.uploaded).toISOString()}
         />
       )}
+
+      <Statistic
+        type='text'
+        emoji={map.metadata.automapper === null ? '🥰' : '🤖'}
+        text={
+          map.metadata.automapper === null
+            ? map.metadata.levelAuthorName
+            : automapperName(map.metadata.automapper)
+        }
+        hover={
+          map.metadata.automapper === null
+            ? 'Mapped by a Human'
+            : 'Mapped by a Robot'
+        }
+      />
 
       <Statistic
         type='num'
