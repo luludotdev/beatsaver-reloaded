@@ -2,37 +2,22 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import { formatDate } from '../../utils/formatDate'
 import { Statistic } from './Statistic'
 
-interface IStatsProps {
-  map: IMapStats
-  uploaded: IBeatmap['uploaded']
-  duration: IBeatmap['metadata']['duration']
-}
-
-interface IFullProps {
-  map: IBeatmap
-  uploaded?: undefined
-  duration?: undefined
-}
-
-interface ICommonProps {
+interface IProps {
   hideTime?: boolean
+  map: IBeatmap
+  stats?: IMapStats
 }
 
-type IProps = (IStatsProps | IFullProps) & ICommonProps
 export const BeatmapStats: FunctionComponent<IProps> = ({
-  map,
-  uploaded: uploadedRaw,
   hideTime,
-  duration: durationRaw,
-}) => {
-  const uploaded = isFullMap(map) ? map.uploaded : uploadedRaw
-  if (uploaded === undefined) throw new Error('Uploaded cannot be null!')
-  const duration = isFullMap(map) ? map.metadata.duration : durationRaw
 
-  const [dateStr, setDateStr] = useState<string>(formatDate(uploaded))
+  map,
+  stats,
+}) => {
+  const [dateStr, setDateStr] = useState<string>(formatDate(map.uploaded))
   useEffect(() => {
     const i = setInterval(() => {
-      const newStr = formatDate(uploaded)
+      const newStr = formatDate(map.uploaded)
       if (dateStr !== newStr) setDateStr(newStr)
     }, 1000 * 30)
 
@@ -48,55 +33,50 @@ export const BeatmapStats: FunctionComponent<IProps> = ({
           type='text'
           emoji='🕔'
           text={dateStr}
-          hover={new Date(uploaded).toISOString()}
+          hover={new Date(map.uploaded).toISOString()}
         />
       )}
 
       <Statistic
         type='num'
         emoji='💾'
-        number={map.stats.downloads}
+        number={stats?.stats.downloads ?? map.stats.downloads}
         hover='Downloads'
       />
 
       <Statistic
         type='num'
         emoji='👍'
-        number={map.stats.upVotes}
+        number={stats?.stats.upVotes ?? map.stats.upVotes}
         hover='Upvotes'
       />
 
       <Statistic
         type='num'
         emoji='👎'
-        number={map.stats.downVotes}
+        number={stats?.stats.downVotes ?? map.stats.downVotes}
         hover='Downvotes'
       />
 
       <Statistic
         type='num'
         emoji='💯'
-        number={map.stats.rating}
+        number={stats?.stats.rating ?? map.stats.rating}
         fixed={1}
         percentage={true}
         hover='Beatmap Rating'
       />
 
-      {duration && duration > 0 ? (
+      {map.metadata.duration && map.metadata.duration > 0 ? (
         <Statistic
           type='text'
           emoji='⏱'
-          text={convertSecondsToTime(duration)}
+          text={convertSecondsToTime(map.metadata.duration)}
           hover='Beatmap Duration'
         />
       ) : null}
     </ul>
   )
-}
-
-// @ts-ignore
-const isFullMap: (map: IMapStats | IBeatmap) => map is IBeatmap = map => {
-  return (map as IBeatmap).downloadURL !== undefined
 }
 
 const convertSecondsToTime: (duration: number) => string = duration => {
