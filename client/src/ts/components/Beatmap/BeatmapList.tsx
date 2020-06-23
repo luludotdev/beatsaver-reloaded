@@ -28,15 +28,15 @@ const BeatmapList: FunctionComponent<IProps> = props => {
     : false
 
   return (
-    <>
-      <div className='box'>
+    <div>
+      <div className='box automapper'>
         <label className='checkbox'>
           <input
             type='checkbox'
             checked={props.showAutos}
             onChange={() => toggleShowAutos()}
           />
-          &nbsp;Show auto-generated beatmaps
+          &nbsp;Show auto-generated Beatmaps
         </label>
       </div>
 
@@ -46,7 +46,7 @@ const BeatmapList: FunctionComponent<IProps> = props => {
           <BeatmapScroller {...api} showAutos={showAutos} finite={isFirefox} />
         )}
       />
-    </>
+    </div>
   )
 }
 

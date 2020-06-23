@@ -27,7 +27,7 @@ export const checkHash = () => {
   if (!elem) return
 
   elem.scrollIntoView(true)
-  parent.scrollBy(0, -17)
+  parent.scrollBy(0, -100)
 }
 
 history.listen(() => setTimeout(() => checkHash(), 0))
