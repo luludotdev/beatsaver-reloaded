@@ -103,7 +103,7 @@ export const parseBeatmap: (
     infoDAT = `${JSON.stringify(infoJSON, null, 2)}\n`
 
     zip.remove(infoDATName)
-    zip.file(infoDATName, infoDAT)
+    zip.file('Info.dat', infoDAT)
   }
 
   const difficulties = ([] as IDifficultyBeatmap[]).concat(
