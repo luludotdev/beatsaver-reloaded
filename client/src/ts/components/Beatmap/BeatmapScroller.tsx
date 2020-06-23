@@ -4,6 +4,7 @@ import { useInView } from 'react-intersection-observer'
 import { history } from '../../init'
 import { IScroller } from '../../store/scrollers'
 import { checkHash } from '../../utils/scroll'
+import { capitalize } from '../../utils/strings'
 import { APIError } from '../APIError'
 import { Loader } from '../Loader'
 import { BeatmapResult } from './BeatmapResult'
@@ -39,11 +40,6 @@ export const BeatmapScroller: FunctionComponent<IProps> = ({
 
   if (inView && !loading && !done && !finite) next()
   if (error) return <APIError error={error} />
-
-  const capitalize = (s: string) => {
-    if (typeof s !== 'string') return ''
-    return s.charAt(0).toUpperCase() + s.slice(1)
-  }
 
   const title =
     type === 'text'
