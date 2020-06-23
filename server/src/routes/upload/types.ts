@@ -8,6 +8,8 @@ declare interface IBeatmapInfo {
   _songFilename: string
   _coverImageFilename: string
   _difficultyBeatmapSets: IBeatmapSet[]
+
+  _customData?: any
 }
 
 declare interface IBeatmapSet {
@@ -85,6 +87,7 @@ declare interface IParsedBeatmap {
     }
 
     characteristics: IBeatmapCharacteristic[]
+    automapper: string | null
   }
 
   hash: string
