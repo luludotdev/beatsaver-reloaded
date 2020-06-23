@@ -38,6 +38,7 @@ export interface IBeatmapLean {
     }
 
     characteristics: IBeatmapCharacteristic[]
+    automapper: string | null
   }
 
   stats: {
@@ -123,6 +124,7 @@ const schema: Schema = new Schema({
       normal: { type: Boolean, required: true },
     },
 
+    automapper: { type: String, default: null, es_indexed: true },
     characteristics: { es_indexed: false, type: [Schema.Types.Mixed] },
   },
 
