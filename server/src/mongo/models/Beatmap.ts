@@ -198,6 +198,8 @@ schema.pre('save', async function preSave(this: IBeatmapModel) {
   this.stats.downVotes = downVotes
   this.stats.rating = calculateRating()
   this.stats.heat = calculateHeat()
+
+  if (this.metadata.automapper === '') this.metadata.automapper = null
 })
 
 schema.virtual('directDownload').get(function(this: IBeatmapModel) {
