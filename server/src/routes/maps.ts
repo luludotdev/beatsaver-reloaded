@@ -19,9 +19,20 @@ const routeLimiter = (id: string) =>
 
 router.get('/latest/:page?', routeLimiter('/latest'), mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+  const inclAutos = ctx.query.automapper
+  const autoSearch =
+    inclAutos === '1'
+      ? {}
+      : inclAutos === '-1'
+      ? { 'metadata.automapper': { $ne: null } }
+      : inclAutos === undefined
+      ? { 'metadata.automapper': { $eq: null } }
+      : new Error()
+
+  if (autoSearch instanceof Error) return (ctx.status = 400)
   const maps = await paginate(
     Beatmap,
-    { deletedAt: null },
+    { deletedAt: null, ...autoSearch },
     { page, sort: '-uploaded', populate: 'uploader', projection: '-votes' }
   )
 
@@ -34,9 +45,20 @@ router.get(
   mapCache,
   async ctx => {
     const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+    const inclAutos = ctx.query.automapper
+    const autoSearch =
+      inclAutos === '1'
+        ? {}
+        : inclAutos === '-1'
+        ? { 'metadata.automapper': { $ne: null } }
+        : inclAutos === undefined
+        ? { 'metadata.automapper': { $eq: null } }
+        : new Error()
+
+    if (autoSearch instanceof Error) return (ctx.status = 400)
     const maps = await paginate(
       Beatmap,
-      { deletedAt: null },
+      { deletedAt: null, ...autoSearch },
       {
         page,
         populate: 'uploader',
@@ -51,9 +73,20 @@ router.get(
 
 router.get('/plays/:page?', routeLimiter('/plays'), mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+  const inclAutos = ctx.query.automapper
+  const autoSearch =
+    inclAutos === '1'
+      ? {}
+      : inclAutos === '-1'
+      ? { 'metadata.automapper': { $ne: null } }
+      : inclAutos === undefined
+      ? { 'metadata.automapper': { $eq: null } }
+      : new Error()
+
+  if (autoSearch instanceof Error) return (ctx.status = 400)
   const maps = await paginate(
     Beatmap,
-    { deletedAt: null },
+    { deletedAt: null, ...autoSearch },
     {
       page,
       populate: 'uploader',
@@ -67,9 +100,20 @@ router.get('/plays/:page?', routeLimiter('/plays'), mapCache, async ctx => {
 
 router.get('/hot/:page?', routeLimiter('/hot'), mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+  const inclAutos = ctx.query.automapper
+  const autoSearch =
+    inclAutos === '1'
+      ? {}
+      : inclAutos === '-1'
+      ? { 'metadata.automapper': { $ne: null } }
+      : inclAutos === undefined
+      ? { 'metadata.automapper': { $eq: null } }
+      : new Error()
+
+  if (autoSearch instanceof Error) return (ctx.status = 400)
   const maps = await paginate(
     Beatmap,
-    { deletedAt: null },
+    { deletedAt: null, ...autoSearch },
     { page, sort: '-stats.heat', populate: 'uploader', projection: '-votes' }
   )
 
@@ -78,9 +122,20 @@ router.get('/hot/:page?', routeLimiter('/hot'), mapCache, async ctx => {
 
 router.get('/rating/:page?', routeLimiter('/rating'), mapCache, async ctx => {
   const page = Math.max(0, Number.parseInt(ctx.params.page, 10)) || 0
+  const inclAutos = ctx.query.automapper
+  const autoSearch =
+    inclAutos === '1'
+      ? {}
+      : inclAutos === '-1'
+      ? { 'metadata.automapper': { $ne: null } }
+      : inclAutos === undefined
+      ? { 'metadata.automapper': { $eq: null } }
+      : new Error()
+
+  if (autoSearch instanceof Error) return (ctx.status = 400)
   const maps = await paginate(
     Beatmap,
-    { deletedAt: null },
+    { deletedAt: null, ...autoSearch },
     { page, sort: '-stats.rating', populate: 'uploader', projection: '-votes' }
   )
 
