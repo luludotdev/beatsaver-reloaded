@@ -46,6 +46,23 @@ router.post('/edit/:key', userBeatmap, async ctx => {
   return (ctx.status = 204)
 })
 
+router.post('/reclassify/:key', userBeatmap, async ctx => {
+  const map: IBeatmapModel = ctx.beatmap
+  const { automapper } = ctx.request.body || ({} as any)
+
+  map.metadata.automapper = automapper
+  await map.save()
+
+  await Promise.all([
+    clearCache(`key:${map.key}`),
+    clearCache(`hash:${map.hash}`),
+    clearCache('maps'),
+    clearCache(`uploader:${map.uploader}`),
+  ])
+
+  return (ctx.status = 204)
+})
+
 router.post('/delete/:key', userBeatmap, async ctx => {
   const map: IBeatmapModel = ctx.beatmap
 

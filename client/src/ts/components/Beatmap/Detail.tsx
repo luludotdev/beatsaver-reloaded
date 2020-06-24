@@ -130,6 +130,43 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
   if (!map || !stats) return <Loader />
   const isUploader = user && (user._id === map.uploader._id || user.admin)
 
+  const reclassifyMap = async (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    if (user?.admin === false) return
+
+    const { value } = await swal.fire({
+      input: 'text',
+      reverseButtons: true,
+      showCancelButton: true,
+      text: 'Leave blank for human mapped',
+      title: 'Reclassify Beatmap',
+    })
+
+    if (value === undefined) return
+    if (typeof value !== 'string') return
+
+    try {
+      const automapper = value === '' ? null : value.toLowerCase()
+      await axios.post(`/manage/reclassify/${map.key}`, { automapper })
+
+      mutate(
+        `/maps/detail/${mapKey}`,
+        {
+          ...map,
+          metadata: { ...map.metadata, automapper },
+        },
+        true
+      )
+    } catch (err) {
+      swal.fire({
+        icon: 'error',
+        title: 'Reclassify Failed',
+      })
+
+      console.error(err)
+    }
+  }
+
   const deleteMap = async (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     if (!isUploader) return
@@ -263,6 +300,12 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
                 <a href='/' onClick={e => editMap(e)}>
                   📝 Edit
                 </a>
+
+                {user?.admin === true ? (
+                  <a href='/' onClick={e => reclassifyMap(e)}>
+                    {map.metadata.automapper === null ? '🤖' : '🥰'} Reclassify
+                  </a>
+                ) : null}
 
                 <a href='/' onClick={e => deleteMap(e)}>
                   ❌ Delete
