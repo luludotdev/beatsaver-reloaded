@@ -93,6 +93,7 @@
   },
   "dependencies": {
     "bson-ext": "^2.0.3",
+    "bulma-checkradio": "^1.1.1",
     "debounce-fn": "^3.0.1",
     "dotenv": "^8.2.0",
     "he": "^1.2.0",

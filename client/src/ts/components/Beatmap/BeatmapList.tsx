@@ -30,14 +30,16 @@ const BeatmapList: FunctionComponent<IProps> = props => {
   return (
     <div>
       <div className='box automapper'>
-        <label className='checkbox'>
+        <div className='field'>
           <input
+            id='showAutos'
+            className='is-checkradio'
             type='checkbox'
             checked={props.showAutos}
             onChange={() => toggleShowAutos()}
           />
-          &nbsp;Show auto-generated Beatmaps
-        </label>
+          <label htmlFor='showAutos'>Show auto-generated Beatmaps</label>
+        </div>
       </div>
 
       <BeatmapAPI

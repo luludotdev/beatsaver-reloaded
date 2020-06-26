@@ -23,3 +23,17 @@ div.field label.label {
     transform: translateX(4px);
   }
 }
+
+.is-checkradio[type=radio] + label:first-of-type,
+.is-checkradio[type=checkbox] + label:first-of-type {
+  user-select: none;
+
+  &::before {
+    outline: none;
+    transform: translate(0, 3px);
+  }
+
+  &::after {
+    transform: translate(0, 2.5px) rotate(45deg);
+  }
+}
