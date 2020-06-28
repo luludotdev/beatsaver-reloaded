@@ -200,8 +200,13 @@ export const parseBeatmap: (
     infoJSON._difficultyBeatmapSets.map(parseSet)
   )
 
-  const isBeatsage = infoJSON?._customData?.beatSage !== undefined
-  const automapper = isBeatsage ? 'beatsage' : null
+  const isLegacyBeatsage = infoJSON?._customData?.beatSage !== undefined
+  const isBeatsage = infoJSON?._customData?._editors?.beatsage !== undefined
+  const automapper = isBeatsage
+    ? 'beatsage'
+    : isLegacyBeatsage
+    ? 'beatsage'
+    : null
 
   const sha1 = hash.digest('hex')
   const duration = await getAudioDuration(sha1, audio)
