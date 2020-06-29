@@ -5,6 +5,7 @@ export const capitalize = (s: string) => {
 
 export const automapperName: (input: string) => string = input => {
   if (input === 'beatsage') return 'BeatSage'
+  if (input === 'deepsaber') return 'DeepSaber'
 
   return capitalize(input)
 }
