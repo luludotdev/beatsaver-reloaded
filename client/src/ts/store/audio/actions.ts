@@ -74,7 +74,7 @@ const getAudioURL: (
   const zip = new JSZip()
   await zip.loadAsync(blob)
 
-  const info = zip.file('info.dat')
+  const info = zip.file('Info.dat') || zip.file('info.dat')
   const infoJSON = JSON.parse(await info.async('text'))
 
   const songFilename: string = infoJSON._songFilename
