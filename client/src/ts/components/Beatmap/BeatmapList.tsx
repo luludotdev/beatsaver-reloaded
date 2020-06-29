@@ -5,7 +5,7 @@ import {
   ToggleShowAutos,
   toggleShowAutos as toggleShowAutosFn,
 } from '../../store/prefs'
-import { canUseDom } from '../../utils/dom'
+import { isFirefox } from '../../utils/dom'
 import { IBeatmapSearch } from './BeatmapAPI'
 import { BeatmapAPI } from './BeatmapAPI'
 import { BeatmapScroller } from './BeatmapScroller'
@@ -22,10 +22,6 @@ type IProps = IBeatmapSearch & IMappedProps & IDispatchProps
 
 const BeatmapList: FunctionComponent<IProps> = props => {
   const { showAutos, toggleShowAutos } = props
-
-  const isFirefox = canUseDom()
-    ? navigator.userAgent.toLowerCase().includes('firefox')
-    : false
 
   return (
     <div>
@@ -45,7 +41,11 @@ const BeatmapList: FunctionComponent<IProps> = props => {
       <BeatmapAPI
         {...props}
         render={api => (
-          <BeatmapScroller {...api} showAutos={showAutos} finite={isFirefox} />
+          <BeatmapScroller
+            {...api}
+            showAutos={showAutos}
+            finite={isFirefox()}
+          />
         )}
       />
     </div>
