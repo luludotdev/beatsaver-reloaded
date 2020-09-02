@@ -14,6 +14,7 @@ export const FILE_EXT_WHITELIST = [
   '.jpg',
   '.jpeg',
   '.srt',
+  '.bin',
 ]
 
 export const FILE_TYPE_BLACKLIST = [
