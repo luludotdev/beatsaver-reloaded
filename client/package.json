@@ -59,7 +59,7 @@
     "history": "^4.10.1",
     "intersection-observer-polyfill": "^0.1.0",
     "jszip": "^3.2.2",
-    "markdown-to-jsx": "^6.10.3",
+    "markdown-to-jsx": "^6.11.4",
     "ms": "^2.1.2",
     "nodemon": "^2.0.1",
     "p-debounce": "^2.1.0",
