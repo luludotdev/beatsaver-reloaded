@@ -25,6 +25,7 @@ export interface IBeatmapLean {
     songSubName: string
     songAuthorName: string
     levelAuthorName: string
+    requiresExternalAudioFile: boolean
 
     duration: number
     bpm: number
@@ -112,6 +113,7 @@ const schema: Schema = new Schema({
       type: String,
     },
     songSubName: { type: String, maxlength: 255, es_indexed: false },
+    requiresExternalAudioFile: { type: Boolean, default: false },
 
     bpm: { type: Number, required: true },
 

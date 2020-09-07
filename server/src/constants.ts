@@ -43,7 +43,8 @@ export const FILE_TYPE_BLACKLIST = [
 ]
 
 const SCHEMA_BASE_URI =
-  'https://raw.githubusercontent.com/lolPants/beatmap-schemas/master/schemas'
+  'https://raw.githubusercontent.com/idolize/beatmap-schemas/master/schemas'
 
 export const SCHEMA_INFO = `${SCHEMA_BASE_URI}/info.schema.json`
 export const SCHEMA_DIFFICULTY = `${SCHEMA_BASE_URI}/difficulty.schema.json`
+export const SCHEMA_AUDIO_CONFIG = `${SCHEMA_BASE_URI}/audio.schema.json`

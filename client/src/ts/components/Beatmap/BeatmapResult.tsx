@@ -113,30 +113,32 @@ const BeatmapResult: FunctionComponent<IProps> = ({
           </div>
 
           <div className='is-button-group'>
-            <a
-              href='/'
-              className={clsx(
-                preview.loading && preview.key === map.key && 'loading',
-                preview.loading && 'disabled'
-              )}
-              onClick={e => {
-                e.preventDefault()
+            {!map.metadata.requiresExternalAudioFile && (
+              <a
+                href='/'
+                className={clsx(
+                  preview.loading && preview.key === map.key && 'loading',
+                  preview.loading && 'disabled'
+                )}
+                onClick={e => {
+                  e.preventDefault()
 
-                if (preview.state === 'playing' && preview.key === map.key) {
-                  stopPreview()
-                } else {
-                  previewBeatmap(map)
-                }
-              }}
-            >
-              {preview.key !== map.key
-                ? 'Preview'
-                : preview.loading
-                ? 'Preview'
-                : preview.error !== null
-                ? 'Playback error!'
-                : 'Stop Preview'}
-            </a>
+                  if (preview.state === 'playing' && preview.key === map.key) {
+                    stopPreview()
+                  } else {
+                    previewBeatmap(map)
+                  }
+                }}
+              >
+                {preview.key !== map.key
+                  ? 'Preview'
+                  : preview.loading
+                  ? 'Preview'
+                  : preview.error !== null
+                  ? 'Playback error!'
+                  : 'Stop Preview'}
+              </a>
+            )}
             <a href={`beatsaver://${map.key}`}>OneClick&trade;</a>
             <a
               href='/'

@@ -72,6 +72,7 @@ declare interface IParsedBeatmap {
     songSubName: string
     songAuthorName: string
     levelAuthorName: string
+    requiresExternalAudioFile: boolean
 
     duration: number
     bpm: number
@@ -110,4 +111,22 @@ declare interface IParsedDifficulty {
   obstacles: number
   njs: number
   njsOffset: number
+}
+
+declare interface IAudioConfig {
+  schemaVersion: number
+  lengthMs: number
+  notes?: string
+  downloadUrls?: string[]
+  knownGoodHashes?: Array<{ type: string, hash: string }>
+  patches?: {
+    delayStartMs?: number
+    padEndMs?: number
+    trim?: {
+      startMs?: number
+      endMs: number
+    }
+    fadeIn?: { startMs: number, durationMs: number }
+    fadeOut?: { startMs: number, durationMs: number }
+  }
 }

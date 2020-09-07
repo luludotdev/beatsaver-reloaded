@@ -141,3 +141,17 @@ export const ERR_BEATMAP_PARSE_TIMEOUT = new CodedError(
   'ERR_BEATMAP_PARSE_TIMEOUT',
   408
 )
+
+export const ERR_BEATMAP_INVALID_AUDIO_CONFIG = new CodedError(
+  'invalid audio.config file',
+  0x30012,
+  'ERR_BEATMAP_INVALID_AUDIO_CONFIG',
+  400
+)
+
+export const ERR_BEATMAP_MISSING_FINGERPRINT = new CodedError(
+  'beatmap missing fingerprint.bin file',
+  0x30013,
+  'ERR_BEATMAP_MISSING_FINGERPRINT',
+  400
+)
