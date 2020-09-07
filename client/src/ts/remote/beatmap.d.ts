@@ -16,6 +16,7 @@ declare interface IBeatmap {
     songSubName: string
     songAuthorName: string
     levelAuthorName: string
+    requiresExternalAudioFile: boolean
 
     bpm: number
     duration?: number

@@ -10,6 +10,10 @@ export const previewBeatmap: (
 ) => TypedThunk = beatmap => async (dispatch, getState) => {
   stopPreview()(dispatch, getState)
 
+  if (beatmap.metadata.requiresExternalAudioFile) {
+    return
+  }
+
   dispatch({
     payload: true,
     type: AudioActionTypes.SET_LOADING,

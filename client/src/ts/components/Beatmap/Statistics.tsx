@@ -90,6 +90,15 @@ export const BeatmapStats: FunctionComponent<IProps> = ({
           hover='Beatmap Duration'
         />
       ) : null}
+
+      {isFullMap(map) && map.metadata.requiresExternalAudioFile ? (
+        <Statistic
+          type='text'
+          emoji='💿'
+          text='BYOS'
+          hover='Bring your own song file'
+        />
+      ) : null}
     </ul>
   )
 }

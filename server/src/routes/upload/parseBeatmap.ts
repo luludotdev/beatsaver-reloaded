@@ -9,6 +9,7 @@ import { withFile } from 'tmp-promise'
 import {
   FILE_EXT_WHITELIST,
   FILE_TYPE_BLACKLIST,
+  SCHEMA_AUDIO_CONFIG,
   SCHEMA_DIFFICULTY,
   SCHEMA_INFO,
 } from '~constants'
@@ -31,6 +32,8 @@ import {
   ERR_BEATMAP_DIFF_NOT_FOUND,
   ERR_BEATMAP_INFO_INVALID,
   ERR_BEATMAP_INFO_NOT_FOUND,
+  ERR_BEATMAP_INVALID_AUDIO_CONFIG,
+  ERR_BEATMAP_MISSING_FINGERPRINT,
 } from './errors'
 
 export const parseBeatmap: (
@@ -78,32 +81,58 @@ export const parseBeatmap: (
   if (size.width !== size.height) throw ERR_BEATMAP_COVER_NOT_SQUARE
   if (size.width < 256 || size.height < 256) throw ERR_BEATMAP_COVER_TOO_SMOL
 
+  let audio: Buffer | undefined
+  let requiresExternalAudioFile = false
+  let audioConfigJSON: IAudioConfig | undefined
+
   const audioEntry = zip.file(infoJSON._songFilename)
   if (audioEntry === null) {
+    // Check if this song requires an external audio file
+    const audioConfigFile = zip.file('audio.json')
+    if (audioConfigFile !== null) {
+      const audioConfig = await audioConfigFile.async('text')
+      if (!validJSON(audioConfig)) throw ERR_BEATMAP_INVALID_AUDIO_CONFIG
+      const audioConfigJSON = JSON.parse(audioConfig)
+      const validateAudioConfig = await schemas.compile(SCHEMA_AUDIO_CONFIG)
+      const audioConfigValid = validateAudioConfig(audioConfigJSON)
+      if (audioConfigValid === false) {
+        parseValidationError('audio.json', validateAudioConfig.errors)
+      }
+
+      const fingerprint = zip.file('fingerprint.bin')
+      if (fingerprint !== null) {
+        requiresExternalAudioFile = true
+      } else {
+        throw ERR_BEATMAP_MISSING_FINGERPRINT
+      }
+    }
+
     throw ERR_BEATMAP_AUDIO_NOT_FOUND(infoJSON._songFilename)
   }
 
-  const audio = await audioEntry.async('nodebuffer')
-  const audioType = fileType(audio)
-  if (
-    audioType === undefined ||
-    (audioType.mime !== 'audio/ogg' && audioType.mime !== 'audio/wav')
-  ) {
-    throw ERR_BEATMAP_AUDIO_INVALID
-  }
+  if (!requiresExternalAudioFile) {
+    audio = await audioEntry.async('nodebuffer')
+    const audioType = fileType(audio)
+    if (
+      audioType === undefined ||
+      (audioType.mime !== 'audio/ogg' && audioType.mime !== 'audio/wav')
+    ) {
+      throw ERR_BEATMAP_AUDIO_INVALID
+    }
 
-  const { name, ext } = parse(infoJSON._songFilename)
-  if (ext === '.ogg') {
-    const eggName = `${name}.egg`
+    const { name, ext } = parse(infoJSON._songFilename)
+    if (ext === '.ogg') {
+      const eggName = `${name}.egg`
 
-    zip.remove(infoJSON._songFilename)
-    zip.file(eggName, audio)
+      zip.remove(infoJSON._songFilename)
+      zip.file(eggName, audio)
 
-    infoJSON._songFilename = `${name}.egg`
-    infoDAT = `${JSON.stringify(infoJSON, null, 2)}\n`
+      infoJSON._songFilename = `${name}.egg`
+      infoDAT = `${JSON.stringify(infoJSON, null, 2)}\n`
 
-    zip.remove(infoDATName)
-    zip.file(infoDATName, infoDAT)
+      zip.remove(infoDATName)
+      zip.file(infoDATName, infoDAT)
+    }
   }
 
   const difficulties = ([] as IDifficultyBeatmap[]).concat(
@@ -201,7 +230,7 @@ export const parseBeatmap: (
   )
 
   const sha1 = hash.digest('hex')
-  const duration = await getAudioDuration(sha1, audio)
+  const duration = await getAudioDuration(sha1, audio, audioConfigJSON)
   const parsed: IParsedBeatmap = {
     hash: sha1,
 
@@ -210,6 +239,7 @@ export const parseBeatmap: (
       songAuthorName: infoJSON._songAuthorName,
       songName: infoJSON._songName,
       songSubName: infoJSON._songSubName,
+      requiresExternalAudioFile,
 
       bpm: infoJSON._beatsPerMinute,
       duration,
@@ -271,8 +301,12 @@ const inspectFile = async (file: JSZip.JSZipObject) => {
 
 const getAudioDuration = async (
   hash: string,
-  audio: Buffer
+  audio?: Buffer,
+  audioConfig?: IAudioConfig
 ): Promise<number> => {
+  if (audioConfig && !audio) {
+    return (audioConfig.lengthMs || 0) / 1000.0
+  }
   const args = [
     '-v',
     'error',

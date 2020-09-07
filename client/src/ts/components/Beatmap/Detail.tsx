@@ -357,30 +357,32 @@ const BeatmapDetail: FunctionComponent<IProps> = ({
             Download
           </a>
           <a href={`beatsaver://${map.key}`}>OneClick&trade; Install</a>
-          <a
-            href='/'
-            className={clsx(
-              preview.loading && preview.key === map.key && 'loading',
-              preview.loading && 'disabled'
-            )}
-            onClick={e => {
-              e.preventDefault()
+          {!map.metadata.requiresExternalAudioFile && (
+            <a
+              href='/'
+              className={clsx(
+                preview.loading && preview.key === map.key && 'loading',
+                preview.loading && 'disabled'
+              )}
+              onClick={e => {
+                e.preventDefault()
 
-              if (preview.state === 'playing' && preview.key === map.key) {
-                stopPreview()
-              } else {
-                previewBeatmap(map)
-              }
-            }}
-          >
-            {preview.loading
-              ? '.'
-              : preview.key !== map.key
-              ? 'Preview'
-              : preview.error !== null
-              ? 'Playback error!'
-              : 'Stop Preview'}
-          </a>
+                if (preview.state === 'playing' && preview.key === map.key) {
+                  stopPreview()
+                } else {
+                  previewBeatmap(map)
+                }
+              }}
+            >
+              {preview.loading
+                ? '.'
+                : preview.key !== map.key
+                ? 'Preview'
+                : preview.error !== null
+                ? 'Playback error!'
+                : 'Stop Preview'}
+            </a>
+          )}
           {/* <a href='/'>View on BeastSaber</a> */}
           <a href='/' onClick={e => copyBSR(e)}>
             {copied ? (
