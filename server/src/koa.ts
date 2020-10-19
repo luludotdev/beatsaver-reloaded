@@ -11,6 +11,7 @@ const router = new Router()
 
 if (!IS_DEV) app.proxy = true
 else {
+  app.use(logger)
   app.use(
     cors({
       exposeHeaders: [
@@ -26,7 +27,6 @@ else {
 app
   .use(realIP)
   .use(helmet({ hsts: false }))
-  .use(logger)
   .use(errorHandler)
   .use(cacheHeaders)
 
