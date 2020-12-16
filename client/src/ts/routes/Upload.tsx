@@ -26,6 +26,11 @@ interface IDispatchProps {
   replace: Replace
 }
 
+const resend = async () => {
+  await axios.post('/auth/resend');
+  alert("Check your email")
+}
+
 type IProps = IPassedProps & IDispatchProps
 const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
   if (user === null) {
@@ -42,6 +47,7 @@ const Upload: FunctionComponent<IProps> = ({ user, push, replace }) => {
             </p>
 
             <p>It might be in spam, check there too.</p>
+            <button onClick={resend}>Resend Email</button>
           </div>
         </article>
       </div>
