@@ -64,7 +64,7 @@
     "@lolpants/ptimeout": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",
     "ajv": "^6.10.2",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "bson-ext": "^2.0.3",
     "chunk": "^0.0.2",
