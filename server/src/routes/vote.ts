@@ -54,6 +54,19 @@ const ERR_BAD_TICKET = new CodedError(
   401
 )
 
+const ERR_INVALID_OCULUS_ID = new CodedError(
+  'invalid vote oculus ID',
+  0x50007,
+  'ERR_INVALID_OCULUS_ID',
+  400
+)
+
+const ERR_OCULUS_API = new CodedError(
+  'oculus api error',
+  0x50008,
+  'ERR_OCULUS_API'
+)
+
 const voteRL = rateLimit({
   duration: 1 * 1000,
   id: ctx => `/vote/${parseKey(ctx.params.key)}:${ctx.realIP}`,
@@ -90,6 +103,40 @@ interface ISteamError {
     errordesc: string
   }
 }
+
+router.post('/oculus/:key', voteRL, async ctx => {
+  const { oculusID, ticket } = ctx.request.body
+
+  if (!oculusID) throw ERR_INVALID_OCULUS_ID
+  if (!ticket) throw ERR_INVALID_TICKET
+
+  const url = `https://api.beatmaps.io/users/verify`
+
+  try {
+    interface IOculusResp {
+      success: boolean
+      error: string | null
+    }
+
+    const {
+      data: { success: resp },
+    } = await axios.post<IOculusResp>(url, {
+      oculusId: oculusID,
+      proof: ticket,
+    })
+
+    if (resp) {
+      // Valid
+      return submitVote(ctx, oculusID)
+    } else {
+      // Invalid ticket
+      throw ERR_BAD_TICKET
+    }
+  } catch (err) {
+    if (err.response !== undefined) throw ERR_OCULUS_API
+    else throw err
+  }
+})
 
 router.post('/steam/:key', voteRL, async ctx => {
   const { steamID, ticket } = ctx.request.body
