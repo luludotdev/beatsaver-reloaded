@@ -7,6 +7,6 @@ const router = new Router({
 })
 
 serve(CDN_PATH, router, {
-  maxage: 86400000 // Cache downloads for 24 hours
+  maxage: 86400000, // Cache downloads for 24 hours
 })
 export { router as cdnRouter }
