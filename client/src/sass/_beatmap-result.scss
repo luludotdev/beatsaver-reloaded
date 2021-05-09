@@ -47,6 +47,7 @@ div.beatmap-result {
 
     @media screen and (max-width: $hide-cover) {
       border-radius: $radius;
+      flex-direction: column;
     }
 
     display: flex;
@@ -60,6 +61,24 @@ div.beatmap-result {
 
         text-align: right;
         color: rgb(23, 23, 24);
+
+        & > ul {
+          & .text {
+            margin: .25em;
+          }
+
+          @media screen and (max-width: $hide-cover) {
+            display: flex;
+            flex-wrap: wrap;
+            padding: .5em 0;
+            li {
+              display: flex;
+              flex-direction: row-reverse;
+              align-items: center;
+              margin: .25em;
+            }
+          }
+        }
       }
 
       & .is-button-group {

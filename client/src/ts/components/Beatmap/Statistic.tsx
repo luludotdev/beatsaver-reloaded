@@ -33,8 +33,8 @@ export const Statistic: FunctionComponent<IStatProps> = props => {
 
     return (
       <li className='mono' title={hover}>
-        {num}
-        {percentage !== undefined ? '%' : ''} {emoji}
+        <span className='text'>{num}{percentage !== undefined ? '%' : ''}</span>
+        <span className='emoji'>{emoji}</span>
       </li>
     )
   } else if (props.type === 'text') {
@@ -42,7 +42,7 @@ export const Statistic: FunctionComponent<IStatProps> = props => {
 
     return (
       <li className='mono' title={hover}>
-        {text} {emoji}
+        <span className='text'>{text}</span><span className='emoji'>{emoji}</span>
       </li>
     )
   }
